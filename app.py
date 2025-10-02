@@ -26,7 +26,6 @@ def criar_usuario(nome, senha, indicado_por=None):
         "saldo": 0.0,
         "gasto": 0.0,
         "materiais": 0,
-        "nivel": "Bronze",
         "foto": "/static/default.png"
     })
     return True
