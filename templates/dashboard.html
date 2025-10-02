@@ -63,32 +63,17 @@
             color: #aaa;
             margin-bottom: 8px;
         }
-        .btn-action {
-            margin-top: 15px;
-            padding: 10px 15px;
-            background: #4e9af1;
-            color: #fff;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            border: none;
-            transition: 0.3s;
-        }
-        .btn-action:hover {
-            background: #6caef7;
-        }
     </style>
 </head>
 <body>
     <header>
         <div class="header-left">
-            <button class="btn-admin" onclick="location.href='/admin'">Painel de Admin</button>
+            <button class="btn-admin" onclick="location.href='/admin_login'">Painel de Admin</button>
         </div>
         <a href="/perfil"><img src="{{ dados.foto }}" class="perfil"></a>
     </header>
 
     <section>
-        <!-- Embed 1: Dashboard do usuário -->
         <div class="card">
             <div class="card-title">💰 Saldo</div>
             {{ dados.saldo }}
@@ -97,19 +82,15 @@
             <div class="card-title">💸 Total gasto</div>
             {{ dados.gasto }}
         </div>
-
-        <!-- Embed 2: Materiais e Níveis disponíveis -->
         <div class="card">
             <div class="card-title">📚 Materiais disponíveis</div>
             {{ dados.materiais }}
-            <button class="btn-action" onclick="location.href='/add_material'">Adicionar Material</button>
         </div>
         <div class="card">
             <div class="card-title">⭐ Níveis disponíveis</div>
             {% for nivel in niveis %}
                 <div>{{ nivel }}</div>
             {% endfor %}
-            <button class="btn-action" onclick="location.href='/add_nivel'">Adicionar Nível</button>
         </div>
     </section>
 </body>
