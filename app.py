@@ -1,12 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import sqlite3, os
+import sqlite3
 import os
 
 app = Flask(__name__)
-app.secret_key = "segredo_super_secreto"
+app.secret_key = "keyseckssiteccue"
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "banco.db")
+# =========================
+# Caminho do banco (gravável no Render)
+# =========================
+DB_PATH = "/tmp/banco.db"
 
 # =========================
 # Inicializar banco
@@ -37,8 +39,10 @@ def criar_usuario(nome, senha, indicado_por=None):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     try:
-        c.execute("INSERT INTO usuarios (nome, senha, indicado_por) VALUES (?,?,?)",
-                  (nome, senha, indicado_por))
+        c.execute(
+            "INSERT INTO usuarios (nome, senha, indicado_por) VALUES (?,?,?)",
+            (nome, senha, indicado_por)
+        )
         conn.commit()
         return True
     except sqlite3.IntegrityError:
@@ -121,4 +125,4 @@ def perfil():
 # =========================
 if __name__ == "__main__":
     init_db()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)), debug=True)
