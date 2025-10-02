@@ -13,7 +13,8 @@ MONGO_URI = os.environ.get("MONGO_URI")  # Defina essa variável no Render
 client = MongoClient(MONGO_URI)
 db = client["EMPERIUMCC"]  # nome do database
 usuarios_col = db["User"]  # nome da collection
-
+niveis_col = db["Niveis"] 
+materiais_col = db["Materiais"] 
 # =========================
 # Funções de banco
 # =========================
@@ -96,6 +97,27 @@ def perfil():
     user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
     return render_template("perfil.html", usuario=user)
 
+@app.route("/dashboard")
+def dashboard():
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+
+    user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
+    if not user:
+        return "Usuário não encontrado!"
+
+    # Buscar níveis disponíveis
+    niveis = [n["nome"] for n in niveis_col.find()]
+
+    dados = {
+        "nome": user["nome"],
+        "saldo": f"R$ {user.get('saldo',0):.2f}",
+        "gasto": f"R$ {user.get('gasto',0):.2f}",
+        "materiais": user.get("materiais",0),
+        "foto": user.get("foto","/static/default.png")
+    }
+
+    return render_template("dashboard.html", dados=dados, niveis=niveis)
 # =========================
 # Main
 # =========================
