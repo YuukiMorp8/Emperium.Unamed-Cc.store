@@ -80,6 +80,30 @@ def perfil():
         return redirect(url_for("login"))
     user = get_usuario(session["usuario"])
     return render_template("perfil.html", usuario=user)
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        nome = request.form["nome"]
+        senha = request.form["senha"]
+
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+
+        # Verifica se já existe
+        c.execute("SELECT * FROM usuarios WHERE nome=?", (nome,))
+        if c.fetchone():
+            conn.close()
+            return "❌ Usuário já existe!"
+
+        # Cria novo usuário
+        c.execute("INSERT INTO usuarios (nome, senha, saldo, gasto, materiais, nivel, foto) VALUES (?,?,?,?,?,?,?)",
+                  (nome, senha, 0.0, 0.0, 0, "Bronze", "/static/default.png"))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("login"))
+
+    return render_template("register.html")
 
 # =========================
 # MAIN
