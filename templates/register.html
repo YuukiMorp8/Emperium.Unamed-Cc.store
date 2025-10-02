@@ -2,18 +2,112 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Registrar - Emperium</title>
+    <title>Registrar - Emperium Unamed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2c003e, #1a0026);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: #2f3136;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+            padding: 30px;
+            width: 450px;
+        }
+
+        .card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #7289da;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 1.1em;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            background: #202225;
+            color: #fff;
+        }
+
+        .input-group input:focus {
+            outline: 2px solid #7289da;
+            background: #2c2f33;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: #7289da;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: #5b6eae;
+        }
+
+        .link {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .link a {
+            color: #7289da;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
-<body style="background:#111; color:#fff; text-align:center; font-family:Arial;">
-    <h1>Criar Conta</h1>
-    <form method="post">
-        <input type="text" name="nome" placeholder="Usuário" required><br><br>
-        <input type="password" name="senha" placeholder="Senha" required><br><br>
-        <input type="password" name="confirmar" placeholder="Confirmar Senha" required><br><br>
-        <input type="text" name="indicacao" placeholder="Quem te indicou? (opcional)"><br><br>
-        <button type="submit">Registrar</button>
-    </form>
-    <br>
-    <a href="/" style="color:lightblue;">Já tem conta? Faça login</a>
+<body>
+    <div class="card">
+        <h2>📜 Registrar Conta</h2>
+        <form method="POST">
+            <div class="input-group">
+                <label for="nome">Nome</label>
+                <input type="text" name="nome" id="nome" placeholder="Digite seu nome" required>
+            </div>
+
+            <div class="input-group">
+                <label for="senha">Senha</label>
+                <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
+            </div>
+
+            <button type="submit" class="btn">Registrar</button>
+        </form>
+        <div class="link">
+            <p>Já tem conta? <a href="/">Entrar</a></p>
+        </div>
+    </div>
 </body>
 </html>
