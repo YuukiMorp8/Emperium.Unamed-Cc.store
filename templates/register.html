@@ -2,112 +2,82 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Registrar - Emperium Unamed</title>
+    <title>Registro - Emperium</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #2c003e, #1a0026);
+            background: #111;
             color: #fff;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
         }
-
-        .card {
-            background: #2f3136;
+        .container {
+            background: #1e1e1e;
             border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.6);
-            padding: 30px;
-            width: 450px;
+            padding: 40px;
+            width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
         }
-
-        .card h2 {
+        h1 {
             text-align: center;
-            margin-bottom: 20px;
-            color: #7289da;
+            color: #ffcc00;
+            margin-bottom: 30px;
         }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
+        label {
             display: block;
+            margin-top: 20px;
             font-weight: bold;
-            margin-bottom: 8px;
-            color: #ccc;
-            font-size: 1.1em;
+            color: #00ccff;
+            font-size: 16px;
         }
-
-        .input-group input {
+        input[type="text"],
+        input[type="password"] {
             width: 100%;
-            padding: 14px;
-            border: none;
+            padding: 12px;
+            margin-top: 5px;
             border-radius: 8px;
-            font-size: 1.1em;
-            background: #202225;
-            color: #fff;
+            border: none;
+            font-size: 16px;
         }
-
-        .input-group input:focus {
-            outline: 2px solid #7289da;
-            background: #2c2f33;
-        }
-
-        .btn {
+        button {
             width: 100%;
             padding: 15px;
-            background: #7289da;
+            margin-top: 30px;
+            background: #ff9900;
             border: none;
-            border-radius: 8px;
-            font-size: 1.2em;
+            border-radius: 10px;
+            font-size: 18px;
             font-weight: bold;
-            color: #fff;
             cursor: pointer;
-            transition: 0.2s;
+            color: #111;
+            transition: 0.3s;
         }
-
-        .btn:hover {
-            background: #5b6eae;
-        }
-
-        .link {
-            margin-top: 15px;
-            text-align: center;
-        }
-
-        .link a {
-            color: #7289da;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
+        button:hover {
+            background: #ffcc00;
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>📜 Registrar Conta</h2>
-        <form method="POST">
-            <div class="input-group">
-                <label for="nome">Nome</label>
-                <input type="text" name="nome" id="nome" placeholder="Digite seu nome" required>
-            </div>
+    <div class="container">
+        <h1>📝 Registrar Conta</h1>
+        <form method="post" action="/register">
+            <label>Nome</label>
+            <input type="text" name="nome" placeholder="Digite seu nome" required>
 
-            <div class="input-group">
-                <label for="senha">Senha</label>
-                <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
-            </div>
+            <label>Senha</label>
+            <input type="password" name="senha" placeholder="Digite sua senha" required>
 
-            <button type="submit" class="btn">Registrar</button>
+            <label>Confirmar Senha</label>
+            <input type="password" name="confirma_senha" placeholder="Confirme sua senha" required>
+
+            <label>Quem te indicou (opcional)</label>
+            <input type="text" name="indicacao" placeholder="Digite quem te indicou">
+
+            <button type="submit">Registrar</button>
         </form>
-        <div class="link">
-            <p>Já tem conta? <a href="/">Entrar</a></p>
-        </div>
     </div>
 </body>
 </html>
