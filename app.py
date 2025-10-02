@@ -3,12 +3,9 @@ import sqlite3
 import os
 
 app = Flask(__name__)
-app.secret_key = "keyseckssiteccue"
+app.secret_key = "segredo_super_secreto"
 
-# =========================
-# Caminho do banco (gravável no Render)
-# =========================
-DB_PATH = "/tmp/banco.db"
+DB_PATH = "/tmp/banco.db"  # caminho gravável no Render
 
 # =========================
 # Inicializar banco
@@ -31,6 +28,9 @@ def init_db():
     """)
     conn.commit()
     conn.close()
+
+# Chamada direta para garantir que o banco exista
+init_db()
 
 # =========================
 # Funções de banco
@@ -124,5 +124,4 @@ def perfil():
 # Main
 # =========================
 if __name__ == "__main__":
-    init_db()
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)), debug=True)
