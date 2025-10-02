@@ -120,6 +120,10 @@ def perfil():
     user = get_usuario(session["usuario"])
     return render_template("perfil.html", usuario=user)
 
+@app.route("/login", methods=["GET", "POST"])
+def login_page():
+    return login()  # reutiliza a função do login existente
+
 # =========================
 # Main
 # =========================
