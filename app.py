@@ -100,29 +100,35 @@ def dashboard():
 
     return render_template("dashboard.html", dados=dados, niveis=niveis)
 
-
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
-        nome = request.form["nome"]
-        senha = request.form["senha"]
-        admin = admins_col.find_one({"nome": nome})
-        if admin and admin["senha"] == senha:
+        nome_admin = request.form["nome_admin"]
+        senha_admin = request.form["senha_admin"]
+
+        # Buscar admin no MongoDB
+        admin = usuarios_col.find_one({"nome": nome_admin, "is_admin": True})
+        if admin and admin["senha"] == senha_admin:
             session["admin"] = str(admin["_id"])
             return redirect(url_for("admin_panel"))
-        return "❌ Nome ou senha de admin incorretos!"
+
+        return "❌ Nome ou senha do admin incorretos!"
+
     return render_template("admin_login.html")
+
 
 @app.route("/admin_panel")
 def admin_panel():
     if "admin" not in session:
         return redirect(url_for("admin_login"))
 
-    # Materiais e níveis do banco
+    # Buscar dados necessários para o painel de admin
+    usuarios = list(usuarios_col.find())
+    niveis = list(niveis_col.find())
     materiais = list(materiais_col.find())
-    niveis = [n["nome"] for n in niveis_col.find()]
 
-    return render_template("admin_panel.html", materiais=materiais, niveis=niveis)
+    return render_template("admin_panel.html", usuarios=usuarios, niveis=niveis, materiais=materiais)
+
 # Main
 # =========================
 if __name__ == "__main__":
