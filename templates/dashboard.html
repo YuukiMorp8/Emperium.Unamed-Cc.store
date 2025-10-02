@@ -14,14 +14,35 @@
         header {
             background: #222;
             padding: 20px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
-        header div {
-            font-size: 24px;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .btn-admin {
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #111;
             font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-admin:hover {
+            background: #ffcc00;
+        }
+        .perfil {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #eee;
         }
         section {
             padding: 20px;
@@ -42,40 +63,32 @@
             color: #aaa;
             margin-bottom: 8px;
         }
-        .perfil {
-            width:70px;
-            height:70px;
-            border-radius:50%;
-            cursor:pointer;
-            border: 2px solid #eee;
-        }
-        .btn-next {
-            display: inline-block;
-            margin: 20px auto;
-            padding: 12px 25px;
+        .btn-action {
+            margin-top: 15px;
+            padding: 10px 15px;
             background: #4e9af1;
             color: #fff;
-            text-decoration: none;
             font-weight: bold;
-            border-radius: 10px;
-            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
         }
-        .btn-next:hover {
+        .btn-action:hover {
             background: #6caef7;
-        }
-        footer {
-            text-align:center;
-            padding: 20px;
         }
     </style>
 </head>
 <body>
     <header>
-        <div>📊 Dashboard - Bem-vindo, {{ dados.nome }}</div>
+        <div class="header-left">
+            <button class="btn-admin" onclick="location.href='/admin'">Painel de Admin</button>
+        </div>
         <a href="/perfil"><img src="{{ dados.foto }}" class="perfil"></a>
     </header>
 
     <section>
+        <!-- Embed 1: Dashboard do usuário -->
         <div class="card">
             <div class="card-title">💰 Saldo</div>
             {{ dados.saldo }}
@@ -84,18 +97,20 @@
             <div class="card-title">💸 Total gasto</div>
             {{ dados.gasto }}
         </div>
+
+        <!-- Embed 2: Materiais e Níveis disponíveis -->
         <div class="card">
             <div class="card-title">📚 Materiais disponíveis</div>
             {{ dados.materiais }}
+            <button class="btn-action" onclick="location.href='/add_material'">Adicionar Material</button>
         </div>
         <div class="card">
-            <div class="card-title">⭐ Nível</div>
-            {{ dados.nivel }}
+            <div class="card-title">⭐ Níveis disponíveis</div>
+            {% for nivel in niveis %}
+                <div>{{ nivel }}</div>
+            {% endfor %}
+            <button class="btn-action" onclick="location.href='/add_nivel'">Adicionar Nível</button>
         </div>
     </section>
-
-    <footer>
-        <a href="/pagina2" class="btn-next">➡ Próxima Página</a>
-    </footer>
 </body>
 </html>
