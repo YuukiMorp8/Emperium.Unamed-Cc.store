@@ -106,7 +106,7 @@ def dashboard():
     if not user:
         return "Usuário não encontrado!"
 
-    # Buscar níveis disponíveis
+    # Buscar níveis disponíveis do admin
     niveis = [n["nome"] for n in niveis_col.find()]
 
     dados = {
@@ -118,7 +118,7 @@ def dashboard():
     }
 
     return render_template("dashboard.html", dados=dados, niveis=niveis)
-# =========================
+
 # Main
 # =========================
 if __name__ == "__main__":
