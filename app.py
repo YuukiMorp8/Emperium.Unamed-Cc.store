@@ -14,7 +14,8 @@ client = MongoClient(MONGO_URI)
 db = client["EMPERIUMCC"]  # nome do database
 usuarios_col = db["User"]  # nome da collection
 niveis_col = db["Niveis"] 
-materiais_col = db["Materiais"] 
+materiais_col = db["Materiais"]
+admins_col = db["Admins"] 
 # =========================
 # Funções de banco
 # =========================
@@ -99,6 +100,29 @@ def dashboard():
 
     return render_template("dashboard.html", dados=dados, niveis=niveis)
 
+
+@app.route("/admin_login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        nome = request.form["nome"]
+        senha = request.form["senha"]
+        admin = admins_col.find_one({"nome": nome})
+        if admin and admin["senha"] == senha:
+            session["admin"] = str(admin["_id"])
+            return redirect(url_for("admin_panel"))
+        return "❌ Nome ou senha de admin incorretos!"
+    return render_template("admin_login.html")
+
+@app.route("/admin_panel")
+def admin_panel():
+    if "admin" not in session:
+        return redirect(url_for("admin_login"))
+
+    # Materiais e níveis do banco
+    materiais = list(materiais_col.find())
+    niveis = [n["nome"] for n in niveis_col.find()]
+
+    return render_template("admin_panel.html", materiais=materiais, niveis=niveis)
 # Main
 # =========================
 if __name__ == "__main__":
