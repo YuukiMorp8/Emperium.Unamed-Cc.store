@@ -69,26 +69,6 @@ def register():
             return "❌ Usuário já existe!"
     return render_template("register.html")
 
-@app.route("/dashboard")
-def dashboard():
-    if "usuario" not in session:
-        return redirect(url_for("login"))
-
-    user = usuarios_col.find_one({"_id": session["usuario"]}) or usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
-    if not user:
-        return "Usuário não encontrado!"
-
-    dados = {
-        "nome": user["nome"],
-        "saldo": f"R$ {user['saldo']:.2f}",
-        "gasto": f"R$ {user['gasto']:.2f}",
-        "materiais": user["materiais"],
-        "nivel": user["nivel"],
-        "foto": user["foto"]
-    }
-
-    return render_template("dashboard.html", dados=dados)
-
 @app.route("/perfil")
 def perfil():
     if "usuario" not in session:
