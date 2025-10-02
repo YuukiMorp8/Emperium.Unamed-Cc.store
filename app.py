@@ -4,7 +4,7 @@ import sqlite3, os
 app = Flask(__name__)
 app.secret_key = "segredo_super_secreto"
 
-DB_PATH = "banco.db"
+DB_PATH = "/tmp/banco.db"
 
 # =========================
 # Inicializar banco
