@@ -12,7 +12,6 @@ DB_PATH = "banco.db"
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    # Cria a tabela somente se ela não existir
     c.execute("""
     CREATE TABLE IF NOT EXISTS usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,6 +27,7 @@ def init_db():
     """)
     conn.commit()
     conn.close()
+
 # =========================
 # Funções de banco
 # =========================
