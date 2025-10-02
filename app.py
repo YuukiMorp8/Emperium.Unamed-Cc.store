@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3, os
+import os
 
 app = Flask(__name__)
 app.secret_key = "segredo_super_secreto"
 
-DB_PATH = "/tmp/banco.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "banco.db")
 
 # =========================
 # Inicializar banco
