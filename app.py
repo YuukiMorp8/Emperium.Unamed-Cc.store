@@ -10,25 +10,24 @@ DB_PATH = "banco.db"
 # Inicializar banco
 # =========================
 def init_db():
-    if not os.path.exists(DB_PATH):
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        c.execute("""
-        CREATE TABLE usuarios (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT UNIQUE,
-            senha TEXT,
-            indicado_por TEXT,
-            saldo REAL DEFAULT 0,
-            gasto REAL DEFAULT 0,
-            materiais INTEGER DEFAULT 0,
-            nivel TEXT DEFAULT 'Bronze',
-            foto TEXT DEFAULT '/static/default.png'
-        )
-        """)
-        conn.commit()
-        conn.close()
-
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    # Cria a tabela somente se ela não existir
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT UNIQUE,
+        senha TEXT,
+        indicado_por TEXT,
+        saldo REAL DEFAULT 0,
+        gasto REAL DEFAULT 0,
+        materiais INTEGER DEFAULT 0,
+        nivel TEXT DEFAULT 'Bronze',
+        foto TEXT DEFAULT '/static/default.png'
+    )
+    """)
+    conn.commit()
+    conn.close()
 # =========================
 # Funções de banco
 # =========================
