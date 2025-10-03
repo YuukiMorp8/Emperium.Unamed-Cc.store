@@ -247,6 +247,7 @@ def aguardando_pagamento(txid):
 
 @app.route("/verificar_pagamento_ajax/<txid>")
 
+@app.route("/verificar_pagamento_ajax/<txid>")
 def verificar_pagamento_ajax(txid):
     print("=== Verificando PIX AJAX ===")
     print("txid recebido:", txid)
@@ -266,8 +267,21 @@ def verificar_pagamento_ajax(txid):
     print("Pagamento verificado:", pago)
 
     if pago:
-        valor_float = float(transacao["valor"]) usuarios_col.update_one( {"_id": user_id}, {"$inc": {"saldo": valor_float}})
-        db.transacoes.update_one({"_id": transacao["_id"]}, {"$set": {"status": "concluida"}})
+        # 🔒 Proteção contra crédito duplicado
+        if transacao["status"] != "concluida":
+            valor_float = round(float(transacao["valor"]), 2)
+            usuarios_col.update_one(
+                {"_id": user_id},
+                {"$inc": {"saldo": valor_float}}
+            )
+            db.transacoes.update_one(
+                {"_id": transacao["_id"]},
+                {"$set": {"status": "concluida"}}
+            )
+            print(f"✅ Saldo incrementado: +{valor_float}")
+        else:
+            print("⚠️ Transação já concluída, saldo não incrementado novamente.")
+
         return {"status": "concluida", "valor": float(transacao["valor"])}
 
     return {"status": "pendente"}
