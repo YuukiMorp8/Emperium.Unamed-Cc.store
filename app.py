@@ -246,6 +246,7 @@ def aguardando_pagamento(txid):
     return render_template("aguardando_pagamento.html", txid=txid)
 
 @app.route("/verificar_pagamento_ajax/<txid>")
+
 def verificar_pagamento_ajax(txid):
     print("=== Verificando PIX AJAX ===")
     print("txid recebido:", txid)
@@ -265,7 +266,7 @@ def verificar_pagamento_ajax(txid):
     print("Pagamento verificado:", pago)
 
     if pago:
-        usuarios_col.update_one({"_id": user_id}, {"$inc": {"saldo": transacao["valor"]}})
+        valor_float = float(transacao["valor"]) usuarios_col.update_one( {"_id": user_id}, {"$inc": {"saldo": valor_float}})
         db.transacoes.update_one({"_id": transacao["_id"]}, {"$set": {"status": "concluida"}})
         return {"status": "concluida", "valor": float(transacao["valor"])}
 
