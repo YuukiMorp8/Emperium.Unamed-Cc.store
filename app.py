@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+.from flask import Flask, render_template, request, redirect, url_for, session
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from pagamento import criar_pix, verificar_pagamento_efi  # função que verifica o PIX
@@ -308,6 +308,12 @@ def verificar_pagamento_ajax(txid):
 
     return {"status": "pendente"}
 
+def censurar_numero(numero: str) -> str:
+    """Mostra os 6 primeiros dígitos e censura os 10 seguintes com '*'"""
+    if len(numero) <= 6:
+        return numero[:6] + '*' * max(0, len(numero) - 6)
+    return numero[:6] + '*' * 10  # sempre 6 visíveis e 10 censurados
+
 @app.route("/comprar", methods=["GET"])
 def comprar():
     if "usuario" not in session:
@@ -326,11 +332,12 @@ def comprar():
 
     resultados = []
     for mat in materiais:
-        bin_val = mat["material"].split("/")[0]
+        bin_val = mat["material"].split("/")[0]  # pega só o número principal
         nivel = mat.get("nivel", "Desconhecido")
         banco = mat.get("banco", "Desconhecido")
         valor = niveis.get(nivel, 0)
 
+        # aplica filtros
         if filtros["pesquisa"] and not bin_val.startswith(filtros["pesquisa"]):
             continue
         if filtros["nivel"] and nivel.lower() != filtros["nivel"].lower():
@@ -344,15 +351,15 @@ def comprar():
             except:
                 pass
 
+        # adiciona material censurado
         resultados.append({
             "_id": str(mat["_id"]),
-            "material": bin_val,
+            "material": censurar_numero(bin_val),
             "nivel": nivel,
             "banco": banco,
             "valor": valor
         })
 
-    # ✅ return só uma vez, fora do loop
     return render_template(
         "comprar.html",
         usuario=user,
@@ -360,43 +367,39 @@ def comprar():
         filtros=filtros,
         niveis=niveis
     )
-
+    
 @app.route("/comprar_finalize", methods=["POST"])
 def comprar_finalize():
     if "usuario" not in session:
-        return redirect(url_for("login"))
+        return {"ok": False, "msg": "Não logado"}, 401
 
     user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
     if not user:
-        return redirect(url_for("login"))
+        return {"ok": False, "msg": "Usuário não encontrado"}, 404
 
     material_id = request.form.get("material_id")
     senha_confirm = request.form.get("senha_confirm")
 
     if not material_id or not senha_confirm:
-        return "❌ Dados inválidos!"
+        return {"ok": False, "msg": "Dados inválidos!"}, 400
 
-    # confirmar senha
     if senha_confirm != user["senha"]:
-        return "❌ Senha incorreta!"
+        return {"ok": False, "msg": "Senha incorreta!"}, 403
 
     material = materiais_col.find_one({"_id": ObjectId(material_id)})
     if not material:
-        return "❌ Material não encontrado!"
+        return {"ok": False, "msg": "Material não encontrado!"}, 404
 
     nivel = material.get("nivel")
     valor = niveis_col.find_one({"nome": nivel}).get("valor", 0)
 
-    # saldo suficiente?
     if user["saldo"] < valor:
-        return "❌ Saldo insuficiente!"
+        return {"ok": False, "msg": "Saldo insuficiente!"}, 400
 
-    # desconta e registra compra
+    # Desconta e registra compra
     usuarios_col.update_one(
         {"_id": user["_id"]},
-        {
-            "$inc": {"saldo": -valor, "gasto": valor},
-        }
+        {"$inc": {"saldo": -valor, "gasto": valor}}
     )
     db.compras.insert_one({
         "usuario_id": user["_id"],
@@ -405,9 +408,7 @@ def comprar_finalize():
         "data": time.strftime("%d/%m/%Y %H:%M:%S")
     })
 
-    return redirect(url_for("dashboard"))
-
-
+    return {"ok": True, "msg": "Compra concluída!"}
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
