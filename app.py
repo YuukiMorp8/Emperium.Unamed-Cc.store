@@ -420,31 +420,36 @@ def comprar_finalize():
     materiais_col.delete_one({"_id": ObjectId(material_id)})
 
     return {"ok": True, "msg": "Compra concluída!"}
-    
+
 @app.route("/historico_compras")
 def historico_compras():
     if "usuario" not in session:
         return redirect(url_for("login"))
 
     user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
-    compras = list(db.compras.find({"usuario_id": user["_id"]}).sort("data", -1))
+    compras = user.get("compras", [])
 
-    # Pega informações dos materiais
-    resultados = []
-    for c in compras:
-        mat = materiais_col.find_one({"_id": c["material_id"]})
-        if mat:
-            bin_val = mat["material"][:6] + "*"*10  # censurado
-            resultados.append({
-                "material": bin_val,
-                "nivel": mat.get("nivel"),
-                "valor": c["valor"],
-                "data": c["data"]
-            })
+    # Prepara os dados para o template
+    compras_formatadas = []
+    for idx, c in enumerate(compras):
+        compras_formatadas.append({
+            "_id": idx,  # índice serve para modal / fetch
+            "numero": c["material"],   # BIN completo
+            "numero_mask": c["material"],  # sem censura
+            "nivel": c.get("nivel", ""),
+            "banco": c.get("banco", ""),
+            "valor": c.get("valor", 0),
+            "data_str": c.get("data", ""),
+            "prazo_inicio_str": c.get("data", ""),   # se quiser prazo, pode ajustar
+            "prazo_fim_str": c.get("data", ""),
+            "expirado": False,  # se não tiver lógica de expiração
+            "validade": c.get("validade",""),
+            "cvv": c.get("cvv",""),
+            "nome": c.get("nome",""),
+            "cpf": c.get("cpf","")
+        })
 
-    return render_template("historico_compras.html", usuario=user, resultados=resultados)
-
-
+    return render_template("historico_compras.html", usuario=user, compras=compras_formatadas)
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
