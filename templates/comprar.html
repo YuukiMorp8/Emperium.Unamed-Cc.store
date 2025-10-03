@@ -20,7 +20,7 @@ button:hover { background:#ffcc00; }
 <body>
 
 <header>
-    <a href="/dashboard"><img src="{{ session.get('usuario_foto', '/static/default.png') }}"></a>
+    <a href="/dashboard"><img src="{{ usuario.foto }}"></a>
 </header>
 
 <div class="main">
@@ -28,9 +28,11 @@ button:hover { background:#ffcc00; }
         <input type="text" name="pesquisa" placeholder="Pesquisar BIN" value="{{ filtros.pesquisa or '' }}">
         <select name="nivel">
             <option value="">Todos Níveis</option>
-            <option value="Prata" {% if filtros.nivel == 'Prata' %}selected{% endif %}>Prata</option>
-            <option value="Ouro" {% if filtros.nivel == 'Ouro' %}selected{% endif %}>Ouro</option>
-            <option value="Diamante" {% if filtros.nivel == 'Diamante' %}selected{% endif %}>Diamante</option>
+            {% for n in niveis %}
+                <option value="{{ n.nome }}" {% if filtros.nivel == n.nome %}selected{% endif %}>
+                    {{ n.nome }} - R$ {{ n.valor }}
+                </option>
+            {% endfor %}
         </select>
         <input type="text" name="banco" placeholder="Banco" value="{{ filtros.banco or '' }}">
         <input type="number" name="valor" placeholder="Valor mínimo" value="{{ filtros.valor or '' }}">
@@ -38,21 +40,28 @@ button:hover { background:#ffcc00; }
     </form>
 
     <div class="grid">
-        {% for mat in resultados %}
-            <div class="card">
-                <div class="card-title">💳 BIN</div>
-                {{ mat.material }}
-                <div class="card-title">🏦 Banco</div>
-                {{ mat.banco }}
-                <div class="card-title">💰 Valor</div>
-                {{ mat.valor }}
-                <div class="card-title">⭐ Nível</div>
-                {{ mat.nivel }}
-                <button>Comprar</button>
-            </div>
+        {% if resultados %}
+            {% for mat in resultados %}
+                <div class="card">
+                    <div class="card-title">💳 BIN</div>
+                    {{ mat.material }}
+                    <div class="card-title">🏦 Banco</div>
+                    {{ mat.banco }}
+                    <div class="card-title">💰 Valor</div>
+                    {% set nivel_info = niveis | selectattr("nome","equalto",mat.nivel) | list %}
+                    {% if nivel_info %}
+                        R$ {{ nivel_info[0].valor }}
+                    {% else %}
+                        R$ 0
+                    {% endif %}
+                    <div class="card-title">⭐ Nível</div>
+                    {{ mat.nivel }}
+                    <button>Comprar</button>
+                </div>
+            {% endfor %}
         {% else %}
             <p>Nenhum resultado encontrado.</p>
-        {% endfor %}
+        {% endif %}
     </div>
 </div>
 
