@@ -215,13 +215,21 @@ def adicionar_saldo_user():
 
     if request.method == "POST":
         valor = float(request.form["quantia"])
-        dados_pix = criar_pix(valor)  # gerar PIX, mas ainda não vai para "aguardando"
+        dados_pix = criar_pix(valor)  # apenas valor
 
         if "erro" in dados_pix:
-            return f"❌ Não foi possível gerar o PIX: {dados_pix['erro']}"
+            return f"❌ Não foi possível gerar o PIX corretamente: {dados_pix['erro']}"
 
-        # Renderiza a tela de pagamento com QR code e botão de confirmação
-        return render_template("confirmar_pagamento.html", dados=dados_pix, valor=valor)
+        # Salva a transação como pendente
+        db.transacoes.insert_one({
+            "usuario_id": user["_id"],
+            "txid": dados_pix["txid"],
+            "valor": valor,
+            "status": "pendente"
+        })
+
+        # Redireciona para a página de pagamento (com QR Code e botão)
+        return render_template("pagamento.html", dados=dados_pix, valor=valor)
 
     return render_template("adicionar_saldo.html")
     
