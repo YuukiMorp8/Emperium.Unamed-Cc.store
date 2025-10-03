@@ -13,7 +13,7 @@
         }
         header {
             background: #222;
-            padding: 20px;
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -22,14 +22,14 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
         .btn-admin {
-            padding: 10px 20px;
+            padding: 8px 18px;
             background: #ff9900;
             color: #111;
             font-weight: bold;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             border: none;
             transition: 0.3s;
@@ -38,66 +38,128 @@
             background: #ffcc00;
         }
         .perfil {
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             cursor: pointer;
             border: 2px solid #eee;
         }
-        section {
+        main {
             padding: 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: 1fr;
+            gap: 25px;
         }
-        .card {
+        .embed {
             background: linear-gradient(135deg, #2e2e2e, #1a1a1a);
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            font-size: 18px;
+        }
+        .embed-title {
+            font-size: 20px;
+            color: #ff9900;
+            margin-bottom: 15px;
             font-weight: bold;
         }
+        .embed-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .card {
+            background: #222;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
         .card-title {
-            font-size: 16px;
+            font-size: 14px;
             color: #aaa;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
+        }
+        .btn-action {
+            padding: 8px 12px;
+            background: #ff9900;
+            color: #111;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            margin-top: 10px;
+            width: 100%;
+            transition: 0.3s;
+        }
+        .btn-action:hover {
+            background: #ffcc00;
         }
     </style>
 </head>
 <body>
+
 <header>
     <div class="header-left">
         <button class="btn-admin" onclick="location.href='/admin_login'">Painel de Admin</button>
         <button class="btn-admin" onclick="location.href='/adicionar_saldo'">Adicionar Saldo</button>
+        <button class="btn-admin" onclick="location.href='/comprar'">Comprar</button>
+        <button class="btn-admin" onclick="location.href='/trocar_material'">Trocar Material</button>
+        <button class="btn-admin" onclick="location.href='/historico_compras'">Histórico</button>
     </div>
     <a href="/perfil"><img src="{{ dados.foto }}" class="perfil"></a>
 </header>
 
-    <section>
-        <div class="card">
-            <div class="card-title">💰 Saldo</div>
-            {{ dados.saldo }}
+<main>
+    <!-- Embed 1: Dashboard -->
+    <div class="embed">
+        <div class="embed-title">📊 Dashboard</div>
+        <div class="embed-content">
+            <div class="card">
+                <div class="card-title">💰 Saldo Atual</div>
+                {{ dados.saldo }}
+            </div>
+            <div class="card">
+                <div class="card-title">💸 Total Gasto</div>
+                {{ dados.gasto }}
+            </div>
+            <div class="card">
+                <div class="card-title">🛒 Compras Totais</div>
+                Em breve
+            </div>
+            <div class="card">
+                <div class="card-title">⭐ Nível Comprado</div>
+                Em breve
+            </div>
         </div>
-<div class="card">
-    <div class="card-title">💸 Total gasto</div>
-    {{ dados.gasto }}
-</div>
+    </div>
 
-<div class="card">
-    <div class="card-title">📚 Materiais disponíveis</div>
-    {{ dados.materiais }}
-</div>
+    <!-- Embed 2: Unamed Emperium -->
+    <div class="embed">
+        <div class="embed-title">🏢 Unamed Emperium</div>
+        <div class="embed-content">
+            <div class="card">
+                <div class="card-title">📚 Cards Disponíveis</div>
+                {{ dados.materiais }}
+            </div>
+            <div class="card">
+                <div class="card-title">⭐ Níveis Disponíveis</div>
+                {% for nivel in niveis %}
+                    <div>{{ nivel }}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-<div class="card">
-    <div class="card-title">⭐ Níveis disponíveis</div>
-    {% for nivel in niveis %}
-        <div>{{ nivel }}</div>
-    {% endfor %}
-</div>
-    </section>
+    <!-- Embed 3: Unamed Hall -->
+    <div class="embed">
+        <div class="embed-title">📢 Unamed Hall</div>
+        <div class="embed-content">
+            <div class="card">
+                <div class="card-title">📣 Anúncios</div>
+                Em breve
+            </div>
+        </div>
+    </div>
+</main>
+
 </body>
 </html>
-
-
-
