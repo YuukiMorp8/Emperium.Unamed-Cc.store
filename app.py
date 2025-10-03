@@ -199,6 +199,28 @@ def add_material():
 
     return redirect(url_for("admin_panel"))
 
+@app.route("/adicionar_saldo", methods=["GET", "POST"])
+def adicionar_saldo():
+    if "admin" not in session:
+        return redirect(url_for("admin_login"))
+
+    if request.method == "POST":
+        nome_usuario = request.form["usuario"].strip()
+        quantia = float(request.form["quantia"])
+
+        # Buscar usuário
+        user = usuarios_col.find_one({"nome": nome_usuario})
+        if not user:
+            return "❌ Usuário não encontrado!"
+
+        # Atualizar saldo
+        novosaldo = user.get("saldo", 0) + quantia
+        usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"saldo": novosaldo}})
+
+        return f"✅ Saldo atualizado! Novo saldo de {user['nome']}: R$ {novosaldo:.2f}"
+
+    return render_template("adicionar_saldo.html")
+
 # Main
 # =========================
 if __name__ == "__main__":
