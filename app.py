@@ -367,49 +367,60 @@ def comprar():
         filtros=filtros,
         niveis=niveis
     )
-    
+
+from datetime import datetime
+
 @app.route("/comprar_finalize", methods=["POST"])
 def comprar_finalize():
     if "usuario" not in session:
-        return {"ok": False, "msg": "Não logado"}, 401
+        return redirect(url_for("login"))
 
     user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
     if not user:
-        return {"ok": False, "msg": "Usuário não encontrado"}, 404
+        return redirect(url_for("login"))
 
     material_id = request.form.get("material_id")
     senha_confirm = request.form.get("senha_confirm")
 
     if not material_id or not senha_confirm:
-        return {"ok": False, "msg": "Dados inválidos!"}, 400
+        return {"ok": False, "msg": "Dados inválidos!"}
 
+    # Confirmar senha
     if senha_confirm != user["senha"]:
-        return {"ok": False, "msg": "Senha incorreta!"}, 403
+        return {"ok": False, "msg": "Senha incorreta!"}
 
     material = materiais_col.find_one({"_id": ObjectId(material_id)})
     if not material:
-        return {"ok": False, "msg": "Material não encontrado!"}, 404
+        return {"ok": False, "msg": "Material não encontrado!"}
 
     nivel = material.get("nivel")
-    valor = niveis_col.find_one({"nome": nivel}).get("valor", 0)
+    valor = datetime.now().strftime("%H:%M:%S")  # valor como hora
 
-    if user["saldo"] < valor:
-        return {"ok": False, "msg": "Saldo insuficiente!"}, 400
+    # Desconta saldo (opcional, se quiser manter saldo)
+    # usuarios_col.update_one(
+    #     {"_id": user["_id"]},
+    #     {"$inc": {"saldo": -valor_float, "gasto": valor_float}}
+    # )
 
-    # Desconta e registra compra
+    # Salva compra no histórico do usuário
     usuarios_col.update_one(
         {"_id": user["_id"]},
-        {"$inc": {"saldo": -valor, "gasto": valor}}
+        {"$push": {
+            "compras": {
+                "material": material["material"],
+                "nivel": nivel,
+                "banco": material.get("banco","Desconhecido"),
+                "valor": valor,
+                "data": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            }
+        }}
     )
-    db.compras.insert_one({
-        "usuario_id": user["_id"],
-        "material_id": material["_id"],
-        "valor": valor,
-        "data": time.strftime("%d/%m/%Y %H:%M:%S")
-    })
+
+    # Remove o material da coleção Materiais
+    materiais_col.delete_one({"_id": ObjectId(material_id)})
 
     return {"ok": True, "msg": "Compra concluída!"}
-
+    
 @app.route("/historico_compras")
 def historico_compras():
     if "usuario" not in session:
