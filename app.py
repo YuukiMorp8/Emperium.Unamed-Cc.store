@@ -215,23 +215,16 @@ def adicionar_saldo_user():
 
     if request.method == "POST":
         valor = float(request.form["quantia"])
-        dados_pix = criar_pix(valor)
+        dados_pix = criar_pix(valor)  # gerar PIX, mas ainda não vai para "aguardando"
 
         if "erro" in dados_pix:
             return f"❌ Não foi possível gerar o PIX: {dados_pix['erro']}"
 
-        db.transacoes.insert_one({
-            "usuario_id": user["_id"],
-            "txid": dados_pix["txid"],
-            "valor": valor,
-            "status": "pendente"
-        })
-
-        return redirect(url_for("aguardando_pagamento", txid=dados_pix["txid"]))
+        # Renderiza a tela de pagamento com QR code e botão de confirmação
+        return render_template("confirmar_pagamento.html", dados=dados_pix, valor=valor)
 
     return render_template("adicionar_saldo.html")
-
-
+    
 @app.route("/aguardando_pagamento/<txid>")
 def aguardando_pagamento(txid):
     if "usuario" not in session:
