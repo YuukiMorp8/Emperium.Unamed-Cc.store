@@ -31,10 +31,9 @@ def verificar_pagamento_efi(txid: str) -> bool:
     except Exception as e:
         print(f"❌ Erro ao verificar PIX: {e}")
         return False
-        
+
 def criar_pix(valor: float) -> dict:
     try:
-        txid = uuid.uuid4().hex
         valor_str = f"{valor:.2f}"
         body = {
             'calendario': {'expiracao': 3600},
@@ -43,23 +42,23 @@ def criar_pix(valor: float) -> dict:
             'solicitacaoPagador': f'Adicionar saldo de R$ {valor_str}'
         }
 
-        response = efi.pix_create_immediate_charge(params={"txid": txid}, body=body)
-
+        response = efi.pix_create_immediate_charge(params={}, body=body)
+        txid_api = response.get("txid")
         pix_copia_cola = response.get("pixCopiaECola")
         if not pix_copia_cola:
             return {"erro": "Pix copiar e colar não retornado!"}
 
+        # QR Code
         img = qrcode.make(pix_copia_cola)
         buf = io.BytesIO()
         img.save(buf, format="PNG")
         img_b64 = base64.b64encode(buf.getvalue()).decode()
 
         return {
-            "txid": txid,
+            "txid": txid_api,
             "valor": valor_str,
             "pix_copia_cola": pix_copia_cola,
             "qrcode_b64": img_b64
         }
-
     except Exception as e:
         return {"erro": str(e)}
