@@ -70,13 +70,36 @@ def register():
             return "❌ Usuário já existe!"
     return render_template("register.html")
 
-@app.route("/perfil")
+@app.route("/perfil", methods=["GET", "POST"])
 def perfil():
     if "usuario" not in session:
         return redirect(url_for("login"))
 
     user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
-    return render_template("perfil.html", usuario=user)
+    mensagem = None
+
+    if request.method == "POST":
+        # Mudar Nome
+        novo_nome = request.form.get("novo_nome")
+        if novo_nome:
+            usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"nome": novo_nome}})
+            mensagem = "✅ Nome alterado com sucesso!"
+            user["nome"] = novo_nome
+
+        # Alterar Senha
+        senha_atual = request.form.get("senha_atual")
+        nova_senha = request.form.get("nova_senha")
+        confirma_senha = request.form.get("confirma_senha")
+        if senha_atual and nova_senha and confirma_senha:
+            if senha_atual != user["senha"]:
+                mensagem = "❌ Senha atual incorreta!"
+            elif nova_senha != confirma_senha:
+                mensagem = "❌ Confirmação da nova senha não confere!"
+            else:
+                usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"senha": nova_senha}})
+                mensagem = "✅ Senha alterada com sucesso!"
+
+    return render_template("perfil.html", usuario=user, mensagem=mensagem)
 
 @app.route("/dashboard")
 def dashboard():
