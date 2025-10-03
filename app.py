@@ -427,25 +427,36 @@ def historico_compras():
         return redirect(url_for("login"))
 
     user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
-    compras = user.get("compras", [])
+    if not user:
+        return redirect(url_for("login"))
 
-    # Prepara os dados para o template
-    compras_formatadas.append({
-        "_id": idx,
-        "numero": c["material"],
-        "numero_mask": c["material"],
-        "nivel": c.get("nivel", ""),
-        "banco": c.get("banco", ""),
-        "valor": float(c.get("valor", 0)),  # 🔹 garante que seja número
-        "data_str": c.get("data", ""),
-        "prazo_inicio_str": c.get("data", ""),
-        "prazo_fim_str": c.get("data", ""),
-        "expirado": False,
-        "validade": c.get("validade",""),
-        "cvv": c.get("cvv",""),
-        "nome": c.get("nome",""),
-        "cpf": c.get("cpf","")
-    })
+    # Pega todas as compras do usuário
+    compras = list(db.compras.find({"usuario_id": user["_id"]}))
+
+    # Lista que será passada para o template
+    compras_formatadas = []
+
+    for c in compras:
+        # Remove do DB após formatar
+        db.compras.delete_one({"_id": c["_id"]})
+
+        compras_formatadas.append({
+            "_id": str(c["_id"]),
+            "numero": c.get("material", ""),
+            "numero_mask": c.get("material", ""),  # sem censura
+            "nivel": c.get("nivel", ""),
+            "banco": c.get("banco", ""),
+            "valor": float(c.get("valor", 0)),  # garante float
+            "data_str": c.get("data", ""),
+            "prazo_inicio_str": c.get("data", ""),
+            "prazo_fim_str": c.get("data", ""),
+            "expirado": False,
+            "validade": c.get("validade",""),
+            "cvv": c.get("cvv",""),
+            "nome": c.get("nome",""),
+            "cpf": c.get("cpf","")
+        })
+
     return render_template("historico_compras.html", usuario=user, compras=compras_formatadas)
 # =========================
 if __name__ == "__main__":
