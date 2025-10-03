@@ -199,7 +199,6 @@ def add_nivel():
     niveis_col.insert_one({"nome": nome, "valor": float(valor)})
     return redirect(url_for("admin_panel"))
 
-
 @app.route("/add_material", methods=["POST"])
 def add_material():
     if "admin" not in session:
@@ -210,8 +209,9 @@ def add_material():
     cpf = request.form.get("cpf")
     nascimento = request.form.get("nascimento") or None
     nivel = request.form.get("nivel")
+    banco = request.form.get("banco")  # novo campo
 
-    if not (material and nome and cpf and nivel):
+    if not (material and nome and cpf and nivel and banco):
         return "❌ Preencha todos os campos obrigatórios!"
 
     if not niveis_col.find_one({"nome": nivel}):
@@ -222,11 +222,11 @@ def add_material():
         "nome": nome,
         "cpf": cpf,
         "nascimento": nascimento,
-        "nivel": nivel
+        "nivel": nivel,
+        "banco": banco  # salvar no MongoDB
     })
 
     return redirect(url_for("admin_panel"))
-
 #-----------------
 # PAGAMENTO PIX
 #-----------------
