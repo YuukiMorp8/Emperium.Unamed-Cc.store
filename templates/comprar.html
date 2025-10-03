@@ -8,62 +8,106 @@ body { font-family: Arial; background:#111; color:#eee; margin:0; padding:0; }
 header { background:#222; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.5); }
 header img { width:60px; height:60px; border-radius:50%; cursor:pointer; border:2px solid #eee; }
 .main { padding:20px; }
-.filtros { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
-input, select { padding:8px; border-radius:8px; border:none; background:#333; color:#fff; }
-button { padding:8px 15px; background:#ff9900; border:none; border-radius:8px; cursor:pointer; color:#111; font-weight:bold; transition:0.3s; }
-button:hover { background:#ffcc00; }
 .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; }
 .card { background:linear-gradient(135deg,#2e2e2e,#1a1a1a); padding:15px; border-radius:12px; text-align:center; }
 .card-title { font-size:14px; color:#aaa; margin-bottom:5px; }
+button { padding:8px 15px; background:#ff9900; border:none; border-radius:8px; cursor:pointer; color:#111; font-weight:bold; transition:0.3s; }
+button:hover { background:#ffcc00; }
+/* Modal */
+.modal-back { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:999; }
+.modal { background:#1e1e1e; padding:20px; border-radius:12px; width:360px; color:#fff; }
+.modal h3 { margin-top:0; color:#ff9900; }
+.input-inline { margin:10px 0; }
+.msg { margin-top:10px; color:#0f0; }
+.msg.err { color:#f33; }
 </style>
 </head>
 <body>
 
 <header>
-    <a href="/dashboard"><img src="{{ usuario.foto }}"></a>
+    <a href="/dashboard"><img src="{{ usuario.get('foto','/static/default.png') }}"></a>
 </header>
 
 <div class="main">
-    <form method="GET" class="filtros">
-        <input type="text" name="pesquisa" placeholder="Pesquisar BIN" value="{{ filtros.pesquisa or '' }}">
-        <select name="nivel">
-            <option value="">Todos Níveis</option>
-            {% for n in niveis %}
-                <option value="{{ n.nome }}" {% if filtros.nivel == n.nome %}selected{% endif %}>
-                    {{ n.nome }} - R$ {{ n.valor }}
-                </option>
-            {% endfor %}
-        </select>
-        <input type="text" name="banco" placeholder="Banco" value="{{ filtros.banco or '' }}">
-        <input type="number" name="valor" placeholder="Valor mínimo" value="{{ filtros.valor or '' }}">
-        <button type="submit">Filtrar</button>
-    </form>
-
     <div class="grid">
-        {% if resultados %}
-            {% for mat in resultados %}
-                <div class="card">
-                    <div class="card-title">💳 BIN</div>
-                    {{ mat.material }}
-                    <div class="card-title">🏦 Banco</div>
-                    {{ mat.banco }}
-                    <div class="card-title">💰 Valor</div>
-                    {% set nivel_info = niveis | selectattr("nome","equalto",mat.nivel) | list %}
-                    {% if nivel_info %}
-                        R$ {{ nivel_info[0].valor }}
-                    {% else %}
-                        R$ 0
-                    {% endif %}
-                    <div class="card-title">⭐ Nível</div>
-                    {{ mat.nivel }}
-                    <button>Comprar</button>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>Nenhum resultado encontrado.</p>
-        {% endif %}
+        {% for mat in resultados %}
+            <div class="card">
+                <div class="card-title">💳 BIN</div>
+                {{ mat.material }}
+                <div class="card-title">🏦 Banco</div>
+                {{ mat.banco }}
+                <div class="card-title">💰 Valor</div>
+                R$ {{ "%.2f"|format(mat.valor) }}
+                <div class="card-title">⭐ Nível</div>
+                {{ mat.nivel }}
+                <button class="btn-buy" data-id="{{ mat._id }}" data-material="{{ mat.material }}" data-nivel="{{ mat.nivel }}" data-valor="{{ mat.valor }}">Comprar</button>
+            </div>
+        {% endfor %}
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal-back" id="modalBack">
+    <div class="modal">
+        <h3>Confirmação de Compra</h3>
+        <p id="modalText">Tem certeza que deseja comprar?</p>
+        <div class="input-inline">
+            <label>Confirme sua senha:</label>
+            <input type="password" id="senhaConfirm" placeholder="Senha">
+        </div>
+        <div style="display:flex; gap:8px;">
+            <button id="confirmBuyBtn">Sim, confirmar</button>
+            <button id="cancelBtn" style="background:#555; color:#fff;">Não</button>
+        </div>
+        <div id="modalMsg" class="msg"></div>
+    </div>
+</div>
+
+<script>
+let selectedMaterialId = null;
+let selectedMaterialInfo = null;
+
+document.querySelectorAll(".btn-buy").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+        selectedMaterialId = btn.dataset.id;
+        selectedMaterialInfo = {
+            material: btn.dataset.material,
+            nivel: btn.dataset.nivel,
+            valor: btn.dataset.valor
+        };
+        document.getElementById("modalText").innerText = `Tem certeza que deseja comprar ${selectedMaterialInfo.material} - ${selectedMaterialInfo.nivel} por R$ ${parseFloat(selectedMaterialInfo.valor).toFixed(2)}?`;
+        document.getElementById("senhaConfirm").value = "";
+        document.getElementById("modalMsg").innerText = "";
+        document.getElementById("modalBack").style.display = "flex";
+    });
+});
+
+document.getElementById("cancelBtn").addEventListener("click", ()=>{
+    document.getElementById("modalBack").style.display = "none";
+});
+
+document.getElementById("confirmBuyBtn").addEventListener("click", async ()=>{
+    const senha = document.getElementById("senhaConfirm").value;
+    if(!senha){ document.getElementById("modalMsg").innerText="Coloque sua senha."; return; }
+
+    const form = new FormData();
+    form.append("material_id", selectedMaterialId);
+    form.append("senha_confirm", senha);
+
+    try{
+        const resp = await fetch("/comprar_finalize",{method:"POST",body:form});
+        const data = await resp.json();
+        if(!data.ok){
+            document.getElementById("modalMsg").innerText=data.msg;
+            document.getElementById("modalMsg").className="msg err";
+            return;
+        }
+        document.getElementById("modalMsg").innerText="Compra concluída!";
+        document.getElementById("modalMsg").className="msg";
+        setTimeout(()=>{location.href="/historico_compras";},900);
+    }catch(err){ document.getElementById("modalMsg").innerText="Erro de rede."; }
+});
+</script>
 
 </body>
 </html>
