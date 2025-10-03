@@ -223,8 +223,7 @@ def adicionar_saldo_user():
         })
 
         return render_template("pagamento.html", dados=dados_pix)
-
-    return render_template("adicionar_saldo_user.html")
+        return render_template("adicionar_saldo.html")
 # Main
 # =========================
 if __name__ == "__main__":
