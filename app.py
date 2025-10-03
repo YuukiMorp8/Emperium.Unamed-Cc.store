@@ -129,6 +129,49 @@ def admin_panel():
 
     return render_template("admin_panel.html", usuarios=usuarios, niveis=niveis, materiais=materiais)
 
+@app.route("/add_nivel", methods=["POST"])
+def add_nivel():
+    if "admin" not in session:
+        return redirect(url_for("admin_login"))
+
+    nome = request.form.get("nivel_nome")
+    valor = request.form.get("nivel_valor")
+
+    if not nome or not valor:
+        return "❌ Preencha todos os campos!"
+
+    niveis_col.insert_one({"nome": nome, "valor": float(valor)})
+    return redirect(url_for("admin_panel"))
+
+
+@app.route("/add_material", methods=["POST"])
+def add_material():
+    if "admin" not in session:
+        return redirect(url_for("admin_login"))
+
+    material = request.form.get("material")
+    nome = request.form.get("nome")
+    cpf = request.form.get("cpf")
+    nascimento = request.form.get("nascimento") or None
+    nivel = request.form.get("nivel")
+
+    if not (material and nome and cpf and nivel):
+        return "❌ Preencha todos os campos obrigatórios!"
+
+    # Verificar se o nível existe
+    if not niveis_col.find_one({"nome": nivel}):
+        return "❌ Nível inválido. Adicione pelo menos um nível primeiro!"
+
+    materiais_col.insert_one({
+        "material": material,
+        "nome": nome,
+        "cpf": cpf,
+        "nascimento": nascimento,
+        "nivel": nivel
+    })
+
+    return redirect(url_for("admin_panel"))
+
 # Main
 # =========================
 if __name__ == "__main__":
