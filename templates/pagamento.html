@@ -1,73 +1,122 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Pagamento PIX</title>
-    <style>
-        body {
-            background: #111;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background: #1e1e1e;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            width: 400px;
-        }
-        img {
-            margin: 20px 0;
-            width: 250px;
-            height: 250px;
-        }
-        .copia-cola {
-            word-break: break-all;
-            background: #222;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-        button {
-            margin-top: 20px;
-            background: #ff9900;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            color: #111;
-        }
-        .confirm-btn {
-            display: block;
-            width: 100%;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Pagamento PIX</title>
+<style>
+    body {
+        background: #111;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+    .container {
+        background: #1e1e1e;
+        padding: 25px;
+        border-radius: 12px;
+        text-align: center;
+        width: 420px;
+    }
+    h2 {
+        margin-bottom: 20px;
+        color: #ff9900;
+    }
+    .embed {
+        background: #222;
+        border-left: 5px solid #ff9900;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 15px 0;
+        text-align: left;
+    }
+    .embed h3 {
+        margin-top: 0;
+        color: #ffcc66;
+    }
+    .embed p {
+        margin: 8px 0;
+    }
+    img {
+        margin: 15px auto;
+        display: block;
+        width: 220px;
+        height: 220px;
+        border: 4px solid #333;
+        border-radius: 10px;
+    }
+    .copia-cola {
+        word-break: break-all;
+        background: #111;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+    button {
+        margin-top: 15px;
+        background: #ff9900;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #111;
+        transition: 0.2s;
+    }
+    button:hover {
+        background: #ffaa22;
+    }
+    .confirm-btn {
+        display: block;
+        width: 100%;
+        margin-top: 20px;
+        background: #28a745;
+        color: #fff;
+    }
+    .confirm-btn:hover {
+        background: #34c759;
+    }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h2>💰 Pagamento PIX</h2>
-        <p>Escaneie o QR Code abaixo ou copie o código para pagar:</p>
-        
-        <!-- QR Code em Base64 -->
-        <img src="data:image/png;base64,{{ dados.qrcode_b64 }}" alt="QR Code PIX">
-        
-        <!-- Código copia e cola -->
-        <div class="copia-cola">{{ dados.pix_copia_cola }}</div>
-        
-        <!-- Botão para copiar -->
-        <button onclick="navigator.clipboard.writeText('{{ dados.pix_copia_cola }}')">
-            Copiar código PIX
-        </button>
+<div class="container">
+    <h2>💰 Pagamento via PIX</h2>
 
-        <!-- Botão para confirmar pagamento -->
-        <form action="{{ url_for('aguardando_pagamento', txid=dados.txid) }}" method="get">
-            <button type="submit" class="confirm-btn">✅ Confirmar pagamento</button>
-        </form>
+    <!-- Embed 1: Valores -->
+    <div class="embed">
+        <h3>💵 Detalhes do Pagamento</h3>
+        <p><strong>Valor a ser pago:</strong> R$ {{ dados.valor_total }} (+10%)</p>
+        <p><strong>Valor que será depositado:</strong> R$ {{ dados.valor_depositado }}</p>
+        <p style="font-size:13px; color:#aaa;">Pagamento automático com pequena taxa de custo.</p>
     </div>
+
+    <!-- Embed 2: QR Code e Copiar/Colar -->
+    <div class="embed">
+        <h3>📲 Pagamento</h3>
+        <p><strong>Escaneie o QR Code abaixo:</strong></p>
+        <img src="data:image/png;base64,{{ dados.qrcode_b64 }}" alt="QR Code PIX">
+
+        <p><strong>Ou copie e cole:</strong></p>
+        <div class="copia-cola" id="pixCode">{{ dados.pix_copia_cola }}</div>
+        <button onclick="copiarCodigo()">📋 Copiar código PIX</button>
+    </div>
+
+    <!-- Botão Confirmar -->
+    <form action="{{ url_for('aguardando_pagamento', txid=dados.txid) }}" method="get">
+        <button type="submit" class="confirm-btn">✅ Confirmar Pagamento</button>
+    </form>
+</div>
+
+<script>
+function copiarCodigo() {
+    const codigo = document.getElementById("pixCode").innerText;
+    navigator.clipboard.writeText(codigo);
+    alert("✅ Código PIX copiado!");
+}
+</script>
 </body>
 </html>
