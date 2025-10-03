@@ -34,15 +34,17 @@ def verificar_pagamento_efi(txid: str) -> bool:
     except Exception as e:
         print(f"❌ Erro ao verificar PIX: {e}")
         return False
-        
+
 def criar_pix(valor: float) -> dict:
     try:
-        valor_str = f"{valor:.2f}"
+        valor_com_taxa = round(valor * 1.10, 2)  # adiciona 10%
+        valor_str = f"{valor_com_taxa:.2f}"
+
         body = {
             'calendario': {'expiracao': 3600},
             'valor': {'original': valor_str},
             'chave': os.getenv("PIX_KEY"),
-            'solicitacaoPagador': f'Adicionar saldo de R$ {valor_str}'
+            'solicitacaoPagador': f'Adicionar saldo de R$ {valor:.2f} (com taxa)'
         }
 
         response = efi.pix_create_immediate_charge(params={}, body=body)
@@ -59,7 +61,8 @@ def criar_pix(valor: float) -> dict:
 
         return {
             "txid": txid_api,
-            "valor": valor_str,
+            "valor_total": valor_com_taxa,   # o que o user paga
+            "valor_depositado": valor,       # o que entra no saldo
             "pix_copia_cola": pix_copia_cola,
             "qrcode_b64": img_b64
         }
