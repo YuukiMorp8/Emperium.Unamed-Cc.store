@@ -222,7 +222,10 @@ def adicionar_saldo_user():
             "status": "pendente"
         })
 
-        return render_template("pagamento.html", dados=dados_pix)
+    dados_pix = criar_pix(user["nome"], cpf, valor)
+    if "erro" in dados_pix:
+       return f"❌ Erro ao gerar PIX: {dados_pix['detalhes']}"
+    return render_template("pagamento.html", dados=dados_pix)
 
     # GET → mostra formulário
     return render_template("adicionar_saldo.html")
