@@ -307,6 +307,60 @@ def verificar_pagamento_ajax(txid):
         return {"status": "concluida", "valor": float(transacao["valor"])}
 
     return {"status": "pendente"}
+
+@app.route("/comprar", methods=["GET", "POST"])
+def comprar():
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+
+    materiais = list(materiais_col.find())
+    filtros = {
+        "nivel": request.args.get("nivel"),
+        "banco": request.args.get("banco"),
+        "valor": request.args.get("valor"),
+        "pesquisa": request.args.get("pesquisa")
+    }
+
+    resultados = []
+
+    for mat in materiais:
+        bin_val = mat["material"].split("/")[0]  # parte antes do "/"
+        valor = int(mat["material"].split("/")[2])
+        banco = mat.get("banco", "Desconhecido")
+        nivel = mat.get("nivel", "Desconhecido")
+
+        # Filtrar por pesquisa (BIN)
+        if filtros["pesquisa"] and not bin_val.startswith(filtros["pesquisa"]):
+            continue
+
+        # Filtrar por nível
+        if filtros["nivel"] and nivel.lower() != filtros["nivel"].lower():
+            continue
+
+        # Filtrar por banco
+        if filtros["banco"] and banco.lower() != filtros["banco"].lower():
+            continue
+
+        # Filtrar por valor
+        if filtros["valor"]:
+            try:
+                if valor < int(filtros["valor"]):
+                    continue
+            except:
+                pass
+
+        # Censura do BIN
+        censurado = bin_val[:6] + "*" * (len(bin_val) - 6)
+
+        resultados.append({
+            "material": censurado,
+            "banco": banco,
+            "valor": valor,
+            "nivel": nivel
+        })
+
+    return render_template("comprar.html", resultados=resultados, filtros=filtros)
+
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
