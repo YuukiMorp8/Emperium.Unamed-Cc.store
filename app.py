@@ -79,6 +79,11 @@ def register():
 import uuid
 import os
 
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
     if "usuario" not in session:
