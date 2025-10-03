@@ -409,6 +409,31 @@ def comprar_finalize():
     })
 
     return {"ok": True, "msg": "Compra concluída!"}
+
+@app.route("/historico_compras")
+def historico_compras():
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+
+    user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
+    compras = list(db.compras.find({"usuario_id": user["_id"]}).sort("data", -1))
+
+    # Pega informações dos materiais
+    resultados = []
+    for c in compras:
+        mat = materiais_col.find_one({"_id": c["material_id"]})
+        if mat:
+            bin_val = mat["material"][:6] + "*"*10  # censurado
+            resultados.append({
+                "material": bin_val,
+                "nivel": mat.get("nivel"),
+                "valor": c["valor"],
+                "data": c["data"]
+            })
+
+    return render_template("historico_compras.html", usuario=user, resultados=resultados)
+
+
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
