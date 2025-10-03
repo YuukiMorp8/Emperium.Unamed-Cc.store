@@ -48,9 +48,17 @@
     <div class="container">
         <h2>💰 Pagamento PIX</h2>
         <p>Escaneie o QR Code abaixo ou copie o código para pagar:</p>
-        <img src="data:image/png;base64,{{ dados.qr_base64 }}" alt="QR Code PIX">
+        
+        <!-- QR Code em Base64 -->
+        <img src="data:image/png;base64,{{ dados.qrcode_b64 }}" alt="QR Code PIX">
+        
+        <!-- Código copia e cola -->
         <div class="copia-cola">{{ dados.pix_copia_cola }}</div>
-        <button onclick="navigator.clipboard.writeText('{{ dados.pix_copia_cola }}')">Copiar código PIX</button>
+        
+        <!-- Botão para copiar -->
+        <button onclick="navigator.clipboard.writeText('{{ dados.pix_copia_cola }}')">
+            Copiar código PIX
+        </button>
     </div>
 </body>
 </html>
