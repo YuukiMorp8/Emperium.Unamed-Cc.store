@@ -86,6 +86,7 @@ def register():
 # USUÁRIO / PERFIL / DASHBOARD
 #-----------------
 import uuid
+import os
 
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
@@ -96,18 +97,19 @@ def perfil():
     mensagem = None
 
     if request.method == "POST":
-        # Alterar nome
-        novo_nome = request.form.get("novo_nome")
-        if novo_nome:
-            usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"nome": novo_nome}})
-            mensagem = "✅ Nome alterado com sucesso!"
-            user["nome"] = novo_nome
+        acao = request.form.get("acao")
 
-        # Alterar senha
-        senha_atual = request.form.get("senha_atual")
-        nova_senha = request.form.get("nova_senha")
-        confirma_senha = request.form.get("confirma_senha")
-        if senha_atual and nova_senha and confirma_senha:
+        if acao == "nome":
+            novo_nome = request.form.get("novo_nome")
+            if novo_nome:
+                usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"nome": novo_nome}})
+                mensagem = "✅ Nome alterado com sucesso!"
+                user["nome"] = novo_nome
+
+        elif acao == "senha":
+            senha_atual = request.form.get("senha_atual")
+            nova_senha = request.form.get("nova_senha")
+            confirma_senha = request.form.get("confirma_senha")
             if senha_atual != user["senha"]:
                 mensagem = "❌ Senha atual incorreta!"
             elif nova_senha != confirma_senha:
@@ -116,28 +118,14 @@ def perfil():
                 usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"senha": nova_senha}})
                 mensagem = "✅ Senha alterada com sucesso!"
 
-        # Alterar foto de perfil
-        if "foto_perfil" in request.files:
+        elif acao == "foto" and "foto_perfil" in request.files:
             file = request.files["foto_perfil"]
             if file and allowed_file(file.filename):
-                upload_folder = app.config["UPLOAD_FOLDER"]
-
-                # Cria a pasta apenas se não existir como diretório
-                if not os.path.isdir(upload_folder):
-                    os.makedirs(upload_folder)
-
-                # Gera nome único para evitar sobrescrever
                 ext = file.filename.rsplit('.', 1)[1].lower()
                 filename = f"{uuid.uuid4().hex}.{ext}"
-                filepath = os.path.join(upload_folder, filename)
-
+                filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
                 file.save(filepath)
-
-                # Atualiza o MongoDB
-                usuarios_col.update_one(
-                    {"_id": user["_id"]},
-                    {"$set": {"foto": "/" + filepath}}
-                )
+                usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"foto": "/" + filepath}})
                 mensagem = "✅ Foto de perfil atualizada!"
                 user["foto"] = "/" + filepath
 
