@@ -200,7 +200,7 @@ def add_material():
     return redirect(url_for("admin_panel"))
 
 from pagamento import criar_pix
-from bson.objectid import ObjectId
+from bson.objectid import ObjectId 
 
 @app.route("/adicionar_saldo", methods=["GET", "POST"])
 def adicionar_saldo_user():
@@ -223,8 +223,9 @@ def adicionar_saldo_user():
         })
 
         return render_template("pagamento.html", dados=dados_pix)
-        return render_template("adicionar_saldo.html")
-# Main
+
+    # GET → mostra formulário
+    return render_template("adicionar_saldo.html")
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
