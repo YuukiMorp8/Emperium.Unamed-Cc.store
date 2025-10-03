@@ -80,7 +80,7 @@ def perfil():
 
 @app.route("/dashboard")
 def dashboard():
-    if "user" not in session:
+    if "usuario" not in session:   # <<< corrigido aqui
         return redirect(url_for("login"))
 
     # Conta quantos materiais existem
