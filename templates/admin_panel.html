@@ -28,8 +28,9 @@
             const nome = document.getElementById("material_nome").value;
             const numeros = document.getElementById("material_num").value;
             const nivel = document.getElementById("material_nivel").value;
+            const banco = document.getElementById("material_banco").value;
 
-            if (!cpf || !nome || !numeros || !nivel) {
+            if (!cpf || !nome || !numeros || !nivel || !banco) {
                 alert("Preencha todos os campos obrigatórios!");
                 return false;
             }
@@ -89,13 +90,14 @@
         <div class="card">
             <h3>Materiais</h3>
             <table>
-                <tr><th>Nome</th><th>CPF</th><th>Nascimento</th><th>Nível</th></tr>
+                <tr><th>Nome</th><th>CPF</th><th>Nascimento</th><th>Nível</th><th>Banco</th></tr>
                 {% for m in materiais %}
                 <tr>
                     <td>{{ m.nome }}</td>
                     <td>{{ m.cpf }}</td>
                     <td>{{ m.nascimento or '-' }}</td>
                     <td>{{ m.nivel }}</td>
+                    <td>{{ m.banco }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -106,6 +108,7 @@
                     <input type="text" id="material_nome" name="nome" placeholder="Nome" required>
                     <input type="text" id="material_cpf" name="cpf" placeholder="CPF" required>
                     <input type="date" name="nascimento" placeholder="Nascimento (opcional)">
+                    <input type="text" id="material_banco" name="banco" placeholder="Banco" required>
                     <select id="material_nivel" name="nivel" required>
                         <option value="">Escolha o nível</option>
                         {% for n in niveis %}
@@ -118,4 +121,4 @@
         </div>
     </section>
 </body>
-</html>
+                        </html>
