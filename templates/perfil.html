@@ -3,13 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>Meu Perfil</title>
+    <style>
+        body { background:#111; color:#fff; font-family:Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
+        .container { background:#1e1e1e; padding:30px; border-radius:15px; width:420px; box-shadow:0 0 15px rgba(0,0,0,0.6); }
+        .card { background:#222; padding:20px; border-radius:12px; margin-bottom:20px; text-align:left; }
+        .card-title { font-weight:bold; margin-bottom:10px; color:#ff9900; }
+        img { width:120px; height:120px; border-radius:50%; display:block; margin:0 auto 15px; }
+        input { width:100%; padding:10px; margin:5px 0; border:none; border-radius:8px; background:#333; color:#fff; }
+        button { background:#ff9900; color:#000; border:none; padding:10px; border-radius:8px; width:100%; cursor:pointer; font-weight:bold; }
+        button:hover { background:#ffaa33; }
+        .msg { text-align:center; margin-bottom:15px; color:#0f0; }
+        .msg.error { color:#f33; }
+    </style>
 </head>
-<body style="background:#111; color:#fff; text-align:center; font-family:Arial;">
-    <h1>👤 Perfil</h1>
-    <img src="{{ usuario[7] }}" width="120" style="border-radius:50%;">
-    <p><b>Nome:</b> {{ usuario[1] }}</p>
-    <p><b>Nível:</b> {{ usuario[6] }}</p>
-    <p><b>Saldo:</b> R$ {{ usuario[3] }}</p>
-    <p><b>Total gasto:</b> R$ {{ usuario[4] }}</p>
+<body>
+    <div class="container">
+        {% if mensagem %}
+            <div class="msg {% if "❌" in mensagem %}error{% endif %}">{{ mensagem }}</div>
+        {% endif %}
+
+        <div class="card" style="text-align:center;">
+            <div class="card-title">👤 Usuário</div>
+            <img src="{{ usuario.get('foto','/static/default.png') }}">
+            <p><b>Nome:</b> {{ usuario.get('nome','') }}</p>
+            <p><b>Nível:</b> {{ usuario.get('nivel','-') }}</p>
+            <p><b>Saldo:</b> R$ {{ usuario.get('saldo',0) }}</p>
+            <p><b>Total gasto:</b> R$ {{ usuario.get('gasto',0) }}</p>
+        </div>
+
+        <div class="card">
+            <div class="card-title">✏️ Mudar Nome</div>
+            <form method="POST">
+                <input type="text" name="novo_nome" placeholder="Novo nome" required>
+                <button type="submit">Alterar Nome</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🔑 Alterar Senha</div>
+            <form method="POST">
+                <input type="password" name="senha_atual" placeholder="Senha atual" required>
+                <input type="password" name="nova_senha" placeholder="Nova senha" required>
+                <input type="password" name="confirma_senha" placeholder="Confirme a nova senha" required>
+                <button type="submit">Alterar Senha</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
