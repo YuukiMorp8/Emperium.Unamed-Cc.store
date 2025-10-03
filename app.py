@@ -199,28 +199,32 @@ def add_material():
 
     return redirect(url_for("admin_panel"))
 
+from pagamento import criar_pix
+from bson.objectid import ObjectId
+
 @app.route("/adicionar_saldo", methods=["GET", "POST"])
-def adicionar_saldo():
-    if "admin" not in session:
-        return redirect(url_for("admin_login"))
+def adicionar_saldo_user():
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+
+    user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
 
     if request.method == "POST":
-        nome_usuario = request.form["usuario"].strip()
-        quantia = float(request.form["quantia"])
+        valor = float(request.form["quantia"])
+        cpf = "12345678909"  # ou puxar do cadastro do usuário
+        dados_pix = criar_pix(user["nome"], cpf, valor)
 
-        # Buscar usuário
-        user = usuarios_col.find_one({"nome": nome_usuario})
-        if not user:
-            return "❌ Usuário não encontrado!"
+        # salvar transação no banco
+        db.transacoes.insert_one({
+            "usuario_id": user["_id"],
+            "txid": dados_pix["txid"],
+            "valor": valor,
+            "status": "pendente"
+        })
 
-        # Atualizar saldo
-        novosaldo = user.get("saldo", 0) + quantia
-        usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"saldo": novosaldo}})
+        return render_template("pagamento.html", dados=dados_pix)
 
-        return f"✅ Saldo atualizado! Novo saldo de {user['nome']}: R$ {novosaldo:.2f}"
-
-    return render_template("adicionar_saldo.html")
-
+    return render_template("adicionar_saldo_user.html")
 # Main
 # =========================
 if __name__ == "__main__":
