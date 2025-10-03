@@ -17,21 +17,24 @@ credentials = {
 efi = EfiPay(credentials)
 
 def verificar_pagamento_efi(txid: str) -> bool:
-    """
-    Verifica se a transação PIX foi concluída.
-    Retorna True se o pagamento foi feito, False caso contrário.
-    """
     try:
         response = efi.pix_detail_charge(params={"txid": txid})
-        print("DEBUG PIX DETAIL:", response)  # <--- Adicione esta linha
-        status = response.get("status", "").strip().lower()
+        print("DEBUG PIX DETAIL:", response)
+
+        # Tenta pegar status em vários formatos
+        status = (
+            response.get("status")
+            or response.get("cob", {}).get("status")
+            or ""
+        ).strip().lower()
+
         print(f"DEBUG STATUS: '{status}' para txid {txid}")
-        # Status esperado: 'concluida', 'concluído', 'concluido'
+
         return status in ["concluida", "concluído", "concluido"]
     except Exception as e:
         print(f"❌ Erro ao verificar PIX: {e}")
         return False
-
+        
 def criar_pix(valor: float) -> dict:
     try:
         valor_str = f"{valor:.2f}"
