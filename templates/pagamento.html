@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Pagamento Pix</title>
+  <style>
+    body { background: #111; color: #eee; text-align: center; font-family: Arial; }
+    .box { margin: 40px auto; background: #222; padding: 20px; border-radius: 12px; width: 400px; }
+    img { width: 250px; margin-top: 15px; }
+    input { width: 100%; padding: 10px; border-radius: 8px; border: none; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Escaneie o QR Code Pix</h2>
+    <img src="data:image/png;base64,{{ dados.qrcode_b64 }}">
+    <p>Ou copie o código abaixo:</p>
+    <input type="text" value="{{ dados.pix_copia_cola }}" readonly onclick="this.select(); document.execCommand('copy'); alert('Copiado!')">
+    <p><b>Valor:</b> R$ {{ dados.valor }}</p>
+  </div>
+</body>
+</html>
