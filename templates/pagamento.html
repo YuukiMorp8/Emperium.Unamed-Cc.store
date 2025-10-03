@@ -89,8 +89,8 @@
     <!-- Embed 1: Valores -->
     <div class="embed">
         <h3>💵 Detalhes do Pagamento</h3>
-        <p><strong>Valor a ser pago:</strong> R$ {{ dados.valor_total }} (+10%)</p>
-        <p><strong>Valor que será depositado:</strong> R$ {{ dados.valor_depositado }}</p>
+        <p><strong>Valor a ser pago:</strong> R$ {{ "%.2f"|format(dados.valor_total) }} (+10%)</p>
+        <p><strong>Valor que será depositado:</strong> R$ {{ "%.2f"|format(dados.valor_depositado) }}</p>
         <p style="font-size:13px; color:#aaa;">Pagamento automático com pequena taxa de custo.</p>
     </div>
 
