@@ -21,6 +21,15 @@ admins_col = db["Admins"]
 # =========================
 # Funções de banco
 # =========================
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = "static/uploads"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    
 def criar_usuario(nome, senha, indicado_por=None):
     if usuarios_col.find_one({"nome": nome}):
         return False
@@ -105,9 +114,20 @@ def perfil():
                 usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"senha": nova_senha}})
                 mensagem = "✅ Senha alterada com sucesso!"
 
+        # Alterar foto de perfil
+        if "foto_perfil" in request.files:
+            file = request.files["foto_perfil"]
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+                os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+                file.save(filepath)
+                usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"foto": "/" + filepath}})
+                mensagem = "✅ Foto de perfil atualizada!"
+                user["foto"] = "/" + filepath
+
     return render_template("perfil.html", usuario=user, mensagem=mensagem)
-
-
+    
 @app.route("/dashboard")
 def dashboard():
     if "usuario" not in session:
@@ -244,8 +264,6 @@ def aguardando_pagamento(txid):
         return "❌ Transação não encontrada!"
 
     return render_template("aguardando_pagamento.html", txid=txid)
-
-@app.route("/verificar_pagamento_ajax/<txid>")
 
 @app.route("/verificar_pagamento_ajax/<txid>")
 def verificar_pagamento_ajax(txid):
