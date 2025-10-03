@@ -80,16 +80,16 @@ def perfil():
 
 @app.route("/dashboard")
 def dashboard():
-    if "usuario" not in session:   # <<< corrigido aqui
+    if "usuario" not in session:
         return redirect(url_for("login"))
 
     # Conta quantos materiais existem
-    total_materiais = db.materiais.count_documents({})
+    total_materiais = materiais_col.count_documents({})
 
-    # Conta quanto foi gasto
+    # Conta quanto foi gasto (somando os valores dos níveis dos materiais)
     total_gasto = 0
-    materiais = db.materiais.find()
-    niveis = {n["nome"]: n["valor"] for n in db.niveis.find()}
+    materiais = materiais_col.find()
+    niveis = {n["nome"]: n["valor"] for n in niveis_col.find()}
 
     for m in materiais:
         if "nivel" in m and m["nivel"] in niveis:
@@ -97,11 +97,13 @@ def dashboard():
 
     dados = {
         "saldo": 1000,  # Exemplo
-        "total_gasto": total_gasto,
+        "gasto": f"R$ {total_gasto:.2f}",
         "materiais": total_materiais
     }
 
-    return render_template("dashboard.html", dados=dados, niveis=list(niveis.keys()))
+    niveis_lista = list(niveis_col.find({}, {"_id": 0, "nome": 1}))  # só pega nome dos níveis
+
+    return render_template("dashboard.html", dados=dados, niveis=niveis_lista)
 
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
