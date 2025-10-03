@@ -204,17 +204,26 @@ from bson.objectid import ObjectId
 
 @app.route("/adicionar_saldo", methods=["GET", "POST"])
 def adicionar_saldo_user():
+    # Verifica se o usuário está logado
     if "usuario" not in session:
         return redirect(url_for("login"))
 
+    # Busca os dados do usuário no banco
     user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
 
     if request.method == "POST":
+        # Pega o valor enviado pelo formulário
         valor = float(request.form["quantia"])
-        cpf = "12345678909"  # ou puxar do cadastro do usuário
-        dados_pix = criar_pix(user["nome"], cpf, valor)
+        cpf = "12345678909"  # ou pegar do cadastro do usuário
 
-        # salvar transação no banco
+        try:
+            # Cria o PIX usando a função do módulo pagamento.py
+            dados_pix = criar_pix(user["nome"], cpf, valor)
+        except Exception as e:
+            # Captura qualquer erro (certificado, autorização, etc.)
+            return f"❌ Erro ao gerar PIX: {str(e)}"
+
+        # Salva a transação no banco de dados
         db.transacoes.insert_one({
             "usuario_id": user["_id"],
             "txid": dados_pix["txid"],
@@ -222,12 +231,10 @@ def adicionar_saldo_user():
             "status": "pendente"
         })
 
-    dados_pix = criar_pix(user["nome"], cpf, valor)
-    if "erro" in dados_pix:
-       return f"❌ Erro ao gerar PIX: {dados_pix['detalhes']}"
-    return render_template("pagamento.html", dados=dados_pix)
+        # Renderiza a página de pagamento com os dados do PIX
+        return render_template("pagamento.html", dados=dados_pix)
 
-    # GET → mostra formulário
+    # Se for GET, apenas mostra o formulário para adicionar saldo
     return render_template("adicionar_saldo.html")
 # =========================
 if __name__ == "__main__":
