@@ -243,6 +243,18 @@ def verificar_pagamento_ajax(txid):
         return {"status": "concluida", "valor": transacao["valor"]}
     
     return {"status": "pendente"}
+
+@app.route("/aguardando_pagamento/<txid>")
+def aguardando_pagamento(txid):
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+
+    user_id = ObjectId(session["usuario"])
+    transacao = db.transacoes.find_one({"txid": txid, "usuario_id": user_id})
+    if not transacao:
+        return "❌ Transação não encontrada!"
+
+    return render_template("aguardando_pagamento.html", txid=txid)
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
