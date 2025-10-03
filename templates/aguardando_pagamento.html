@@ -29,9 +29,12 @@ const INTERVALO = 10;        // segundos entre cada tentativa
 let tentativasRestantes = TENTATIVAS;
 let contador = INTERVALO;
 let cicloAtivo = true;
+let timer = null;  // armazenar o setInterval ativo
 
 // Função de verificação
 async function verificarPagamento() {
+    if (!cicloAtivo) return; // 🚫 Se já confirmou, não chama mais
+
     botao.disabled = true;
     mensagemEl.innerText = "Verificando...";
     try {
@@ -42,7 +45,9 @@ async function verificarPagamento() {
         if(data.status && data.status.toLowerCase() === "concluida"){
             mensagemEl.innerText = `✅ Pagamento confirmado! Saldo adicionado: R$ ${parseFloat(data.valor).toFixed(2)}`;
             contadorEl.style.display = 'none';
-            cicloAtivo = false;
+            cicloAtivo = false;   // 🔒 trava chamadas futuras
+            if (timer) clearInterval(timer); // 🔒 cancela contador
+            botao.disabled = true; // 🔒 desativa botão manual
         } else if(data.status) {
             mensagemEl.innerText = "⌛ Pagamento ainda não confirmado.";
         } else {
@@ -58,12 +63,13 @@ async function verificarPagamento() {
 function iniciarContador() {
     contadorEl.style.display = 'block';
     contador = INTERVALO;
-    let timer = setInterval(() => {
+    timer = setInterval(() => {
+        if (!cicloAtivo) { clearInterval(timer); return; } // 🚫 se já confirmou, para
         contador--;
         contadorEl.innerText = `Próxima tentativa em: ${contador}s`;
         if(contador <= 0){
             clearInterval(timer);
-            if(tentativasRestantes > 0){
+            if(tentativasRestantes > 0 && cicloAtivo){
                 verificarPagamento();
                 tentativasRestantes--;
                 if(tentativasRestantes > 0){
@@ -84,8 +90,8 @@ iniciarContador();
 
 // Botão manual
 botao.addEventListener("click", () => {
+    if (!cicloAtivo) return; // 🚫 se já confirmou, não deixa clicar
     tentativasRestantes = TENTATIVAS;
-    cicloAtivo = true;
     verificarPagamento();
     tentativasRestantes--;
     iniciarContador();
