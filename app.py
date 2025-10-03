@@ -212,7 +212,7 @@ def adicionar_saldo_user():
         valor = float(request.form["quantia"])
 
         # Cria PIX
-        dados_pix = criar_pix(user["nome"], "", valor)  # CPF não é obrigatório
+        dados_pix = criar_pix(valor)
         if "erro" in dados_pix:
             return f"❌ Não foi possível gerar o PIX corretamente: {dados_pix['erro']}"
 
