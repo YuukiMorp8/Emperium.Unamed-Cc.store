@@ -232,7 +232,7 @@ def adicionar_saldo_user():
         return render_template("pagamento.html", dados=dados_pix, valor=valor)
 
     return render_template("adicionar_saldo.html")
-    
+
 @app.route("/aguardando_pagamento/<txid>")
 def aguardando_pagamento(txid):
     if "usuario" not in session:
