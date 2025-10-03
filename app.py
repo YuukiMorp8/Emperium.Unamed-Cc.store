@@ -85,7 +85,7 @@ def register():
 #-----------------
 # USUÁRIO / PERFIL / DASHBOARD
 #-----------------
-import uuid  # adicione no topo do arquivo
+import uuid
 
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
@@ -120,13 +120,16 @@ def perfil():
         if "foto_perfil" in request.files:
             file = request.files["foto_perfil"]
             if file and allowed_file(file.filename):
-                # Cria pasta se não existir
-                os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+                upload_folder = app.config["UPLOAD_FOLDER"]
 
-                # Nome único para evitar sobrescrever
+                # Cria a pasta apenas se não existir como diretório
+                if not os.path.isdir(upload_folder):
+                    os.makedirs(upload_folder)
+
+                # Gera nome único para evitar sobrescrever
                 ext = file.filename.rsplit('.', 1)[1].lower()
                 filename = f"{uuid.uuid4().hex}.{ext}"
-                filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+                filepath = os.path.join(upload_folder, filename)
 
                 file.save(filepath)
 
@@ -138,8 +141,8 @@ def perfil():
                 mensagem = "✅ Foto de perfil atualizada!"
                 user["foto"] = "/" + filepath
 
-    
     return render_template("perfil.html", usuario=user, mensagem=mensagem)
+    
 @app.route("/dashboard")
 def dashboard():
     if "usuario" not in session:
