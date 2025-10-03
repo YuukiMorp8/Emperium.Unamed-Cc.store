@@ -313,6 +313,10 @@ def comprar():
     if "usuario" not in session:
         return redirect(url_for("login"))
 
+    user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
+    if not user:
+        return redirect(url_for("login"))
+
     materiais = list(materiais_col.find())
     filtros = {
         "nivel": request.args.get("nivel"),
@@ -359,8 +363,10 @@ def comprar():
             "nivel": nivel
         })
 
-    return render_template("comprar.html", resultados=resultados, filtros=filtros)
+    # Recupera todos os níveis para o filtro dinâmico
+    niveis = list(niveis_col.find({}, {"_id": 0, "nome": 1, "valor": 1}))
 
+    return render_template("comprar.html", resultados=resultados, filtros=filtros, usuario=user, niveis=niveis)
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
