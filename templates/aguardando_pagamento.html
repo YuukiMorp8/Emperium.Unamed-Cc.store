@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Aguardando Pagamento</title>
+<style>
+    body { background:#111; color:#fff; font-family:Arial,sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
+    .container { background:#1e1e1e; padding:30px; border-radius:12px; text-align:center; width:400px; }
+    button { margin-top:20px; background:#ff9900; border:none; padding:12px 20px; border-radius:8px; cursor:pointer; font-weight:bold; color:#111; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>💰 Aguardando confirmação do pagamento!</h2>
+    <p id="mensagem">Verificando automaticamente...</p>
+    <p id="contador">Tente novamente em: 30s</p>
+    <button id="verificar" disabled>Verificar Pagamento</button>
+</div>
+
+<script>
+let txid = "{{ txid }}";
+let contador = 30;
+const botao = document.getElementById("verificar");
+const contadorEl = document.getElementById("contador");
+const mensagemEl = document.getElementById("mensagem");
+
+// Função para atualizar contador
+let countdown = setInterval(() => {
+    contador--;
+    contadorEl.innerText = `Tente novamente em: ${contador}s`;
+    if(contador <= 0){
+        clearInterval(countdown);
+        botao.disabled = false;
+        contadorEl.style.display = 'none';
+    }
+}, 1000);
+
+// Função para verificar pagamento
+async function verificarPagamento() {
+    mensagemEl.innerText = "Verificando...";
+    try {
+        let resp = await fetch(`/verificar_pagamento_ajax/${txid}`);
+        let data = await resp.json();
+        if(data.status === "concluida"){
+            mensagemEl.innerText = `✅ Pagamento confirmado! Saldo adicionado: R$ ${data.valor.toFixed(2)}`;
+            botao.disabled = true;
+        } else {
+            mensagemEl.innerText = "⌛ Pagamento ainda não confirmado.";
+            // Reinicia o contador se necessário
+            contador = 30;
+            botao.disabled = true;
+            contadorEl.style.display = 'block';
+            countdown = setInterval(() => {
+                contador--;
+                contadorEl.innerText = `Tente novamente em: ${contador}s`;
+                if(contador <= 0){
+                    clearInterval(countdown);
+                    botao.disabled = false;
+                    contadorEl.style.display = 'none';
+                }
+            }, 1000);
+        }
+    } catch(e){
+        mensagemEl.innerText = "❌ Erro ao verificar pagamento.";
+    }
+}
+
+// Verifica automaticamente a cada 5 segundos
+let autoCheck = setInterval(() => {
+    verificarPagamento();
+}, 5000);
+
+// Botão de verificação manual
+botao.addEventListener("click", verificarPagamento);
+</script>
+</body>
+</html>
