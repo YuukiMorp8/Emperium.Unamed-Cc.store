@@ -80,25 +80,28 @@ def perfil():
 
 @app.route("/dashboard")
 def dashboard():
-    if "usuario" not in session:
+    if "user" not in session:
         return redirect(url_for("login"))
 
-    user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
-    if not user:
-        return "Usuário não encontrado!"
+    # Conta quantos materiais existem
+    total_materiais = db.materiais.count_documents({})
 
-    # Buscar níveis disponíveis do admin
-    niveis = [n["nome"] for n in niveis_col.find()]
+    # Conta quanto foi gasto
+    total_gasto = 0
+    materiais = db.materiais.find()
+    niveis = {n["nome"]: n["valor"] for n in db.niveis.find()}
+
+    for m in materiais:
+        if "nivel" in m and m["nivel"] in niveis:
+            total_gasto += niveis[m["nivel"]]
 
     dados = {
-        "nome": user["nome"],
-        "saldo": f"R$ {user.get('saldo',0):.2f}",
-        "gasto": f"R$ {user.get('gasto',0):.2f}",
-        "materiais": user.get("materiais",0),
-        "foto": user.get("foto","/static/default.png")
+        "saldo": 1000,  # Exemplo
+        "total_gasto": total_gasto,
+        "materiais": total_materiais
     }
 
-    return render_template("dashboard.html", dados=dados, niveis=niveis)
+    return render_template("dashboard.html", dados=dados, niveis=list(niveis.keys()))
 
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
