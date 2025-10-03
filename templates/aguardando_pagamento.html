@@ -37,15 +37,19 @@ async function verificarPagamento() {
     try {
         let resp = await fetch(`/verificar_pagamento_ajax/${txid}`);
         let data = await resp.json();
-        if(data.status === "concluida"){
+        console.log("DEBUG resposta:", data);
+
+        if(data.status && data.status.toLowerCase() === "concluida"){
             mensagemEl.innerText = `✅ Pagamento confirmado! Saldo adicionado: R$ ${parseFloat(data.valor).toFixed(2)}`;
             contadorEl.style.display = 'none';
-            clearInterval(autoCheck);
             cicloAtivo = false;
-        } else {
+        } else if(data.status) {
             mensagemEl.innerText = "⌛ Pagamento ainda não confirmado.";
+        } else {
+            mensagemEl.innerText = "❌ Erro: resposta inválida do servidor.";
         }
     } catch(e){
+        console.error(e);
         mensagemEl.innerText = "❌ Erro ao verificar pagamento.";
     }
 }
