@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Admin - Emperium</title>
+    <style>
+        body { font-family: Arial,sans-serif; background:#111; color:#eee; margin:0; padding:0; }
+        header { background:#222; padding:20px; text-align:center; font-size:24px; font-weight:bold; }
+        section { padding:20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; }
+        .card { background:#1a1a1a; padding:20px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.5); }
+        .card h3 { margin-top:0; color:#ff9900; }
+        table { width:100%; border-collapse:collapse; }
+        th, td { padding:8px; border:1px solid #444; text-align:left; }
+        th { background:#222; }
+        .btn { padding:8px 12px; background:#4e9af1; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+        .btn:hover { background:#6caef7; }
+    </style>
+</head>
+<body>
+    <header>Painel de Administração</header>
+    <section>
+        <div class="card">
+            <h3>Usuários</h3>
+            <table>
+                <tr><th>Nome</th><th>Saldo</th><th>Gasto</th></tr>
+                {% for u in usuarios %}
+                <tr>
+                    <td>{{ u.nome }}</td>
+                    <td>R$ {{ u.saldo }}</td>
+                    <td>R$ {{ u.gasto }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>Níveis</h3>
+            <table>
+                <tr><th>Nome</th></tr>
+                {% for n in niveis %}
+                <tr>
+                    <td>{{ n.nome }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>Materiais</h3>
+            <table>
+                <tr><th>Nome</th></tr>
+                {% for m in materiais %}
+                <tr>
+                    <td>{{ m.nome }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </section>
+</body>
+</html>
