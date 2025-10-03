@@ -5,7 +5,7 @@ import base64
 import os
 from efipay import EfiPay
 
-CERT_PATH = os.path.join(os.path.dirname(__file__), "produção-unamedstore.pem")
+CERT_PATH = os.path.join(os.path.dirname(__file__), "prod store.pem")
 
 credentials = {
     'client_id': os.environ.get("EFI_CLIENT_ID"),
