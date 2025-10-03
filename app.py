@@ -85,6 +85,8 @@ def register():
 #-----------------
 # USUÁRIO / PERFIL / DASHBOARD
 #-----------------
+import uuid  # adicione no topo do arquivo
+
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
     if "usuario" not in session:
@@ -114,32 +116,30 @@ def perfil():
                 usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"senha": nova_senha}})
                 mensagem = "✅ Senha alterada com sucesso!"
 
-# Dentro do POST de /perfil
-if "foto_perfil" in request.files:
-    file = request.files["foto_perfil"]
-    if file and allowed_file(file.filename):
-        # Gera pasta se não existir
-        upload_folder = app.config["UPLOAD_FOLDER"]
-        if not os.path.exists(upload_folder):
-            os.makedirs(upload_folder)
+        # Alterar foto de perfil
+        if "foto_perfil" in request.files:
+            file = request.files["foto_perfil"]
+            if file and allowed_file(file.filename):
+                # Cria pasta se não existir
+                os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
-        # Cria nome único para evitar sobrescrever
-        ext = file.filename.rsplit('.', 1)[1].lower()
-        filename = f"{uuid.uuid4().hex}.{ext}"
-        filepath = os.path.join(upload_folder, filename)
+                # Nome único para evitar sobrescrever
+                ext = file.filename.rsplit('.', 1)[1].lower()
+                filename = f"{uuid.uuid4().hex}.{ext}"
+                filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
 
-        file.save(filepath)
+                file.save(filepath)
 
-        # Atualiza o MongoDB
-        usuarios_col.update_one(
-            {"_id": user["_id"]},
-            {"$set": {"foto": "/" + filepath}}
-        )
-        mensagem = "✅ Foto de perfil atualizada!"
-        user["foto"] = "/" + filepath
+                # Atualiza o MongoDB
+                usuarios_col.update_one(
+                    {"_id": user["_id"]},
+                    {"$set": {"foto": "/" + filepath}}
+                )
+                mensagem = "✅ Foto de perfil atualizada!"
+                user["foto"] = "/" + filepath
 
-    return render_template("perfil.html", usuario=user, mensagem=mensagem)
     
+    return render_template("perfil.html", usuario=user, mensagem=mensagem)
 @app.route("/dashboard")
 def dashboard():
     if "usuario" not in session:
