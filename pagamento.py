@@ -16,17 +16,15 @@ credentials = {
 
 efi = EfiPay(credentials)
 
-def criar_pix(nome: str, cpf: str, valor: float) -> dict:
-    import qrcode, io, base64
+def criar_pix(valor: float) -> dict:
     try:
         txid = uuid.uuid4().hex
         valor_str = f"{valor:.2f}"
         body = {
             'calendario': {'expiracao': 3600},
-            'devedor': {'cpf': cpf, 'nome': nome},
             'valor': {'original': valor_str},
             'chave': os.getenv("PIX_KEY"),
-            'solicitacaoPagador': f'Adicionar saldo ({nome})'
+            'solicitacaoPagador': f'Adicionar saldo de R$ {valor_str}'
         }
 
         response = efi.pix_create_immediate_charge(params={"txid": txid}, body=body)
