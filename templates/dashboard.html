@@ -78,20 +78,23 @@
             <div class="card-title">💰 Saldo</div>
             {{ dados.saldo }}
         </div>
-        <div class="card">
-            <div class="card-title">💸 Total gasto</div>
-            {{ dados.gasto }}
-        </div>
-        <div class="card">
-            <div class="card-title">📚 Materiais disponíveis</div>
-            {{ dados.materiais }}
-        </div>
-        <div class="card">
-            <div class="card-title">⭐ Níveis disponíveis</div>
-            {% for nivel in niveis %}
-                <div>{{ nivel }}</div>
-            {% endfor %}
-        </div>
+<div class="card">
+    <div class="card-title">💸 Total gasto</div>
+    {{ dados.gasto }}
+</div>
+
+<div class="card">
+    <div class="card-title">📚 Materiais disponíveis</div>
+    {{ dados.materiais }}
+</div>
+
+<div class="card">
+    <div class="card-title">⭐ Níveis disponíveis</div>
+    {% for nivel in niveis %}
+        <div>{{ nivel }}</div>
+    {% endfor %}
+</div>
     </section>
 </body>
 </html>
+
