@@ -366,6 +366,54 @@ def comprar():
             filtros=filtros,
             niveis=niveis  # agora os níveis do Mongo chegam no template
         )
+
+@app.route("/comprar_finalize", methods=["POST"])
+def comprar_finalize():
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+
+    user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
+    if not user:
+        return redirect(url_for("login"))
+
+    material_id = request.form.get("material_id")
+    senha_confirm = request.form.get("senha_confirm")
+
+    if not material_id or not senha_confirm:
+        return "❌ Dados inválidos!"
+
+    # confirmar senha
+    if senha_confirm != user["senha"]:
+        return "❌ Senha incorreta!"
+
+    material = materiais_col.find_one({"_id": ObjectId(material_id)})
+    if not material:
+        return "❌ Material não encontrado!"
+
+    nivel = material.get("nivel")
+    valor = niveis_col.find_one({"nome": nivel}).get("valor", 0)
+
+    # saldo suficiente?
+    if user["saldo"] < valor:
+        return "❌ Saldo insuficiente!"
+
+    # desconta e registra compra
+    usuarios_col.update_one(
+        {"_id": user["_id"]},
+        {
+            "$inc": {"saldo": -valor, "gasto": valor},
+        }
+    )
+    db.compras.insert_one({
+        "usuario_id": user["_id"],
+        "material_id": material["_id"],
+        "valor": valor,
+        "data": time.strftime("%d/%m/%Y %H:%M:%S")
+    })
+
+    return redirect(url_for("dashboard"))
+
+
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
