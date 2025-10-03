@@ -103,19 +103,19 @@ def dashboard():
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
-        nome_admin = request.form["nome_admin"]
-        senha_admin = request.form["senha_admin"]
+        nome_admin = request.form["nome_admin"].strip()
+        senha_admin = request.form["senha_admin"].strip()
 
-        # Buscar admin no MongoDB
-        admin = usuarios_col.find_one({"nome": nome_admin, "is_admin": True})
-        if admin and admin["senha"] == senha_admin:
+        # Buscar admin na coleção correta
+        admin = admins_col.find_one({"nome": nome_admin})
+
+        if admin and admin.get("senha", "").strip() == senha_admin:
             session["admin"] = str(admin["_id"])
             return redirect(url_for("admin_panel"))
 
         return "❌ Nome ou senha do admin incorretos!"
 
     return render_template("admin_login.html")
-
 
 @app.route("/admin_panel")
 def admin_panel():
