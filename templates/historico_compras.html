@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Histórico de Compras</title>
+<style>
+body { font-family: Arial; background:#111; color:#eee; margin:0; padding:0; }
+.container { padding:20px; max-width:900px; margin:0 auto; }
+.card { background:#1a1a1a; padding:15px; border-radius:10px; margin-bottom:12px; }
+.card-title { font-size:14px; color:#aaa; margin-bottom:5px; }
+.btn-action { padding:8px 12px; background:#ff9900; border:none; border-radius:8px; color:#111; font-weight:bold; cursor:pointer; margin-top:10px; }
+.btn-action:hover { background:#ffcc00; }
+.modal-back { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:999; }
+.modal { background:#1e1e1e; padding:20px; border-radius:12px; width:420px; color:#fff; }
+.modal h3 { color:#ff9900; margin-top:0; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Histórico de Compras</h2>
+    {% for c in compras %}
+    <div class="card">
+        <div>{{ c.data_str }}</div>
+        <div>Compra de material: <b>{{ c.numero_mask }}</b> - ({{ c.nivel }})</div>
+        <div>Valor: R$ {{ "%.2f"|format(c.valor) }}</div>
+        <button class="btn-action view-btn" data-id="{{ c._id }}">Ver compra</button>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="modal-back" id="modalBack">
+    <div class="modal" id="modalContent">
+        <h3>Detalhes da Compra</h3>
+        <div id="modalBody"></div>
+        <div style="margin-top:12px; text-align:right;">
+            <button class="btn-action" id="closeModal">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll(".view-btn").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+        const id = btn.dataset.id;
+        try{
+            const resp = await fetch(`/api/compra/${id}`);
+            const data = await resp.json();
+            if(!data.ok){ alert(data.msg); return; }
+            const c = data.compra;
+            document.getElementById("modalBody").innerHTML = `
+                <p>Olá - {{ usuario.username }}</p>
+                <h4>Aqui está o seu pedido:</h4>
+                <div style="background:#222; padding:10px; border-radius:8px;">
+                    <b>Produto:</b> ${c.numero_mask} - (${c.nivel})<br>
+                    <b>Valor:</b> R$ ${parseFloat(c.valor).toFixed(2)}<br>
+                    <b>Data de compra:</b> ${c.data_str}<br>
+                    <b>Período de troca:</b> ${c.prazo_inicio_str} - ${c.prazo_fim_str} ${c.expirado?'(Expirado)':''}
+                </div>
+                <h4>Detalhe do produto:</h4>
+                <div style="background:#222; padding:10px; border-radius:8px;">
+                    <b>Número:</b> ${c.numero}<br>
+                    <b>Validade:</b> ${c.validade}<br>
+                    <b>CVV:</b> ${c.cvv}<br>
+                    <b>Nome:</b> ${c.nome}<br>
+                    <b>CPF:</b> ${c.cpf}
+                </div>
+            `;
+            document.getElementById("modalBack").style.display="flex";
+        }catch(e){ alert("Erro ao carregar detalhes."); }
+    });
+});
+
+document.getElementById("closeModal").addEventListener("click",()=>{document.getElementById("modalBack").style.display="none";});
+</script>
+</body>
+</html>
