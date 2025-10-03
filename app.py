@@ -1,4 +1,4 @@
-.from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from pagamento import criar_pix, verificar_pagamento_efi  # função que verifica o PIX
