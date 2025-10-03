@@ -8,11 +8,13 @@ body { font-family: Arial; background:#111; color:#eee; margin:0; padding:0; }
 header { background:#222; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.5); }
 header img { width:60px; height:60px; border-radius:50%; cursor:pointer; border:2px solid #eee; }
 .main { padding:20px; }
+.filtros { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+input, select { padding:8px; border-radius:8px; border:none; background:#333; color:#fff; }
+button { padding:8px 15px; background:#ff9900; border:none; border-radius:8px; cursor:pointer; color:#111; font-weight:bold; transition:0.3s; }
+button:hover { background:#ffcc00; }
 .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; }
 .card { background:linear-gradient(135deg,#2e2e2e,#1a1a1a); padding:15px; border-radius:12px; text-align:center; }
 .card-title { font-size:14px; color:#aaa; margin-bottom:5px; }
-button { padding:8px 15px; background:#ff9900; border:none; border-radius:8px; cursor:pointer; color:#111; font-weight:bold; transition:0.3s; }
-button:hover { background:#ffcc00; }
 /* Modal */
 .modal-back { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:999; }
 .modal { background:#1e1e1e; padding:20px; border-radius:12px; width:360px; color:#fff; }
@@ -29,19 +31,35 @@ button:hover { background:#ffcc00; }
 </header>
 
 <div class="main">
+    <!-- Filtros -->
+    <form method="GET" class="filtros">
+        <input type="text" name="pesquisa" placeholder="Pesquisar BIN" value="{{ filtros.pesquisa or '' }}">
+        <select name="nivel">
+            <option value="">Todos Níveis</option>
+            {% for n, v in niveis.items() %}
+            <option value="{{ n }}" {% if filtros.nivel == n %}selected{% endif %}>{{ n }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="banco" placeholder="Banco" value="{{ filtros.banco or '' }}">
+        <input type="number" name="valor" placeholder="Valor mínimo" value="{{ filtros.valor_min or '' }}">
+        <button type="submit">Filtrar</button>
+    </form>
+
     <div class="grid">
         {% for mat in resultados %}
             <div class="card">
-                <div class="card-title">💳 BIN</div>
-                {{ mat.material }}
-                <div class="card-title">🏦 Banco</div>
-                {{ mat.banco }}
-                <div class="card-title">💰 Valor</div>
-                R$ {{ "%.2f"|format(mat.valor) }}
-                <div class="card-title">⭐ Nível</div>
-                {{ mat.nivel }}
-                <button class="btn-buy" data-id="{{ mat._id }}" data-material="{{ mat.material }}" data-nivel="{{ mat.nivel }}" data-valor="{{ mat.valor }}">Comprar</button>
+                <div class="card-title">💳 BIN</div>{{ mat.material }}
+                <div class="card-title">🏦 Banco</div>{{ mat.banco }}
+                <div class="card-title">💰 Valor</div>R$ {{ "%.2f"|format(mat.valor) }}
+                <div class="card-title">⭐ Nível</div>{{ mat.nivel }}
+                <button class="btn-buy" 
+                    data-id="{{ mat._id }}" 
+                    data-material="{{ mat.material }}" 
+                    data-nivel="{{ mat.nivel }}" 
+                    data-valor="{{ mat.valor }}">Comprar</button>
             </div>
+        {% else %}
+            <p>Nenhum resultado encontrado.</p>
         {% endfor %}
     </div>
 </div>
