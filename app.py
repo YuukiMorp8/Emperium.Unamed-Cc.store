@@ -359,9 +359,13 @@ def comprar():
             "banco": banco,
             "valor": valor
         })
-
-    return render_template("comprar.html", usuario=user, resultados=resultados, filtros=filtros)
-    
+        return render_template(
+            "comprar.html",
+            usuario=user,
+            resultados=resultados,
+            filtros=filtros,
+            niveis=niveis  # agora os níveis do Mongo chegam no template
+        )
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
