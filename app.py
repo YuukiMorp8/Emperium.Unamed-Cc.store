@@ -211,19 +211,11 @@ def adicionar_saldo_user():
 
     if request.method == "POST":
         valor = float(request.form["quantia"])
-        cpf = "12345678909"  # ou pegar do cadastro do usuário
+        dados_pix = criar_pix(valor)
 
-        try:
-            dados_pix = criar_pix(user["nome"], cpf, valor)
-        except Exception as e:
-            # Retorna a mensagem de erro e não tenta acessar dados_pix["txid"]
-            return f"❌ Erro ao gerar PIX: {str(e)}"
-
-        # Verifica se 'txid' realmente existe antes de salvar no banco
         if "txid" not in dados_pix:
-            return "❌ Não foi possível gerar o PIX corretamente."
+            return f"❌ Não foi possível gerar o PIX corretamente: {dados_pix.get('erro')}"
 
-        # Salva a transação no banco de dados
         db.transacoes.insert_one({
             "usuario_id": user["_id"],
             "txid": dados_pix["txid"],
@@ -231,10 +223,8 @@ def adicionar_saldo_user():
             "status": "pendente"
         })
 
-        # Renderiza a página de pagamento
         return render_template("pagamento.html", dados=dados_pix)
 
-    # GET → apenas mostra o formulário
     return render_template("adicionar_saldo.html")
 # =========================
 if __name__ == "__main__":
