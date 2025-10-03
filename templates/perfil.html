@@ -34,6 +34,7 @@
         <div class="card">
             <div class="card-title">✏️ Mudar Nome</div>
             <form method="POST">
+                <input type="hidden" name="acao" value="nome">
                 <input type="text" name="novo_nome" placeholder="Novo nome" required>
                 <button type="submit">Alterar Nome</button>
             </form>
@@ -42,18 +43,21 @@
         <div class="card">
             <div class="card-title">🔑 Alterar Senha</div>
             <form method="POST">
+                <input type="hidden" name="acao" value="senha">
                 <input type="password" name="senha_atual" placeholder="Senha atual" required>
                 <input type="password" name="nova_senha" placeholder="Nova senha" required>
                 <input type="password" name="confirma_senha" placeholder="Confirme a nova senha" required>
                 <button type="submit">Alterar Senha</button>
             </form>
         </div>
+
         <div class="card">
             <div class="card-title">🖼️ Mudar Foto de Perfil</div>
             <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="acao" value="foto">
                 <input type="file" name="foto_perfil" accept="image/*" required>
                 <button type="submit">Alterar Foto</button>
-    </form>
+            </form>
         </div>
     </div>
 </body>
