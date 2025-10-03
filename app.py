@@ -245,21 +245,29 @@ def aguardando_pagamento(txid):
 
     return render_template("aguardando_pagamento.html", txid=txid)
 
-
 @app.route("/verificar_pagamento_ajax/<txid>")
 def verificar_pagamento_ajax(txid):
+    print("=== Verificando PIX AJAX ===")
+    print("txid recebido:", txid)
+    print("usuario na sessão:", session.get("usuario"))
+
     if "usuario" not in session:
         return {"status": "erro", "mensagem": "Não logado"}
 
     user_id = ObjectId(session["usuario"])
     transacao = db.transacoes.find_one({"txid": txid, "usuario_id": user_id})
+    print("Transacao encontrada:", transacao)
+
     if not transacao:
         return {"status": "erro", "mensagem": "Transação não encontrada"}
 
-    if verificar_pagamento_efi(txid):
+    pago = verificar_pagamento_efi(txid)
+    print("Pagamento verificado:", pago)
+
+    if pago:
         usuarios_col.update_one({"_id": user_id}, {"$inc": {"saldo": transacao["valor"]}})
         db.transacoes.update_one({"_id": transacao["_id"]}, {"$set": {"status": "concluida"}})
-        return {"status": "concluida", "valor": transacao["valor"]}
+        return {"status": "concluida", "valor": float(transacao["valor"])}
 
     return {"status": "pendente"}
 # =========================
