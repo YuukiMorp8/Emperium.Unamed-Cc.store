@@ -4,18 +4,85 @@
 <meta charset="UTF-8">
 <title>Aguardando Pagamento</title>
 <style>
-    body { background:#111; color:#fff; font-family:Arial,sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
-    .container { background:#1e1e1e; padding:30px; border-radius:12px; text-align:center; width:400px; }
-    button { margin-top:20px; background:#ff9900; border:none; padding:12px 20px; border-radius:8px; cursor:pointer; font-weight:bold; color:#111; }
-    button:disabled { background:#555; cursor:not-allowed; }
+    body {
+        background: #111;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+    .container {
+        width: 420px;
+        text-align: center;
+    }
+    .embed {
+        background: #1e1e1e;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        text-align: left;
+    }
+    .embed h3 {
+        margin: 0 0 10px 0;
+        color: #ff9900;
+    }
+    .embed p {
+        margin: 5px 0;
+    }
+    button {
+        margin-top: 10px;
+        background: #ff9900;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #111;
+        width: 100%;
+    }
+    button:disabled {
+        background: #555;
+        cursor: not-allowed;
+    }
+    .hidden {
+        display: none;
+    }
+    .buttons-confirmed button {
+        width: 48%;
+        margin: 5px 1%;
+        display: inline-block;
+    }
 </style>
 </head>
 <body>
 <div class="container">
-    <h2>💰 Aguardando confirmação do pagamento!</h2>
-    <p id="mensagem">Verificando automaticamente...</p>
-    <p id="contador">Próxima tentativa em: 10s</p>
-    <button id="verificar" disabled>Verificar Pagamento</button>
+    <!-- Embed 1 -->
+    <div class="embed">
+        <h3>💰 Aguardando Pagamento</h3>
+        <p>Estamos aguardando a confirmação do seu pagamento!</p>
+        <p>Tempo estimado: 10 segundos a 2 minutos</p>
+    </div>
+
+    <!-- Embed 2 -->
+    <div class="embed">
+        <h3>⌛ Verificação</h3>
+        <p id="mensagem">Verificando automaticamente...</p>
+        <p id="contador">Próxima tentativa em: 10s</p>
+        <button id="verificar">Verificar Pagamento</button>
+    </div>
+
+    <!-- Botões finais (inicialmente escondidos) -->
+    <div id="botoes-confirmados" class="buttons-confirmed hidden">
+        <form action="{{ url_for('dashboard') }}" method="get" style="display:inline;">
+            <button type="submit">🏠 Voltar à Dashboard</button>
+        </form>
+        <form action="{{ url_for('adicionar_saldo_user') }}" method="get" style="display:inline;">
+            <button type="submit">💳 Comprar novamente</button>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -23,18 +90,15 @@ let txid = "{{ txid }}";
 const botao = document.getElementById("verificar");
 const contadorEl = document.getElementById("contador");
 const mensagemEl = document.getElementById("mensagem");
+const botoesConfirmados = document.getElementById("botoes-confirmados");
 
-const TENTATIVAS = 6;        // total de tentativas
-const INTERVALO = 10;        // segundos entre cada tentativa
+const TENTATIVAS = 6;
+const INTERVALO = 10;
 let tentativasRestantes = TENTATIVAS;
 let contador = INTERVALO;
-let cicloAtivo = true;
-let timer = null;  // armazenar o setInterval ativo
 
 // Função de verificação
 async function verificarPagamento() {
-    if (!cicloAtivo) return; // 🚫 Se já confirmou, não chama mais
-
     botao.disabled = true;
     mensagemEl.innerText = "Verificando...";
     try {
@@ -45,9 +109,8 @@ async function verificarPagamento() {
         if(data.status && data.status.toLowerCase() === "concluida"){
             mensagemEl.innerText = `✅ Pagamento confirmado! Saldo adicionado: R$ ${parseFloat(data.valor).toFixed(2)}`;
             contadorEl.style.display = 'none';
-            cicloAtivo = false;   // 🔒 trava chamadas futuras
-            if (timer) clearInterval(timer); // 🔒 cancela contador
-            botao.disabled = true; // 🔒 desativa botão manual
+            botao.style.display = 'none';
+            botoesConfirmados.classList.remove('hidden');
         } else if(data.status) {
             mensagemEl.innerText = "⌛ Pagamento ainda não confirmado.";
         } else {
@@ -59,23 +122,22 @@ async function verificarPagamento() {
     }
 }
 
-// Função de contagem regressiva
+// Contador automático
 function iniciarContador() {
     contadorEl.style.display = 'block';
     contador = INTERVALO;
-    timer = setInterval(() => {
-        if (!cicloAtivo) { clearInterval(timer); return; } // 🚫 se já confirmou, para
+    let timer = setInterval(() => {
         contador--;
         contadorEl.innerText = `Próxima tentativa em: ${contador}s`;
         if(contador <= 0){
             clearInterval(timer);
-            if(tentativasRestantes > 0 && cicloAtivo){
+            if(tentativasRestantes > 0){
                 verificarPagamento();
                 tentativasRestantes--;
                 if(tentativasRestantes > 0){
                     iniciarContador();
                 } else {
-                    botao.disabled = false; // fim das tentativas automáticas
+                    botao.disabled = false;
                     contadorEl.innerText = `Você pode tentar novamente clicando no botão.`;
                 }
             }
@@ -83,14 +145,13 @@ function iniciarContador() {
     }, 1000);
 }
 
-// Inicia as tentativas automáticas
+// Inicia verificações automáticas
 verificarPagamento();
 tentativasRestantes--;
 iniciarContador();
 
 // Botão manual
 botao.addEventListener("click", () => {
-    if (!cicloAtivo) return; // 🚫 se já confirmou, não deixa clicar
     tentativasRestantes = TENTATIVAS;
     verificarPagamento();
     tentativasRestantes--;
