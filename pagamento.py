@@ -16,6 +16,20 @@ credentials = {
 
 efi = EfiPay(credentials)
 
+def verificar_pagamento_efi(txid: str) -> bool:
+    """
+    Verifica se a transação PIX foi concluída.
+    Retorna True se o pagamento foi feito, False caso contrário.
+    """
+    try:
+        response = efi.pix_detail_charge(params={"txid": txid})
+        status = response.get("status", "").strip().lower()
+        # Status esperado: 'concluida', 'concluído', 'concluido'
+        return status in ["concluida", "concluído", "concluido"]
+    except Exception as e:
+        print(f"❌ Erro ao verificar PIX: {e}")
+        return False
+        
 def criar_pix(valor: float) -> dict:
     try:
         txid = uuid.uuid4().hex
