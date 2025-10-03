@@ -430,25 +430,22 @@ def historico_compras():
     compras = user.get("compras", [])
 
     # Prepara os dados para o template
-    compras_formatadas = []
-    for idx, c in enumerate(compras):
-        compras_formatadas.append({
-            "_id": idx,  # índice serve para modal / fetch
-            "numero": c["material"],   # BIN completo
-            "numero_mask": c["material"],  # sem censura
-            "nivel": c.get("nivel", ""),
-            "banco": c.get("banco", ""),
-            "valor": c.get("valor", 0),
-            "data_str": c.get("data", ""),
-            "prazo_inicio_str": c.get("data", ""),   # se quiser prazo, pode ajustar
-            "prazo_fim_str": c.get("data", ""),
-            "expirado": False,  # se não tiver lógica de expiração
-            "validade": c.get("validade",""),
-            "cvv": c.get("cvv",""),
-            "nome": c.get("nome",""),
-            "cpf": c.get("cpf","")
-        })
-
+    compras_formatadas.append({
+        "_id": idx,
+        "numero": c["material"],
+        "numero_mask": c["material"],
+        "nivel": c.get("nivel", ""),
+        "banco": c.get("banco", ""),
+        "valor": float(c.get("valor", 0)),  # 🔹 garante que seja número
+        "data_str": c.get("data", ""),
+        "prazo_inicio_str": c.get("data", ""),
+        "prazo_fim_str": c.get("data", ""),
+        "expirado": False,
+        "validade": c.get("validade",""),
+        "cvv": c.get("cvv",""),
+        "nome": c.get("nome",""),
+        "cpf": c.get("cpf","")
+    })
     return render_template("historico_compras.html", usuario=user, compras=compras_formatadas)
 # =========================
 if __name__ == "__main__":
