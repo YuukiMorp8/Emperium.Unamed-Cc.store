@@ -20,16 +20,7 @@ materiais_col = db["Materiais"]
 admins_col = db["Admins"] 
 # =========================
 # Funções de banco
-# =========================
-from werkzeug.utils import secure_filename
-
-UPLOAD_FOLDER = "static/uploads"
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-    
+# =========================   
 def criar_usuario(nome, senha, indicado_por=None):
     if usuarios_col.find_one({"nome": nome}):
         return False
@@ -97,19 +88,18 @@ def perfil():
     mensagem = None
 
     if request.method == "POST":
-        acao = request.form.get("acao")
+        # Alterar nome
+        novo_nome = request.form.get("novo_nome")
+        if novo_nome:
+            usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"nome": novo_nome}})
+            mensagem = "✅ Nome alterado com sucesso!"
+            user["nome"] = novo_nome
 
-        if acao == "nome":
-            novo_nome = request.form.get("novo_nome")
-            if novo_nome:
-                usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"nome": novo_nome}})
-                mensagem = "✅ Nome alterado com sucesso!"
-                user["nome"] = novo_nome
-
-        elif acao == "senha":
-            senha_atual = request.form.get("senha_atual")
-            nova_senha = request.form.get("nova_senha")
-            confirma_senha = request.form.get("confirma_senha")
+        # Alterar senha
+        senha_atual = request.form.get("senha_atual")
+        nova_senha = request.form.get("nova_senha")
+        confirma_senha = request.form.get("confirma_senha")
+        if senha_atual and nova_senha and confirma_senha:
             if senha_atual != user["senha"]:
                 mensagem = "❌ Senha atual incorreta!"
             elif nova_senha != confirma_senha:
@@ -118,16 +108,22 @@ def perfil():
                 usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"senha": nova_senha}})
                 mensagem = "✅ Senha alterada com sucesso!"
 
-        elif acao == "foto" and "foto_perfil" in request.files:
+        # Alterar foto de perfil (apenas salva o nome/caminho no Mongo)
+        if "foto_perfil" in request.files:
             file = request.files["foto_perfil"]
             if file and allowed_file(file.filename):
+                # Gera nome único
                 ext = file.filename.rsplit('.', 1)[1].lower()
-                filename = f"{uuid.uuid4().hex}.{ext}"
-                filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-                file.save(filepath)
-                usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"foto": "/" + filepath}})
+                filename = f"{uuid.uuid4().hex}.{ext}"  # Ex: 100000.png
+                filepath = f"static/uploads/{filename}"  # Caminho virtual
+
+                # Apenas salva o caminho no MongoDB
+                usuarios_col.update_one(
+                    {"_id": user["_id"]},
+                    {"$set": {"foto": filepath}}
+                )
                 mensagem = "✅ Foto de perfil atualizada!"
-                user["foto"] = "/" + filepath
+                user["foto"] = filepath
 
     return render_template("perfil.html", usuario=user, mensagem=mensagem)
     
