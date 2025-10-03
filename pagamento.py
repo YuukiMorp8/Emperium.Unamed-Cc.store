@@ -23,7 +23,9 @@ def verificar_pagamento_efi(txid: str) -> bool:
     """
     try:
         response = efi.pix_detail_charge(params={"txid": txid})
+        print("DEBUG PIX DETAIL:", response)  # <--- Adicione esta linha
         status = response.get("status", "").strip().lower()
+        print(f"DEBUG STATUS: '{status}' para txid {txid}")
         # Status esperado: 'concluida', 'concluído', 'concluido'
         return status in ["concluida", "concluído", "concluido"]
     except Exception as e:
