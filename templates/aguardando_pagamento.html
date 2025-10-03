@@ -7,71 +7,85 @@
     body { background:#111; color:#fff; font-family:Arial,sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
     .container { background:#1e1e1e; padding:30px; border-radius:12px; text-align:center; width:400px; }
     button { margin-top:20px; background:#ff9900; border:none; padding:12px 20px; border-radius:8px; cursor:pointer; font-weight:bold; color:#111; }
+    button:disabled { background:#555; cursor:not-allowed; }
 </style>
 </head>
 <body>
 <div class="container">
     <h2>💰 Aguardando confirmação do pagamento!</h2>
     <p id="mensagem">Verificando automaticamente...</p>
-    <p id="contador">Tente novamente em: 30s</p>
+    <p id="contador">Próxima tentativa em: 10s</p>
     <button id="verificar" disabled>Verificar Pagamento</button>
 </div>
 
 <script>
 let txid = "{{ txid }}";
-let contador = 30;
 const botao = document.getElementById("verificar");
 const contadorEl = document.getElementById("contador");
 const mensagemEl = document.getElementById("mensagem");
 
-// Função para atualizar contador
-let countdown = setInterval(() => {
-    contador--;
-    contadorEl.innerText = `Tente novamente em: ${contador}s`;
-    if(contador <= 0){
-        clearInterval(countdown);
-        botao.disabled = false;
-        contadorEl.style.display = 'none';
-    }
-}, 1000);
+const TENTATIVAS = 6;        // total de tentativas
+const INTERVALO = 10;        // segundos entre cada tentativa
+let tentativasRestantes = TENTATIVAS;
+let contador = INTERVALO;
+let cicloAtivo = true;
 
-// Função para verificar pagamento
+// Função de verificação
 async function verificarPagamento() {
+    botao.disabled = true;
     mensagemEl.innerText = "Verificando...";
     try {
         let resp = await fetch(`/verificar_pagamento_ajax/${txid}`);
         let data = await resp.json();
         if(data.status === "concluida"){
-            mensagemEl.innerText = `✅ Pagamento confirmado! Saldo adicionado: R$ ${data.valor.toFixed(2)}`;
-            botao.disabled = true;
+            mensagemEl.innerText = `✅ Pagamento confirmado! Saldo adicionado: R$ ${parseFloat(data.valor).toFixed(2)}`;
+            contadorEl.style.display = 'none';
+            clearInterval(autoCheck);
+            cicloAtivo = false;
         } else {
             mensagemEl.innerText = "⌛ Pagamento ainda não confirmado.";
-            // Reinicia o contador se necessário
-            contador = 30;
-            botao.disabled = true;
-            contadorEl.style.display = 'block';
-            countdown = setInterval(() => {
-                contador--;
-                contadorEl.innerText = `Tente novamente em: ${contador}s`;
-                if(contador <= 0){
-                    clearInterval(countdown);
-                    botao.disabled = false;
-                    contadorEl.style.display = 'none';
-                }
-            }, 1000);
         }
     } catch(e){
         mensagemEl.innerText = "❌ Erro ao verificar pagamento.";
     }
 }
 
-// Verifica automaticamente a cada 5 segundos
-let autoCheck = setInterval(() => {
-    verificarPagamento();
-}, 5000);
+// Função de contagem regressiva
+function iniciarContador() {
+    contadorEl.style.display = 'block';
+    contador = INTERVALO;
+    let timer = setInterval(() => {
+        contador--;
+        contadorEl.innerText = `Próxima tentativa em: ${contador}s`;
+        if(contador <= 0){
+            clearInterval(timer);
+            if(tentativasRestantes > 0){
+                verificarPagamento();
+                tentativasRestantes--;
+                if(tentativasRestantes > 0){
+                    iniciarContador();
+                } else {
+                    botao.disabled = false; // fim das tentativas automáticas
+                    contadorEl.innerText = `Você pode tentar novamente clicando no botão.`;
+                }
+            }
+        }
+    }, 1000);
+}
 
-// Botão de verificação manual
-botao.addEventListener("click", verificarPagamento);
+// Inicia as tentativas automáticas
+verificarPagamento();
+tentativasRestantes--;
+iniciarContador();
+
+// Botão manual
+botao.addEventListener("click", () => {
+    tentativasRestantes = TENTATIVAS;
+    cicloAtivo = true;
+    verificarPagamento();
+    tentativasRestantes--;
+    iniciarContador();
+});
 </script>
 </body>
 </html>
