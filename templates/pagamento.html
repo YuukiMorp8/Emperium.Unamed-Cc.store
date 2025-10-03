@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Pagamento Pix - Emperium</title>
+    <title>Pagamento PIX</title>
     <style>
         body {
             background: #111;
@@ -12,65 +12,45 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
         }
         .container {
             background: #1e1e1e;
-            padding: 40px;
-            border-radius: 15px;
-            width: 420px;
+            padding: 30px;
+            border-radius: 12px;
             text-align: center;
+            width: 400px;
         }
         img {
-            width: 250px;
             margin: 20px 0;
-            border: 2px solid #ff9900;
-            border-radius: 12px;
+            width: 250px;
+            height: 250px;
         }
-        input {
-            width: 100%;
-            padding: 12px;
+        .copia-cola {
+            word-break: break-all;
+            background: #222;
+            padding: 10px;
             border-radius: 8px;
-            border: none;
-            font-size: 14px;
-            margin-top: 10px;
+            margin-top: 15px;
         }
         button {
-            margin-top: 15px;
-            padding: 12px;
-            width: 100%;
+            margin-top: 20px;
             background: #ff9900;
             border: none;
-            border-radius: 10px;
+            padding: 12px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            color: #111;
             font-weight: bold;
-            font-size: 16px;
+            color: #111;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>💳 Pague com Pix</h1>
-        <p><b>Usuário:</b> {{ usuario }}</p>
-        <p><b>Valor:</b> R$ {{ valor }}</p>
-
-        <!-- QR Code -->
-        <img src="data:image/png;base64,{{ qrcode_b64 }}" alt="QR Code Pix">
-
-        <!-- Copia e Cola -->
-        <p>Ou copie o código Pix abaixo:</p>
-        <input type="text" id="pixCode" value="{{ pix_copia_cola }}" readonly>
-        <button onclick="copiarPix()">📋 Copiar Código</button>
+        <h2>💰 Pagamento PIX</h2>
+        <p>Escaneie o QR Code abaixo ou copie o código para pagar:</p>
+        <img src="data:image/png;base64,{{ dados.qr_base64 }}" alt="QR Code PIX">
+        <div class="copia-cola">{{ dados.pix_copia_cola }}</div>
+        <button onclick="navigator.clipboard.writeText('{{ dados.pix_copia_cola }}')">Copiar código PIX</button>
     </div>
-
-    <script>
-        function copiarPix() {
-            const pixInput = document.getElementById("pixCode");
-            pixInput.select();
-            document.execCommand("copy");
-            alert("Código Pix copiado!");
-        }
-    </script>
 </body>
 </html>
