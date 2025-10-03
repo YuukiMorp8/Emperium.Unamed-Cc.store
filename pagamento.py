@@ -8,8 +8,8 @@ from efipay import EfiPay
 CERT_PATH = os.path.join(os.path.dirname(__file__), "produção-unamedstore.pem")
 
 credentials = {
-    'client_id': os.getenv("EFI_CLIENT_ID"),
-    'client_secret': os.getenv("EFI_CLIENT_SECRET"),
+    'client_id': os.environ.get("EFI_CLIENT_ID"),
+    'client_secret': os.environ.get("EFI_CLIENT_SECRET"),
     'sandbox': False,
     'certificate': CERT_PATH
 }
@@ -24,7 +24,7 @@ def criar_pix(nome: str, cpf: str, valor: float) -> dict:
         'calendario': {'expiracao': 3600},
         'devedor': {'cpf': cpf, 'nome': nome},
         'valor': {'original': valor_str},
-        'chave': os.getenv("PIX_KEY"),
+        'chave': os.environ.get("PIX_KEY"),
         'solicitacaoPagador': f'Adicionar saldo ({nome})'
     }
 
