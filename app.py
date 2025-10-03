@@ -317,7 +317,6 @@ def comprar():
     materiais = list(materiais_col.find())
     niveis = {n["nome"]: n["valor"] for n in niveis_col.find()}
 
-    # Filtros do usuário
     filtros = {
         "nivel": request.args.get("nivel"),
         "banco": request.args.get("banco"),
@@ -330,21 +329,14 @@ def comprar():
         bin_val = mat["material"].split("/")[0]
         nivel = mat.get("nivel", "Desconhecido")
         banco = mat.get("banco", "Desconhecido")
-        valor = niveis.get(nivel, 0)  # valor real do nível do Mongo
+        valor = niveis.get(nivel, 0)
 
-        # Filtro por pesquisa BIN
         if filtros["pesquisa"] and not bin_val.startswith(filtros["pesquisa"]):
             continue
-
-        # Filtro por nível
         if filtros["nivel"] and nivel.lower() != filtros["nivel"].lower():
             continue
-
-        # Filtro por banco
         if filtros["banco"] and banco.lower() != filtros["banco"].lower():
             continue
-
-        # Filtro por valor mínimo
         if filtros["valor_min"]:
             try:
                 if valor < float(filtros["valor_min"]):
@@ -359,13 +351,15 @@ def comprar():
             "banco": banco,
             "valor": valor
         })
-        return render_template(
-            "comprar.html",
-            usuario=user,
-            resultados=resultados,
-            filtros=filtros,
-            niveis=niveis  # agora os níveis do Mongo chegam no template
-        )
+
+    # ✅ return só uma vez, fora do loop
+    return render_template(
+        "comprar.html",
+        usuario=user,
+        resultados=resultados,
+        filtros=filtros,
+        niveis=niveis
+    )
 
 @app.route("/comprar_finalize", methods=["POST"])
 def comprar_finalize():
