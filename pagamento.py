@@ -17,6 +17,7 @@ credentials = {
 efi = EfiPay(credentials)
 
 def criar_pix(nome: str, cpf: str, valor: float) -> dict:
+    import uuid, qrcode, io, base64
     txid = uuid.uuid4().hex
     valor_str = f"{valor:.2f}"
     body = {
@@ -27,21 +28,27 @@ def criar_pix(nome: str, cpf: str, valor: float) -> dict:
         'solicitacaoPagador': f'Adicionar saldo ({nome})'
     }
 
-    response = efi.pix_create_immediate_charge(params={"txid": txid}, body=body)
+    try:
+        response = efi.pix_create_immediate_charge(params={"txid": txid}, body=body)
 
-    pix_copia_cola = response.get("pixCopiaECola")
-    if not pix_copia_cola:
-        raise ValueError("Pix copiar e colar não retornado!")
+        if not isinstance(response, dict) or "pixCopiaECola" not in response:
+            raise ValueError("Pix copiar e colar não retornado!")
 
-    # Gerar QR em base64
-    img = qrcode.make(pix_copia_cola)
-    buf = io.BytesIO()
-    img.save(buf, format="PNG")
-    img_b64 = base64.b64encode(buf.getvalue()).decode()
+        pix_copia_cola = response["pixCopiaECola"]
 
-    return {
-        "txid": txid,
-        "valor": valor_str,
-        "pix_copia_cola": pix_copia_cola,
-        "qrcode_b64": img_b64
-    }
+        # Gerar QR code em base64
+        img = qrcode.make(pix_copia_cola)
+        buf = io.BytesIO()
+        img.save(buf, format="PNG")
+        img_b64 = base64.b64encode(buf.getvalue()).decode()
+
+        return {
+            "txid": txid,
+            "valor": valor_str,
+            "pix_copia_cola": pix_copia_cola,
+            "qrcode_b64": img_b64
+        }
+
+    except Exception as e:
+        # Retorna erro sem quebrar o Flask
+        return {"erro": "Não foi possível gerar o PIX", "detalhes": str(e)}
