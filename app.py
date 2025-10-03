@@ -38,9 +38,9 @@ def criar_usuario(nome, senha, indicado_por=None):
 def get_usuario(nome):
     return usuarios_col.find_one({"nome": nome})
 
-# =========================
-# Rotas
-# =========================
+#-----------------
+# LOGIN / REGISTRO
+#-----------------
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -48,10 +48,11 @@ def login():
         senha = request.form["senha"]
         user = get_usuario(nome)
         if user and user["senha"] == senha:
-            session["usuario"] = str(user["_id"])  # armazenamos o ID do Mongo
+            session["usuario"] = str(user["_id"])
             return redirect(url_for("dashboard"))
         return "❌ Usuário ou senha incorretos!"
     return render_template("login.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -72,6 +73,9 @@ def register():
             return "❌ Usuário já existe!"
     return render_template("register.html")
 
+#-----------------
+# USUÁRIO / PERFIL / DASHBOARD
+#-----------------
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
     if "usuario" not in session:
@@ -81,14 +85,14 @@ def perfil():
     mensagem = None
 
     if request.method == "POST":
-        # Mudar Nome
+        # Alterar nome
         novo_nome = request.form.get("novo_nome")
         if novo_nome:
             usuarios_col.update_one({"_id": user["_id"]}, {"$set": {"nome": novo_nome}})
             mensagem = "✅ Nome alterado com sucesso!"
             user["nome"] = novo_nome
 
-        # Alterar Senha
+        # Alterar senha
         senha_atual = request.form.get("senha_atual")
         nova_senha = request.form.get("nova_senha")
         confirma_senha = request.form.get("confirma_senha")
@@ -103,6 +107,7 @@ def perfil():
 
     return render_template("perfil.html", usuario=user, mensagem=mensagem)
 
+
 @app.route("/dashboard")
 def dashboard():
     if "usuario" not in session:
@@ -112,13 +117,9 @@ def dashboard():
     if not user:
         return redirect(url_for("login"))
 
-    # 🔹 Conta materiais globais
     total_materiais = materiais_col.count_documents({})
-
-    # 🔹 Busca todos os níveis (apenas nomes para listar no dashboard)
     niveis = [n["nome"] for n in niveis_col.find({}, {"_id": 0, "nome": 1})]
 
-    # 🔹 Dados do usuário (saldo e gasto são individuais)
     dados = {
         "nome": user["nome"],
         "saldo": f"R$ {user.get('saldo', 0):.2f}",
@@ -129,13 +130,14 @@ def dashboard():
 
     return render_template("dashboard.html", dados=dados, niveis=niveis)
 
+#-----------------
+# ADMIN
+#-----------------
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
         nome_admin = request.form["nome_admin"].strip()
         senha_admin = request.form["senha_admin"].strip()
-
-        # Buscar admin na coleção correta
         admin = admins_col.find_one({"nome": nome_admin})
 
         if admin and admin.get("senha", "").strip() == senha_admin:
@@ -146,17 +148,18 @@ def admin_login():
 
     return render_template("admin_login.html")
 
+
 @app.route("/admin_panel")
 def admin_panel():
     if "admin" not in session:
         return redirect(url_for("admin_login"))
 
-    # Buscar dados necessários para o painel de admin
     usuarios = list(usuarios_col.find())
     niveis = list(niveis_col.find())
     materiais = list(materiais_col.find())
 
     return render_template("admin_panel.html", usuarios=usuarios, niveis=niveis, materiais=materiais)
+
 
 @app.route("/add_nivel", methods=["POST"])
 def add_nivel():
@@ -187,7 +190,6 @@ def add_material():
     if not (material and nome and cpf and nivel):
         return "❌ Preencha todos os campos obrigatórios!"
 
-    # Verificar se o nível existe
     if not niveis_col.find_one({"nome": nivel}):
         return "❌ Nível inválido. Adicione pelo menos um nível primeiro!"
 
@@ -201,6 +203,9 @@ def add_material():
 
     return redirect(url_for("admin_panel"))
 
+#-----------------
+# PAGAMENTO PIX
+#-----------------
 @app.route("/adicionar_saldo", methods=["GET", "POST"])
 def adicionar_saldo_user():
     if "usuario" not in session:
@@ -210,10 +215,10 @@ def adicionar_saldo_user():
 
     if request.method == "POST":
         valor = float(request.form["quantia"])
-        dados_pix = criar_pix(valor)  # apenas valor
+        dados_pix = criar_pix(valor)
 
         if "erro" in dados_pix:
-            return f"❌ Não foi possível gerar o PIX corretamente: {dados_pix['erro']}"
+            return f"❌ Não foi possível gerar o PIX: {dados_pix['erro']}"
 
         db.transacoes.insert_one({
             "usuario_id": user["_id"],
@@ -225,24 +230,7 @@ def adicionar_saldo_user():
         return redirect(url_for("aguardando_pagamento", txid=dados_pix["txid"]))
 
     return render_template("adicionar_saldo.html")
-    
-@app.route("/verificar_pagamento_ajax/<txid>")
-def verificar_pagamento_ajax(txid):
-    if "usuario" not in session:
-        return {"status": "erro", "mensagem": "Não logado"}
-    
-    user_id = ObjectId(session["usuario"])
-    transacao = db.transacoes.find_one({"txid": txid, "usuario_id": user_id})
-    if not transacao:
-        return {"status": "erro", "mensagem": "Transação não encontrada"}
 
-    if verificar_pagamento_efi(txid):
-        # Atualiza saldo do usuário e status da transação
-        usuarios_col.update_one({"_id": user_id}, {"$inc": {"saldo": transacao["valor"]}})
-        db.transacoes.update_one({"_id": transacao["_id"]}, {"$set": {"status": "concluida"}})
-        return {"status": "concluida", "valor": transacao["valor"]}
-    
-    return {"status": "pendente"}
 
 @app.route("/aguardando_pagamento/<txid>")
 def aguardando_pagamento(txid):
@@ -255,6 +243,24 @@ def aguardando_pagamento(txid):
         return "❌ Transação não encontrada!"
 
     return render_template("aguardando_pagamento.html", txid=txid)
+
+
+@app.route("/verificar_pagamento_ajax/<txid>")
+def verificar_pagamento_ajax(txid):
+    if "usuario" not in session:
+        return {"status": "erro", "mensagem": "Não logado"}
+
+    user_id = ObjectId(session["usuario"])
+    transacao = db.transacoes.find_one({"txid": txid, "usuario_id": user_id})
+    if not transacao:
+        return {"status": "erro", "mensagem": "Transação não encontrada"}
+
+    if verificar_pagamento_efi(txid):
+        usuarios_col.update_one({"_id": user_id}, {"$inc": {"saldo": transacao["valor"]}})
+        db.transacoes.update_one({"_id": transacao["_id"]}, {"$set": {"status": "concluida"}})
+        return {"status": "concluida", "valor": transacao["valor"]}
+
+    return {"status": "pendente"}
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
