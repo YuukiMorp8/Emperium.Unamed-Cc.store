@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Comprar - Emperium</title>
+<style>
+body { font-family: Arial; background:#111; color:#eee; margin:0; padding:0; }
+header { background:#222; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.5); }
+header img { width:60px; height:60px; border-radius:50%; cursor:pointer; border:2px solid #eee; }
+.main { padding:20px; }
+.filtros { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+input, select { padding:8px; border-radius:8px; border:none; background:#333; color:#fff; }
+button { padding:8px 15px; background:#ff9900; border:none; border-radius:8px; cursor:pointer; color:#111; font-weight:bold; transition:0.3s; }
+button:hover { background:#ffcc00; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; }
+.card { background:linear-gradient(135deg,#2e2e2e,#1a1a1a); padding:15px; border-radius:12px; text-align:center; }
+.card-title { font-size:14px; color:#aaa; margin-bottom:5px; }
+</style>
+</head>
+<body>
+
+<header>
+    <a href="/dashboard"><img src="{{ session.get('usuario_foto', '/static/default.png') }}"></a>
+</header>
+
+<div class="main">
+    <form method="GET" class="filtros">
+        <input type="text" name="pesquisa" placeholder="Pesquisar BIN" value="{{ filtros.pesquisa or '' }}">
+        <select name="nivel">
+            <option value="">Todos Níveis</option>
+            <option value="Prata" {% if filtros.nivel == 'Prata' %}selected{% endif %}>Prata</option>
+            <option value="Ouro" {% if filtros.nivel == 'Ouro' %}selected{% endif %}>Ouro</option>
+            <option value="Diamante" {% if filtros.nivel == 'Diamante' %}selected{% endif %}>Diamante</option>
+        </select>
+        <input type="text" name="banco" placeholder="Banco" value="{{ filtros.banco or '' }}">
+        <input type="number" name="valor" placeholder="Valor mínimo" value="{{ filtros.valor or '' }}">
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <div class="grid">
+        {% for mat in resultados %}
+            <div class="card">
+                <div class="card-title">💳 BIN</div>
+                {{ mat.material }}
+                <div class="card-title">🏦 Banco</div>
+                {{ mat.banco }}
+                <div class="card-title">💰 Valor</div>
+                {{ mat.valor }}
+                <div class="card-title">⭐ Nível</div>
+                {{ mat.nivel }}
+                <button>Comprar</button>
+            </div>
+        {% else %}
+            <p>Nenhum resultado encontrado.</p>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>
