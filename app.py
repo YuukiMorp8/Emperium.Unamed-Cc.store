@@ -84,31 +84,25 @@ def dashboard():
         return redirect(url_for("login"))
 
     user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
+    if not user:
+        return redirect(url_for("login"))
 
-    # Conta quantos materiais existem para esse usuário
-    materiais_user = materiais_col.find({"usuario_id": str(user["_id"])})
-    total_materiais = materiais_col.count_documents({"usuario_id": str(user["_id"])})
+    # 🔹 Conta materiais globais
+    total_materiais = materiais_col.count_documents({})
 
-    # Buscar níveis com valores
-    niveis = {n["nome"]: n["valor"] for n in niveis_col.find()}
+    # 🔹 Busca todos os níveis (apenas nomes para listar no dashboard)
+    niveis = [n["nome"] for n in niveis_col.find({}, {"_id": 0, "nome": 1})]
 
-    # Calcula total gasto desse usuário
-    total_gasto = 0
-    for m in materiais_user:
-        if "nivel" in m and m["nivel"] in niveis:
-            total_gasto += niveis[m["nivel"]]
-
+    # 🔹 Dados do usuário (saldo e gasto são individuais)
     dados = {
         "nome": user["nome"],
         "saldo": f"R$ {user.get('saldo', 0):.2f}",
-        "gasto": f"R$ {total_gasto:.2f}",
+        "gasto": f"R$ {user.get('gasto', 0):.2f}",
         "materiais": total_materiais,
         "foto": user.get("foto", "/static/default.png")
     }
 
-    niveis_lista = [n["nome"] for n in niveis_col.find({}, {"_id": 0, "nome": 1})]
-
-    return render_template("dashboard.html", dados=dados, niveis=niveis_lista)
+    return render_template("dashboard.html", dados=dados, niveis=niveis)
 
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
