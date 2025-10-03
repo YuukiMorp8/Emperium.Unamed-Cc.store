@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from pagamento import criar_pix, verificar_pagamento_efi  # função que verifica o PIX
+import time
 import os
 
 app = Flask(__name__)
@@ -199,9 +201,6 @@ def add_material():
 
     return redirect(url_for("admin_panel"))
 
-from pagamento import criar_pix
-from bson.objectid import ObjectId 
-
 @app.route("/adicionar_saldo", methods=["GET", "POST"])
 def adicionar_saldo_user():
     if "usuario" not in session:
@@ -211,11 +210,13 @@ def adicionar_saldo_user():
 
     if request.method == "POST":
         valor = float(request.form["quantia"])
-        dados_pix = criar_pix(valor)
 
-        if "txid" not in dados_pix:
-            return f"❌ Não foi possível gerar o PIX corretamente: {dados_pix.get('erro')}"
+        # Cria PIX
+        dados_pix = criar_pix(user["nome"], "", valor)  # CPF não é obrigatório
+        if "erro" in dados_pix:
+            return f"❌ Não foi possível gerar o PIX corretamente: {dados_pix['erro']}"
 
+        # Salva transação pendente
         db.transacoes.insert_one({
             "usuario_id": user["_id"],
             "txid": dados_pix["txid"],
@@ -226,6 +227,30 @@ def adicionar_saldo_user():
         return render_template("pagamento.html", dados=dados_pix)
 
     return render_template("adicionar_saldo.html")
+
+
+@app.route("/confirmar_pagamento/<txid>")
+def confirmar_pagamento(txid):
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+
+    user_id = ObjectId(session["usuario"])
+    transacao = db.transacoes.find_one({"txid": txid, "usuario_id": user_id})
+    if not transacao:
+        return "❌ Transação não encontrada!"
+
+    # Verifica status no EFI Pay
+    if verificar_pagamento_efi(txid):
+        # Atualiza saldo do usuário
+        usuarios_col.update_one(
+            {"_id": user_id},
+            {"$inc": {"saldo": transacao["valor"]}}
+        )
+        # Atualiza status da transação
+        db.transacoes.update_one({"_id": transacao["_id"]}, {"$set": {"status": "concluida"}})
+        return f"✅ Pagamento confirmado! Saldo adicionado: R$ {transacao['valor']:.2f}"
+    else:
+        return "⌛ Pagamento ainda não confirmado. Tente novamente em alguns segundos."
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
