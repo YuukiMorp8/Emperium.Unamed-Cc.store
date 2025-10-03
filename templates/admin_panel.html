@@ -6,19 +6,49 @@
     <style>
         body { font-family: Arial,sans-serif; background:#111; color:#eee; margin:0; padding:0; }
         header { background:#222; padding:20px; text-align:center; font-size:24px; font-weight:bold; }
-        section { padding:20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; }
+        section { padding:20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px; }
         .card { background:#1a1a1a; padding:20px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.5); }
         .card h3 { margin-top:0; color:#ff9900; }
-        table { width:100%; border-collapse:collapse; }
+        table { width:100%; border-collapse:collapse; margin-top:10px; }
         th, td { padding:8px; border:1px solid #444; text-align:left; }
         th { background:#222; }
-        .btn { padding:8px 12px; background:#4e9af1; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+        input, select { width:100%; padding:8px; margin:5px 0 10px 0; border-radius:6px; border:none; }
+        .btn { padding:10px 15px; background:#4e9af1; color:#fff; border:none; border-radius:6px; cursor:pointer; }
         .btn:hover { background:#6caef7; }
+        .form-section { display:none; margin-top:10px; }
     </style>
+    <script>
+        function toggleForm(id) {
+            let form = document.getElementById(id);
+            form.style.display = (form.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function validarMaterial() {
+            const cpf = document.getElementById("material_cpf").value;
+            const nome = document.getElementById("material_nome").value;
+            const numeros = document.getElementById("material_num").value;
+            const nivel = document.getElementById("material_nivel").value;
+
+            if (!cpf || !nome || !numeros || !nivel) {
+                alert("Preencha todos os campos obrigatórios!");
+                return false;
+            }
+
+            // Validar 16 números ou formato exemplo
+            const regex = /^\d{16}(\/\d{2}\/\d{2}\/\d+)$/;
+            if (!regex.test(numeros)) {
+                alert("O campo 'material' deve seguir o formato correto: 16 números ou ex: 4593830180936028/04/33/500");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </head>
 <body>
     <header>Painel de Administração</header>
     <section>
+        <!-- Usuários -->
         <div class="card">
             <h3>Usuários</h3>
             <table>
@@ -33,28 +63,58 @@
             </table>
         </div>
 
+        <!-- Níveis -->
         <div class="card">
             <h3>Níveis</h3>
             <table>
-                <tr><th>Nome</th></tr>
+                <tr><th>Nome</th><th>Valor</th></tr>
                 {% for n in niveis %}
                 <tr>
                     <td>{{ n.nome }}</td>
+                    <td>R$ {{ n.valor }}</td>
                 </tr>
                 {% endfor %}
             </table>
+            <button class="btn" onclick="toggleForm('form_add_nivel')">Adicionar Nível</button>
+            <div id="form_add_nivel" class="form-section">
+                <form method="post" action="/add_nivel">
+                    <input type="text" name="nivel_nome" placeholder="Nome do nível (ex: prata)" required>
+                    <input type="number" name="nivel_valor" placeholder="Valor do nível (ex: 20)" required>
+                    <button type="submit" class="btn">Adicionar Nível</button>
+                </form>
+            </div>
         </div>
 
+        <!-- Materiais -->
         <div class="card">
             <h3>Materiais</h3>
             <table>
-                <tr><th>Nome</th></tr>
+                <tr><th>Nome</th><th>CPF</th><th>Nascimento</th><th>Nível</th></tr>
                 {% for m in materiais %}
                 <tr>
                     <td>{{ m.nome }}</td>
+                    <td>{{ m.cpf }}</td>
+                    <td>{{ m.nascimento or '-' }}</td>
+                    <td>{{ m.nivel }}</td>
                 </tr>
                 {% endfor %}
             </table>
+            <button class="btn" onclick="toggleForm('form_add_material')">Adicionar Material</button>
+            <div id="form_add_material" class="form-section">
+                <form method="post" action="/add_material" onsubmit="return validarMaterial()">
+                    <input type="text" id="material_num" name="material" placeholder="Material (16 números ou ex: 4593830180936028/04/33/500)" required>
+                    <input type="text" id="material_nome" name="nome" placeholder="Nome" required>
+                    <input type="text" id="material_cpf" name="cpf" placeholder="CPF" required>
+                    <input type="date" name="nascimento" placeholder="Nascimento (opcional)">
+                    <select id="material_nivel" name="nivel" required>
+                        <option value="">Escolha o nível</option>
+                        {% for n in niveis %}
+                        <option value="{{ n.nome }}">{{ n.nome }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn">Adicionar Material</button>
+                </form>
+            </div>
         </div>
     </section>
 </body>
