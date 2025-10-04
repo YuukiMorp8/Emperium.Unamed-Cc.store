@@ -4,127 +4,150 @@
 <meta charset="UTF-8">
 <title>Adicionar Saldo - Emperium</title>
 <style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        font-family: Arial, sans-serif;
-        background: #0a0a0a;
-        color: #fff;
-        box-sizing: border-box;
-    }
+/* ===== BASE ===== */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: "Poppins", Arial, sans-serif;
+    background: radial-gradient(circle at center, #0b0b0b, #090808, #070707);
+    color: #fff;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+/* ===== CONTAINER ===== */
+.container {
+    background: radial-gradient(circle at top left, #141313, #0c0c0c);
+    width: 95%;
+    max-width: 800px;
+    padding: 50px 40px;
+    border-radius: 20px;
+    border: 2px solid rgba(245,214,123,0.25);
+    box-shadow: 0 0 40px rgba(245,214,123,0.15), inset 0 0 25px rgba(245,214,123,0.08);
+    text-align: center;
+}
 
+/* ===== TÍTULO ===== */
+h1 {
+    font-size: 42px;
+    color: #f5d67b;
+    text-shadow: 0 0 15px rgba(245,214,123,0.3);
+    margin-bottom: 35px;
+}
+
+/* ===== EMBED ===== */
+.embed {
+    background: rgba(15,15,15,0.9);
+    border-left: 6px solid #d4af37;
+    border-radius: 16px;
+    padding: 30px 25px;
+    text-align: left;
+    margin-bottom: 40px;
+    box-shadow: 0 0 25px rgba(245,214,123,0.15);
+    transition: 0.3s;
+}
+.embed:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 35px rgba(245,214,123,0.25);
+}
+
+.embed h2 {
+    color: #f5d67b;
+    font-size: 26px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(245,214,123,0.3);
+}
+
+.embed p {
+    color: #ddd;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+/* ===== INPUT ===== */
+input {
+    width: 100%;
+    max-width: 500px;
+    padding: 22px;
+    margin: 20px 0;
+    border-radius: 12px;
+    border: 1px solid rgba(245,214,123,0.25);
+    background: rgba(20,20,20,0.95);
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    box-shadow: inset 0 0 15px rgba(245,214,123,0.1);
+    transition: 0.3s;
+}
+input:focus {
+    outline: none;
+    border-color: #f5d67b;
+    box-shadow: 0 0 20px rgba(245,214,123,0.3);
+}
+
+/* ===== BOTÃO ===== */
+button {
+    width: 100%;
+    max-width: 500px;
+    padding: 22px;
+    border-radius: 14px;
+    border: none;
+    font-size: 22px;
+    font-weight: bold;
+    color: #111;
+    background: linear-gradient(135deg, #d4af37, #8a6f2e);
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 30px rgba(245,214,123,0.35);
+}
+button:hover {
+    background: linear-gradient(135deg, #f5d67b, #b99232);
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(245,214,123,0.6);
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 768px) {
     .container {
-        background: linear-gradient(135deg, #0ccf7a, #4ed400);
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 40px 25px;
-        box-sizing: border-box;
+        padding: 35px 25px;
     }
-
     h1 {
-        font-size: 36px;
-        color: #0a0a0a;
-        margin-bottom: 25px;
-        font-weight: bold;
+        font-size: 34px;
     }
-
-    /* Embed */
-    .embed {
-        background: rgba(0, 0, 0, 0.5);
-        border-left: 6px solid #00cc66;
-        border-radius: 14px;
-        padding: 25px;
-        width: 100%;
-        max-width: 420px;
-        text-align: left;
-        box-shadow: 0 0 20px rgba(0,0,0,0.4);
-    }
-
     .embed h2 {
-        color: #aaffaa;
-        margin-top: 0;
-        margin-bottom: 12px;
         font-size: 22px;
     }
-
     .embed p {
-        color: #ddd;
-        margin: 8px 0;
         font-size: 16px;
     }
-
-    input {
-        width: 100%;
-        padding: 18px;
-        margin: 15px 0;
-        border-radius: 12px;
-        border: none;
+    input, button {
         font-size: 18px;
-        box-sizing: border-box;
-    }
-
-    button {
-        width: 100%;
         padding: 20px;
-        border-radius: 14px;
-        border: none;
-        font-size: 20px;
-        font-weight: bold;
-        color: #0a0a0a;
-        background: #00e676;
-        cursor: pointer;
-        transition: 0.3s;
     }
-
-    button:hover {
-        background: #00ff88;
-        transform: scale(1.03);
-    }
-
-    /* Responsivo */
-    @media (max-width: 768px) {
-        h1 {
-            font-size: 30px;
-        }
-        .embed {
-            padding: 20px;
-        }
-        input {
-            font-size: 17px;
-        }
-        button {
-            font-size: 18px;
-        }
-    }
+}
 </style>
 </head>
 <body>
-    <div class="container">
-        <h1>💰 Adicionar Saldo</h1>
 
-        <div class="embed">
-            <h2>🧾 Detalhes da Operação</h2>
-            <p>Adicione saldo à sua conta com total segurança via PIX.</p>
-            <p>O valor será creditado automaticamente após o pagamento.</p>
-        </div>
+<div class="container">
+    <h1>💰 Adicionar Saldo</h1>
 
-        <form method="post">
-            <input type="number" name="quantia" placeholder="Quanto adicionar (R$)" required>
-            <button type="submit">Gerar Pagamento</button>
-        </form>
+    <div class="embed">
+        <h2>🧾 Detalhes da Operação</h2>
+        <p>Adicione saldo à sua conta com total segurança via PIX.</p>
+        <p>O valor será creditado automaticamente após o pagamento.</p>
     </div>
+
+    <form method="post">
+        <input type="number" name="quantia" placeholder="Quanto adicionar (R$)" required>
+        <button type="submit">Gerar Pagamento</button>
+    </form>
+</div>
+
 </body>
 </html>
