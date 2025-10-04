@@ -185,15 +185,41 @@ main {
 <main>
     <!-- Dashboard -->
     <div class="embed">
-        <div class="embed-title">📊 Dashboard</div>
-        <div class="embed-content">
-            <div class="card"><div class="card-title">💰 Saldo Atual</div>{{ dados.saldo }}</div>
-            <div class="card"><div class="card-title">💸 Total Gasto</div>{{ dados.gasto }}</div>
-            <div class="card"><div class="card-title">🛒 Compras Totais</div>Em breve</div>
-            <div class="card"><div class="card-title">⭐ Nível Comprado</div>Em breve</div>
-        </div>
-    </div>
+    <div class="embed-title">📊 Dashboard</div>
+    <div class="embed-content">
 
+        <div class="card">
+            <div class="card-title">💰 Saldo Atual</div>
+            {{ dados.saldo }}
+        </div>
+
+        <div class="card">
+            <div class="card-title">💸 Total Gasto</div>
+            {{ dados.gasto }}
+        </div>
+
+        <div class="card">
+            <div class="card-title">🛒 Compras Totais</div>
+            {{ dados.compras|length }}
+        </div>
+
+        <div class="card">
+            <div class="card-title">⭐ Nível</div>
+            {% if dados.gasto < 50 %}
+                Novato
+            {% elif dados.gasto < 100 %}
+                Iniciante
+            {% elif dados.gasto < 500 %}
+                Avançado
+            {% elif dados.gasto < 1000 %}
+                ABSURDO
+            {% else %}
+                Lendário ⚡
+            {% endif %}
+        </div>
+
+    </div>
+            </div>
     <!-- Unamed Emperium -->
     <div class="embed">
         <div class="embed-title">🏢 Unamed Emperium</div>
@@ -222,4 +248,5 @@ main {
 
 </body>
 </html>
+
 
