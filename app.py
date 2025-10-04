@@ -385,7 +385,7 @@ def comprar_finalize():
     if not material_id or not senha_confirm:
         return {"ok": False, "msg": "Dados inválidos!"}
 
-    # Confirmar senha
+    # confirmar senha
     if senha_confirm != user["senha"]:
         return {"ok": False, "msg": "Senha incorreta!"}
 
@@ -394,33 +394,37 @@ def comprar_finalize():
         return {"ok": False, "msg": "Material não encontrado!"}
 
     nivel = material.get("nivel")
-    valor = datetime.now().strftime("%H:%M:%S")  # valor como hora
+    valor = float(niveis_col.find_one({"nome": nivel}).get("valor", 0))
 
-    # Desconta saldo (opcional, se quiser manter saldo)
-    # usuarios_col.update_one(
-    #     {"_id": user["_id"]},
-    #     {"$inc": {"saldo": -valor_float, "gasto": valor_float}}
-    # )
+    # saldo suficiente?
+    if user["saldo"] < valor:
+        return {"ok": False, "msg": "Saldo insuficiente!"}
 
-    # Salva compra no histórico do usuário
+    # desconta saldo do usuário
     usuarios_col.update_one(
         {"_id": user["_id"]},
-        {"$push": {
-            "compras": {
-                "material": material["material"],
-                "nivel": nivel,
-                "banco": material.get("banco","Desconhecido"),
-                "valor": valor,
-                "data": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-            }
-        }}
+        {"$inc": {"saldo": -valor, "gasto": valor}}
     )
 
-    # Remove o material da coleção Materiais
+    # salva a compra na coleção 'compras'
+    db.compras.insert_one({
+        "usuario_id": user["_id"],
+        "material": material["material"],
+        "nivel": nivel,
+        "banco": material.get("banco", ""),
+        "valor": valor,
+        "data": time.strftime("%d/%m/%Y %H:%M:%S"),
+        "validade": material.get("validade", ""),
+        "cvv": material.get("cvv", ""),
+        "nome": material.get("nome", ""),
+        "cpf": material.get("cpf", "")
+    })
+
+    # remove o material da coleção 'materiais'
     materiais_col.delete_one({"_id": ObjectId(material_id)})
 
     return {"ok": True, "msg": "Compra concluída!"}
-
+    
 @app.route("/historico_compras")
 def historico_compras():
     if "usuario" not in session:
