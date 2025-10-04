@@ -8,8 +8,18 @@ import os
 from datetime import timedelta
 
 app = Flask(__name__)
-app.secret_key = "uma_chave_segura_aqui"  # já deve existir
-app.permanent_session_lifetime = timedelta(days=7)  # usuário fica logado 7 dias
+app.secret_key = "uma_chave_segura_aqui"
+
+# Mantém o login por 7 dias
+app.permanent_session_lifetime = timedelta(days=7)
+
+# Garante que o cookie da sessão será salvo corretamente
+app.config.update(
+    SESSION_COOKIE_NAME='session',
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SECURE=True,  # altere para True se usar HTTPS
+    SESSION_COOKIE_SAMESITE='None',  # ou 'None' se usar HTTPS e subdomínios
+)
 
 # =========================
 # Conexão com MongoDB
@@ -53,11 +63,15 @@ def login():
         user = get_usuario(nome)
 
         if user and user["senha"] == senha:
-            session.permanent = True  # 🔥 mantém login mesmo após fechar o navegador
+            session.permanent = True  # 🔥 mantém login
             session["usuario"] = str(user["_id"])
             return redirect(url_for("dashboard"))
 
         return "❌ Usuário ou senha incorretos!"
+
+    # Se já estiver logado, pula direto pro dashboard
+    if "usuario" in session:
+        return redirect(url_for("dashboard"))
 
     return render_template("login.html")
 
