@@ -4,95 +4,121 @@
     <meta charset="UTF-8">
     <title>Dashboard - Emperium</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #111;
-            color: #eee;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background: #222;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .btn-admin {
-            padding: 8px 18px;
-            background: #ff9900;
-            color: #111;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            border: none;
-            transition: 0.3s;
-        }
-        .btn-admin:hover {
-            background: #ffcc00;
-        }
-        .perfil {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid #eee;
-        }
-        main {
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
-        .embed {
-            background: linear-gradient(135deg, #2e2e2e, #1a1a1a);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-        .embed-title {
-            font-size: 20px;
-            color: #ff9900;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        .embed-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        .card {
-            background: #222;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .card-title {
-            font-size: 14px;
-            color: #aaa;
-            margin-bottom: 5px;
-        }
-        .btn-action {
-            padding: 8px 12px;
-            background: #ff9900;
-            color: #111;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            border: none;
-            margin-top: 10px;
-            width: 100%;
-            transition: 0.3s;
-        }
-        .btn-action:hover {
-            background: #ffcc00;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #eee;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background: #222;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    flex-wrap: wrap;
+}
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.btn-admin {
+    padding: 8px 16px;
+    background: #ff9900;
+    color: #111;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+    flex: 1 1 auto; /* ocupa espaço disponível */
+    min-width: 120px;
+}
+.btn-admin:hover {
+    background: #ffcc00;
+}
+.perfil {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #eee;
+}
+main {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+.embed {
+    background: linear-gradient(135deg, #2e2e2e, #1a1a1a);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    width: 100%;
+    box-sizing: border-box;
+}
+.embed-title {
+    font-size: 20px;
+    color: #ff9900;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+.embed-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    width: 100%;
+}
+.card {
+    background: #222;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+.card-title {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+.btn-action {
+    padding: 8px 12px;
+    background: #ff9900;
+    color: #111;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    margin-top: 10px;
+    width: 100%;
+    transition: 0.3s;
+}
+.btn-action:hover {
+    background: #ffcc00;
+}
+
+/* RESPONSIVO PARA CELULAR */
+@media (max-width: 768px) {
+    .embed-content {
+        grid-template-columns: 1fr;
+    }
+    header {
+        justify-content: center;
+    }
+    .header-left {
+        justify-content: center;
+    }
+    .btn-admin {
+        min-width: 100px;
+        flex: 1 1 45%;
+    }
+}
     </style>
 </head>
 <body>
@@ -163,3 +189,4 @@
 
 </body>
 </html>
+
