@@ -448,6 +448,50 @@ def historico_compras():
         )
 
     return render_template("historico_compras.html", compras=compras, usuario=user)
+
+from bson.objectid import ObjectId
+from flask import jsonify
+
+@app.route("/api/compra/<compra_id>")
+def api_compra(compra_id):
+    if "usuario" not in session:
+        return jsonify({"ok": False, "msg": "Não logado"})
+
+    user_id = ObjectId(session["usuario"])
+    compra = db.compras.find_one({"_id": ObjectId(compra_id), "usuario_id": user_id})
+    if not compra:
+        return jsonify({"ok": False, "msg": "Compra não encontrada"})
+
+    # Preparar os dados para enviar ao front-end
+    # Censura BIN apenas no card principal, mas mostra completo no modal
+    numero = compra.get("material", "")
+    numero_mask = numero[:6] + "*" * (len(numero) - 16) + numero[-10:]
+
+    compra_data = {
+        "_id": str(compra["_id"]),
+        "material": numero,
+        "numero_mask": numero_mask,
+        "nivel": compra.get("nivel", ""),
+        "banco": compra.get("banco", ""),
+        "valor": float(compra.get("valor", 0)),
+        "data_str": compra.get("data", ""),
+        "numero": numero,
+        "validade": compra.get("validade", ""),
+        "cvv": compra.get("cvv", ""),
+        "cpf": compra.get("cpf", ""),
+        "nome": compra.get("nome", ""),
+        # Período fixo de troca: 10 minutos
+        "prazo_inicio_str": compra.get("data", ""),
+        "prazo_fim_str": time.strftime(
+            "%d/%m/%Y %H:%M:%S",
+            time.localtime(time.time() + 10*60)  # 10 minutos depois
+        ),
+        "expirado": False
+    }
+
+    return jsonify({"ok": True, "compra": compra_data})
+
+
                     
 # =========================
 if __name__ == "__main__":
