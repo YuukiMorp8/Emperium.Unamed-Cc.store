@@ -452,79 +452,41 @@ def historico_compras():
 from bson.objectid import ObjectId
 from flask import jsonify
 
-@app.route("/api/compra/<compra_id>")
-def api_compra(compra_id):
+@app.route("/api/compra/<id>")
+def api_compra(id):
     if "usuario" not in session:
-        return jsonify({"ok": False, "msg": "Não logado"}), 401
+        return {"ok": False, "msg": "Não logado"}
 
-    try:
-        cid = ObjectId(compra_id)
-    except:
-        return jsonify({"ok": False, "msg": "ID inválido"}), 400
-
-    user_id = ObjectId(session["usuario"])
-    compra = db.compras.find_one({"_id": cid, "usuario_id": user_id})
+    compra = db.compras.find_one({"_id": ObjectId(id)})
     if not compra:
-        return jsonify({"ok": False, "msg": "Compra não encontrada"}), 404
+        return {"ok": False, "msg": "Compra não encontrada"}
 
-    # material armazenado como "NNNN.../MM/YY/CVV" (possível variação, tratamos robustamente)
-    material_raw = compra.get("material", "")  # ex: "5502095720054727/10/20/300"
+    material_raw = compra.get("material", "")
     parts = material_raw.split("/")
 
     numero = parts[0] if len(parts) >= 1 else ""
-    validade = ""
-    cvv = ""
-
-    # validade pode estar em partes[1] e parts[2] -> formato MM/YY
-    if len(parts) >= 3:
-        validade = f"{parts[1]}/{parts[2]}"
-        cvv = parts[3] if len(parts) >= 4 else ""
-    elif len(parts) == 2:
-        # somente uma parte após a barra: pode ser "MMYY" ou "MM/YY" já separado
-        validade = parts[1]
-        cvv = ""
-    else:
-        validade = ""
-        cvv = ""
-
-    # máscara pedida: mostrar 6 primeiros, censurar os últimos 10 (ex: 454545**********)
-    mask_len = max(0, len(numero) - 6)
-    numero_mask = numero[:6] + ("*" * mask_len)
-
-    # prazo de troca fixo: 10 minutos a partir da compra
-    try:
-        # compra['data'] já no formato "%d/%m/%Y %H:%M:%S"
-        compra_ts = time.strptime(compra.get("data", data_str), "%d/%m/%Y %H:%M:%S")
-        prazo_inicio_ts = time.mktime(compra_ts)
-    except Exception:
-        prazo_inicio_ts = time.time()
-
-    prazo_fim_ts = prazo_inicio_ts + 10*60  # 10 minutos
-    prazo_inicio_str = time.strftime("%d/%m/%Y %H:%M:%S", time.localtime(prazo_inicio_ts))
-    prazo_fim_str = time.strftime("%d/%m/%Y %H:%M:%S", time.localtime(prazo_fim_ts))
-    expirado = time.time() > prazo_fim_ts
+    validade = f"{parts[1]}/{parts[2]}" if len(parts) >= 3 else ""
+    cvv = parts[3] if len(parts) >= 4 else ""
 
     compra_data = {
         "_id": str(compra["_id"]),
-        "material_raw": material_raw,
         "numero": numero,
-        "numero_mask": numero_mask,
+        "numero_mask": numero[:6] + "*" * max(0,len(numero)-6),
         "validade": validade,
         "cvv": cvv,
-        "nivel": compra.get("nivel"),
-        "banco": compra.get("banco"),
-        "valor": float(compra.get("valor", 0)),
-        "data_str": compra.get("data"),
-        "prazo_inicio_str": prazo_inicio_str,
-        "prazo_fim_str": prazo_fim_str,
-        "expirado": expirado,
-        "nome": compra.get("nome", "") or "",
-        "cpf": compra.get("cpf", "") or ""
+        "nivel": compra.get("nivel",""),
+        "banco": compra.get("banco",""),
+        "valor": float(compra.get("valor",0)),
+        "data_str": compra.get("data",""),
+        "prazo_inicio_str": compra.get("prazo_inicio_str",""),
+        "prazo_fim_str": compra.get("prazo_fim_str",""),
+        "expirado": compra.get("expirado", False),
+        "nome": compra.get("nome",""),
+        "cpf": compra.get("cpf","")
     }
 
-    return jsonify({"ok": True, "compra": compra_data})
-
-
+    return {"ok": True, "compra": compra_data}
+    
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
