@@ -2,15 +2,15 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Aguardando Pagamento</title>
+<title>Aguardando Pagamento - Emperium</title>
 <style>
     html, body {
         margin: 0;
         padding: 0;
         width: 100%;
         height: 100%;
-        font-family: Arial, sans-serif;
-        background: #111;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #0b0b0b;
         color: #fff;
         box-sizing: border-box;
     }
@@ -18,113 +18,121 @@
     body {
         display: flex;
         justify-content: center;
-        align-items: stretch; /* ocupa toda a altura */
+        align-items: stretch;
     }
 
     .container {
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, #1a1a1a, #222222);
+        background: linear-gradient(135deg, #101010, #181818);
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
-        padding: 40px 15px;
+        padding: 50px 20px;
         box-sizing: border-box;
         overflow-y: auto;
     }
 
     h2 {
-        font-size: 42px;
-        margin-bottom: 40px;
+        font-size: 44px;
+        margin-bottom: 35px;
         text-align: center;
-        color: #b9894d;
+        color: #c79b4b;
+        text-shadow: 0 0 10px rgba(199, 155, 75, 0.4);
     }
 
+    /* EMBED */
     .embed {
-        background: #2a2a2a;
-        border-left: 5px solid #997733;
-        border-radius: 14px;
-        padding: 26px;
-        margin: 20px 0;
+        background: rgba(20, 20, 20, 0.9);
+        border-left: 6px solid #c79b4b;
+        border-radius: 18px;
+        padding: 30px;
+        margin: 25px 0;
         width: 100%;
+        max-width: 520px;
         box-sizing: border-box;
+        box-shadow: 0 0 20px rgba(0,0,0,0.6);
         text-align: left;
     }
 
     .embed h3 {
         margin-top: 0;
-        font-size: 28px;
-        color: #ccaa77;
+        font-size: 26px;
+        color: #e0b76a;
+        margin-bottom: 10px;
     }
 
     .embed p {
-        margin: 14px 0;
-        font-size: 21px;
+        margin: 12px 0;
+        font-size: 19px;
+        color: #ccc;
     }
 
+    /* BOTÕES */
     button {
         margin-top: 20px;
         width: 100%;
-        padding: 24px;
+        padding: 26px;
         border-radius: 16px;
         border: none;
         font-size: 23px;
         font-weight: bold;
         cursor: pointer;
         transition: 0.3s;
+        background: linear-gradient(90deg, #c79b4b, #b28633);
+        color: #fff;
+        box-shadow: 0 0 12px rgba(199, 155, 75, 0.3);
     }
 
     button:hover {
-        transform: scale(1.03);
-    }
-
-    button:not(.confirm-btn) {
-        background: #997733;
-        color: #fff;
-    }
-
-    button:not(.confirm-btn):hover {
-        background: #aa8844;
+        transform: scale(1.04);
+        background: linear-gradient(90deg, #e0b76a, #c79b4b);
+        box-shadow: 0 0 16px rgba(199, 155, 75, 0.5);
     }
 
     .confirm-btn {
-        background: #228844;
+        background: linear-gradient(90deg, #1e8a44, #28a055);
         color: #fff;
-        margin-top: 32px;
+        margin-top: 35px;
+        box-shadow: 0 0 14px rgba(30,138,68,0.4);
     }
 
     .confirm-btn:hover {
-        background: #33aa66;
+        background: linear-gradient(90deg, #2cbc63, #34d171);
+        box-shadow: 0 0 20px rgba(46,184,90,0.5);
     }
 
     .hidden {
         display: none;
     }
 
-    .buttons-confirmed button {
-        width: 48%;
-        margin: 5px 1%;
-        display: inline-block;
+    .buttons-confirmed {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        max-width: 520px;
+        margin-top: 20px;
     }
 
-    /* Responsivo para celular */
+    /* RESPONSIVO */
     @media (max-width: 768px) {
-        .container {
-            padding: 30px 10px;
-        }
         h2 {
             font-size: 36px;
         }
+        .embed {
+            padding: 24px;
+        }
         .embed h3 {
-            font-size: 26px;
+            font-size: 24px;
         }
         .embed p {
-            font-size: 19px;
+            font-size: 18px;
         }
         button {
-            font-size: 22px;
-            padding: 20px;
+            font-size: 21px;
+            padding: 22px;
         }
     }
 </style>
@@ -133,28 +141,28 @@
 <div class="container">
     <h2>💰 Aguardando Pagamento</h2>
 
-    <!-- Embed 1 -->
+    <!-- EMBED 1 -->
     <div class="embed">
-        <h3>💰 Aguardando Pagamento</h3>
-        <p>Estamos aguardando a confirmação do seu pagamento!</p>
-        <p>Tempo estimado: 10 segundos a 2 minutos</p>
+        <h3>💰 Status</h3>
+        <p>Estamos aguardando a confirmação do seu pagamento.</p>
+        <p>Tempo estimado: <strong>10 segundos a 2 minutos</strong>.</p>
     </div>
 
-    <!-- Embed 2 -->
+    <!-- EMBED 2 -->
     <div class="embed">
         <h3>⌛ Verificação</h3>
         <p id="mensagem">Verificando automaticamente...</p>
         <p id="contador">Próxima tentativa em: 10s</p>
-        <button id="verificar">Verificar Pagamento</button>
+        <button id="verificar">🔄 Verificar Pagamento</button>
     </div>
 
-    <!-- Botões finais (inicialmente escondidos) -->
+    <!-- BOTÕES FINAIS -->
     <div id="botoes-confirmados" class="buttons-confirmed hidden">
-        <form action="{{ url_for('dashboard') }}" method="get" style="display:inline;">
+        <form action="{{ url_for('dashboard') }}" method="get">
             <button type="submit">🏠 Voltar à Dashboard</button>
         </form>
-        <form action="{{ url_for('adicionar_saldo_user') }}" method="get" style="display:inline;">
-            <button type="submit">💳 Adicionar saldo novamente</button>
+        <form action="{{ url_for('adicionar_saldo_user') }}" method="get">
+            <button type="submit" class="confirm-btn">💳 Adicionar Saldo Novamente</button>
         </form>
     </div>
 </div>
@@ -178,19 +186,18 @@ async function verificarPagamento() {
     try {
         let resp = await fetch(`/verificar_pagamento_ajax/${txid}`);
         let data = await resp.json();
-        console.log("DEBUG resposta:", data);
 
-        if(data.status && data.status.toLowerCase() === "concluida"){
+        if (data.status && data.status.toLowerCase() === "concluida") {
             mensagemEl.innerText = `✅ Pagamento confirmado! Saldo adicionado: R$ ${parseFloat(data.valor).toFixed(2)}`;
             contadorEl.style.display = 'none';
             botao.style.display = 'none';
             botoesConfirmados.classList.remove('hidden');
-        } else if(data.status) {
-            mensagemEl.innerText = "⌛ Pagamento ainda não confirmado.";
+        } else if (data.status) {
+            mensagemEl.innerText = "⌛ Pagamento ainda não confirmado...";
         } else {
             mensagemEl.innerText = "❌ Erro: resposta inválida do servidor.";
         }
-    } catch(e){
+    } catch (e) {
         console.error(e);
         mensagemEl.innerText = "❌ Erro ao verificar pagamento.";
     }
@@ -203,12 +210,12 @@ function iniciarContador() {
     let timer = setInterval(() => {
         contador--;
         contadorEl.innerText = `Próxima tentativa em: ${contador}s`;
-        if(contador <= 0){
+        if (contador <= 0) {
             clearInterval(timer);
-            if(tentativasRestantes > 0){
+            if (tentativasRestantes > 0) {
                 verificarPagamento();
                 tentativasRestantes--;
-                if(tentativasRestantes > 0){
+                if (tentativasRestantes > 0) {
                     iniciarContador();
                 } else {
                     botao.disabled = false;
