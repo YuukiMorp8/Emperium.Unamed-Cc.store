@@ -141,22 +141,20 @@ def dashboard():
     if "usuario" not in session:
         return redirect(url_for("login"))
 
-    # Busca o usuário logado
     user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
     if not user:
         return redirect(url_for("login"))
 
-    user_id = str(user["_id"])
+    user_id = ObjectId(user["_id"])  # manter como ObjectId
 
-    # Contar o número de compras do usuário
-    compras_usuario = list(compras_col.find({"user": user_id}))
+    # Buscar compras do usuário usando 'usuario_id'
+    compras_usuario = list(compras_col.find({"usuario_id": user_id}))
     total_compras = len(compras_usuario)
 
-    # Garantir que o gasto e saldo existam
-    total_gasto = float(user.get("gasto", 0))
-    saldo = float(user.get("saldo", 0))
+    # Calcular total gasto somando as compras
+    total_gasto = sum(float(c.get("valor", 0)) for c in compras_usuario)
 
-    # Determinar o nível com base no total gasto
+    # Nível do usuário
     if total_gasto < 50:
         nivel_usuario = "Novato"
     elif total_gasto < 100:
@@ -168,17 +166,16 @@ def dashboard():
     else:
         nivel_usuario = "Lendário"
 
-    # Buscar níveis disponíveis da coleção Niveis
+    # Níveis disponíveis
     niveis_cursor = niveis_col.find({}, {"_id": 0, "nome": 1})
     niveis_disponiveis = [n.get("nome", "Desconhecido") for n in niveis_cursor]
 
-    # Contar materiais disponíveis
+    # Total de materiais
     total_materiais = materiais_col.count_documents({})
 
-    # Dados enviados ao template
     dados = {
         "nome": user["nome"],
-        "saldo": f"R$ {saldo:.2f}",
+        "saldo": f"R$ {float(user.get('saldo', 0)):.2f}",
         "gasto": f"R$ {total_gasto:.2f}",
         "compras": total_compras,
         "nivel": nivel_usuario,
