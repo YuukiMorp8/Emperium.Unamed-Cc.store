@@ -1,64 +1,180 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Meu Perfil</title>
-    <style>
-        body { background:#111; color:#fff; font-family:Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
-        .container { background:#1e1e1e; padding:30px; border-radius:15px; width:420px; box-shadow:0 0 15px rgba(0,0,0,0.6); }
-        .card { background:#222; padding:20px; border-radius:12px; margin-bottom:20px; text-align:left; }
-        .card-title { font-weight:bold; margin-bottom:10px; color:#ff9900; }
-        img { width:120px; height:120px; border-radius:50%; display:block; margin:0 auto 15px; }
-        input { width:100%; padding:10px; margin:5px 0; border:none; border-radius:8px; background:#333; color:#fff; }
-        button { background:#ff9900; color:#000; border:none; padding:10px; border-radius:8px; width:100%; cursor:pointer; font-weight:bold; }
-        button:hover { background:#ffaa33; }
-        .msg { text-align:center; margin-bottom:15px; color:#0f0; }
-        .msg.error { color:#f33; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Perfil - Emperium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Cinzel:wght@600&display=swap" rel="stylesheet">
+  <style>
+    /* ====== BASE ====== */
+    body {
+      background: radial-gradient(circle at center, #0b0b0b, #111);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* ====== CONTAINER ====== */
+    .container {
+      background: rgba(25, 25, 25, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(245, 214, 123, 0.25);
+      border-radius: 18px;
+      padding: 35px;
+      width: 440px;
+      box-shadow: 0 0 30px rgba(245,214,123,0.15), inset 0 0 20px rgba(245,214,123,0.08);
+      position: relative;
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ====== BOTÃO LOGOUT ====== */
+    .logout-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #d4af37, #8a6f2e);
+      color: #111;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(245,214,123,0.3);
+      transition: 0.3s;
+    }
+    .logout-btn:hover {
+      background: linear-gradient(135deg, #f5d67b, #b99232);
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(245,214,123,0.5);
+    }
+
+    /* ====== CARDS ====== */
+    .card {
+      background: rgba(20,20,20,0.9);
+      border-left: 4px solid #d4af37;
+      padding: 20px;
+      border-radius: 14px;
+      margin-bottom: 22px;
+      box-shadow: inset 0 0 15px rgba(245,214,123,0.1);
+      transition: 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 25px rgba(245,214,123,0.2);
+    }
+
+    .card-title {
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #f5d67b;
+      font-family: 'Cinzel', serif;
+      text-align: center;
+    }
+
+    /* ====== INPUTS & BOTÕES ====== */
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 10px;
+      border: none;
+      border-radius: 8px;
+      background: #333;
+      color: #fff;
+      font-size: 14px;
+    }
+    button {
+      background: linear-gradient(135deg, #d4af37, #8a6f2e);
+      color: #111;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      width: 100%;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: linear-gradient(135deg, #f5d67b, #b99232);
+      transform: scale(1.04);
+      box-shadow: 0 0 20px rgba(245,214,123,0.4);
+    }
+
+    /* ====== FOTO ====== */
+    img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      display: block;
+      margin: 0 auto 15px;
+      border: 2px solid rgba(245,214,123,0.7);
+      box-shadow: 0 0 20px rgba(245,214,123,0.3);
+    }
+
+    /* ====== MENSAGEM ====== */
+    .msg {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #0f0;
+      font-weight: 600;
+    }
+    .msg.error {
+      color: #f33;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        {% if mensagem %}
-            <div class="msg {% if "❌" in mensagem %}error{% endif %}">{{ mensagem }}</div>
-        {% endif %}
+  <div class="container">
+    <button class="logout-btn" onclick="location.href='/logout'">🚪 Sair</button>
 
-        <div class="card" style="text-align:center;">
-            <div class="card-title">👤 Usuário</div>
-            <img src="{{ usuario.get('foto','/static/default.png') }}">
-            <p><b>Nome:</b> {{ usuario.get('nome','') }}</p>
-            <p><b>Nível:</b> {{ usuario.get('nivel','-') }}</p>
-            <p><b>Saldo:</b> R$ {{ usuario.get('saldo',0) }}</p>
-            <p><b>Total gasto:</b> R$ {{ usuario.get('gasto',0) }}</p>
-        </div>
+    {% if mensagem %}
+      <div class="msg {% if '❌' in mensagem %}error{% endif %}">{{ mensagem }}</div>
+    {% endif %}
 
-        <div class="card">
-            <div class="card-title">✏️ Mudar Nome</div>
-            <form method="POST">
-                <input type="hidden" name="acao" value="nome">
-                <input type="text" name="novo_nome" placeholder="Novo nome" required>
-                <button type="submit">Alterar Nome</button>
-            </form>
-        </div>
-
-        <div class="card">
-            <div class="card-title">🔑 Alterar Senha</div>
-            <form method="POST">
-                <input type="hidden" name="acao" value="senha">
-                <input type="password" name="senha_atual" placeholder="Senha atual" required>
-                <input type="password" name="nova_senha" placeholder="Nova senha" required>
-                <input type="password" name="confirma_senha" placeholder="Confirme a nova senha" required>
-                <button type="submit">Alterar Senha</button>
-            </form>
-        </div>
-
-        <div class="card">
-            <div class="card-title">🖼️ Mudar Foto de Perfil</div>
-            <form method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="acao" value="foto">
-                <input type="file" name="foto_perfil" accept="image/*" required>
-                <button type="submit">Alterar Foto</button>
-            </form>
-        </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-title">👤 Meu Perfil</div>
+      <img src="{{ usuario.get('foto','/static/default.png') }}">
+      <p><b>Nome:</b> {{ usuario.get('nome','') }}</p>
+      <p><b>Saldo:</b> R$ {{ usuario.get('saldo',0) }}</p>
+      <p><b>Total gasto:</b> R$ {{ usuario.get('gasto',0) }}</p>
     </div>
+
+    <div class="card">
+      <div class="card-title">✏️ Mudar Nome</div>
+      <form method="POST">
+        <input type="hidden" name="acao" value="nome">
+        <input type="text" name="novo_nome" placeholder="Novo nome" required>
+        <button type="submit">Alterar Nome</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔑 Alterar Senha</div>
+      <form method="POST">
+        <input type="hidden" name="acao" value="senha">
+        <input type="password" name="senha_atual" placeholder="Senha atual" required>
+        <input type="password" name="nova_senha" placeholder="Nova senha" required>
+        <input type="password" name="confirma_senha" placeholder="Confirme a nova senha" required>
+        <button type="submit">Alterar Senha</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🖼️ Mudar Foto de Perfil</div>
+      <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="acao" value="foto">
+        <input type="file" name="foto_perfil" accept="image/*" required>
+        <button type="submit">Alterar Foto</button>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
