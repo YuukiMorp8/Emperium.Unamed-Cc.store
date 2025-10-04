@@ -141,18 +141,19 @@ def dashboard():
     if "usuario" not in session:
         return redirect(url_for("login"))
 
+    # Pega o usuário logado
     user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
     if not user:
         return redirect(url_for("login"))
 
-    user_id = ObjectId(user["_id"])
+    user_id = user["_id"]  # já é ObjectId
 
     # ====== Compras do usuário ======
     compras_usuario = list(compras_col.find({"usuario_id": user_id}))
     total_compras = len(compras_usuario)
     total_gasto = sum(float(c.get("valor", 0)) for c in compras_usuario)
 
-    # ====== Nível do usuário ======
+    # ====== Nível do usuário baseado no gasto ======
     if total_gasto < 50:
         nivel_usuario = "Novato"
     elif total_gasto < 100:
@@ -170,8 +171,9 @@ def dashboard():
     # ====== Total de materiais ======
     total_materiais = materiais_col.count_documents({})
 
+    # ====== Dados para o template ======
     dados = {
-        "nome": user["nome"],
+        "nome": user.get("nome", "Usuário"),
         "saldo": f"R$ {float(user.get('saldo', 0)):.2f}",
         "gasto": f"R$ {total_gasto:.2f}",
         "compras": total_compras,
