@@ -4,81 +4,136 @@
 <meta charset="UTF-8">
 <title>Pagamento PIX</title>
 <style>
-    body {
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        font-family: Arial, sans-serif;
         background: #111;
         color: #fff;
-        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+    }
+
+    body {
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
-        margin: 0;
     }
+
     .container {
-        background: #1e1e1e;
-        padding: 25px;
-        border-radius: 12px;
-        text-align: center;
-        width: 420px;
+        width: 100%;
+        height: 100%;
+        max-width: 500px;
+        background: linear-gradient(135deg, #1a1a1a, #222222);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 25px;
+        box-sizing: border-box;
     }
+
     h2 {
-        margin-bottom: 20px;
-        color: #ff9900;
+        font-size: 32px;
+        margin-bottom: 30px;
+        color: #b9894d; /* tom mais escuro e suave */
     }
+
     .embed {
-        background: #222;
-        border-left: 5px solid #ff9900;
-        border-radius: 10px;
-        padding: 15px;
-        margin: 15px 0;
+        background: #2a2a2a;
+        border-left: 5px solid #997733;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+        width: 100%;
+        box-sizing: border-box;
         text-align: left;
     }
+
     .embed h3 {
         margin-top: 0;
-        color: #ffcc66;
+        font-size: 22px;
+        color: #ccaa77;
     }
+
     .embed p {
-        margin: 8px 0;
+        margin: 10px 0;
+        font-size: 16px;
     }
+
     img {
         margin: 15px auto;
         display: block;
-        width: 220px;
-        height: 220px;
+        width: 240px;
+        height: 240px;
         border: 4px solid #333;
-        border-radius: 10px;
+        border-radius: 12px;
     }
+
     .copia-cola {
         word-break: break-all;
-        background: #111;
-        padding: 10px;
-        border-radius: 8px;
+        background: #1a1a1a;
+        padding: 12px;
+        border-radius: 10px;
         margin-top: 10px;
-        font-size: 14px;
+        font-size: 16px;
     }
+
     button {
         margin-top: 15px;
-        background: #ff9900;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: bold;
-        color: #111;
-        transition: 0.2s;
-    }
-    button:hover {
-        background: #ffaa22;
-    }
-    .confirm-btn {
-        display: block;
         width: 100%;
-        margin-top: 20px;
-        background: #28a745;
+        max-width: 400px;
+        padding: 18px;
+        border-radius: 12px;
+        border: none;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        transform: scale(1.03);
+    }
+
+    button:not(.confirm-btn) {
+        background: #997733;
         color: #fff;
     }
+
+    button:not(.confirm-btn):hover {
+        background: #aa8844;
+    }
+
+    .confirm-btn {
+        background: #228844;
+        color: #fff;
+        margin-top: 25px;
+    }
+
     .confirm-btn:hover {
-        background: #34c759;
+        background: #33aa66;
+    }
+
+    /* Responsivo para celular */
+    @media (max-width: 768px) {
+        .container {
+            padding: 30px 20px;
+        }
+        h2 {
+            font-size: 28px;
+        }
+        .embed h3 {
+            font-size: 20px;
+        }
+        .embed p, .copia-cola {
+            font-size: 15px;
+        }
+        button {
+            font-size: 17px;
+            padding: 16px;
+        }
     }
 </style>
 </head>
