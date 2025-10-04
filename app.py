@@ -145,17 +145,12 @@ def dashboard():
     if not user:
         return redirect(url_for("login"))
 
-    total_materiais = materiais_col.count_documents({})
-    niveis = [n["nome"] for n in niveis_col.find({}, {"_id": 0, "nome": 1})]
-
     # === Buscar compras do usuário ===
-    compras_usuario = list(compras_col.find({"user": str(user["_id"])}))
-
-    # === Contar e somar ===
+    compras_usuario = list(compras_col.find({"user_id": str(user["_id"])}))
     compras_totais = len(compras_usuario)
     total_gasto = sum(float(c.get("valor", 0)) for c in compras_usuario)
 
-    # === Definir nível com base no gasto ===
+    # === Calcular nível ===
     if total_gasto < 50:
         nivel = "Novato"
     elif total_gasto < 100:
@@ -165,20 +160,22 @@ def dashboard():
     elif total_gasto < 1000:
         nivel = "ABSURDO"
     else:
-        nivel = "LENDÁRIO 💎"
+        nivel = "Lendário"
 
-    # === Dados para template ===
+    # === Total de materiais ===
+    total_materiais = materiais_col.count_documents({})
+
     dados = {
         "nome": user["nome"],
-        "saldo": f"R$ {user.get('saldo', 0):.2f}",
+        "saldo": f"R$ {float(user.get('saldo', 0)):.2f}",
         "gasto": f"R$ {total_gasto:.2f}",
         "compras": compras_totais,
         "nivel": nivel,
         "materiais": total_materiais,
-        "foto": user.get("foto", "/static/default.png")
+        "foto": user.get("foto", "/static/default.png"),
     }
 
-    return render_template("dashboard.html", dados=dados, niveis=niveis)
+    return render_template("dashboard.html", dados=dados)
 #-----------------
 # ADMIN
 #-----------------
