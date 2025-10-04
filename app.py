@@ -17,7 +17,8 @@ db = client["EMPERIUMCC"]  # nome do database
 usuarios_col = db["User"]  # nome da collection
 niveis_col = db["Niveis"] 
 materiais_col = db["Materiais"]
-admins_col = db["Admins"] 
+admins_col = db["Admins"]
+compras_col = db["compras"]
 # =========================
 # Funções de banco
 # =========================   
