@@ -22,19 +22,13 @@ header {
     background: linear-gradient(90deg, #2a1b35, #3d1f2d, #312014);
     padding: 25px 30px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     box-shadow: 0 4px 25px rgba(0,0,0,0.8);
     border-bottom: 1px solid rgba(245,214,123,0.25);
     position: sticky;
     top: 0;
     z-index: 10;
-}
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
 }
 
 /* ========== PERFIL ========== */
@@ -47,29 +41,9 @@ header {
     cursor: pointer;
 }
 
-/* ========== BOTÕES DE MENU (agora fixos embaixo no mobile) ========== */
-.btn-admin {
-    padding: 16px 24px;
-    background: linear-gradient(135deg, #d4af37, #8a6f2e);
-    color: #111;
-    font-weight: bold;
-    border-radius: 12px;
-    cursor: pointer;
-    border: none;
-    transition: 0.3s;
-    min-width: 150px;
-    font-size: 18px;
-    box-shadow: 0 0 20px rgba(212,175,55,0.3);
-}
-.btn-admin:hover {
-    background: linear-gradient(135deg, #f5d67b, #b99232);
-    transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(245,214,123,0.5);
-}
-
 /* ========== CONTEÚDO PRINCIPAL ========== */
 main {
-    padding: 50px 25px 120px;
+    padding: 50px 25px 160px;
     display: flex;
     flex-direction: column;
     gap: 40px;
@@ -154,9 +128,8 @@ main {
     box-shadow: 0 0 25px rgba(245,214,123,0.6);
 }
 
-/* ========== BOTÕES FIXOS NO MOBILE ========== */
+/* ========== BARRA INFERIOR ========== */
 .nav-bottom {
-    display: none;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -166,37 +139,35 @@ main {
     border-top: 1px solid rgba(245,214,123,0.25);
     display: flex;
     justify-content: space-around;
-    padding: 12px 10px;
+    padding: 16px 15px;
     box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
     z-index: 99;
 }
 
 .nav-bottom button {
     flex: 1;
-    margin: 0 5px;
-    padding: 14px 10px;
+    margin: 0 10px;
+    padding: 22px 10px;
     background: linear-gradient(135deg, #d4af37, #8a6f2e);
     border: none;
-    border-radius: 10px;
-    font-size: 16px;
+    border-radius: 14px;
+    font-size: 20px;
     color: #111;
     font-weight: bold;
-    box-shadow: 0 0 15px rgba(245,214,123,0.25);
+    box-shadow: 0 0 25px rgba(245,214,123,0.35);
     transition: 0.3s;
 }
 .nav-bottom button:hover {
-    transform: scale(1.06);
-    box-shadow: 0 0 25px rgba(245,214,123,0.5);
+    transform: scale(1.08);
+    box-shadow: 0 0 35px rgba(245,214,123,0.6);
 }
 
 /* ========== RESPONSIVIDADE ========== */
 @media (max-width: 900px) {
-    header { flex-direction: column; gap: 15px; }
-    .header-left { justify-content: center; flex-wrap: wrap; }
-    .btn-admin { display: none; } /* Esconde botões de topo */
-    .nav-bottom { display: flex; } /* Mostra os fixos inferiores */
+    header { padding: 20px; justify-content: center; }
     .perfil { width: 65px; height: 65px; }
-    main { padding-bottom: 160px; }
+    main { padding-bottom: 200px; }
+    .nav-bottom button { font-size: 18px; padding: 20px 8px; }
     .embed { padding: 25px; }
     .embed-title { font-size: 24px; }
     .card { font-size: 18px; padding: 20px; }
@@ -206,13 +177,6 @@ main {
 <body>
 
 <header>
-    <div class="header-left">
-        <button class="btn-admin" onclick="location.href='/admin_login'">Painel de Admin</button>
-        <button class="btn-admin" onclick="location.href='/adicionar_saldo'">Adicionar Saldo</button>
-        <button class="btn-admin" onclick="location.href='/comprar'">Comprar</button>
-        <button class="btn-admin" onclick="location.href='/trocar_material'">Trocar Material</button>
-        <button class="btn-admin" onclick="location.href='/historico_compras'">Histórico</button>
-    </div>
     <a href="/perfil"><img src="{{ dados.foto }}" class="perfil"></a>
 </header>
 
@@ -243,7 +207,7 @@ main {
     </div>
 </main>
 
-<!-- Barra inferior (mobile) -->
+<!-- Barra inferior fixa -->
 <div class="nav-bottom">
     <button onclick="location.href='/adicionar_saldo'">💰 Saldo</button>
     <button onclick="location.href='/comprar'">🛒 Comprar</button>
