@@ -176,6 +176,20 @@ main {
 </head>
 <body>
 
+    <header>
+    <!-- Botão Admin no canto superior esquerdo -->
+    <button class="btn-admin" style="position:absolute; top:20px; left:20px; z-index:1000;"
+            onclick="location.href='/admin_login'">Painel de Admin</button>
+
+    <div class="header-left" style="margin-left:160px;"> <!-- Espaço para o botão do Admin -->
+        <button class="btn-admin" onclick="location.href='/adicionar_saldo'">Adicionar Saldo</button>
+        <button class="btn-admin" onclick="location.href='/comprar'">Comprar</button>
+        <button class="btn-admin" onclick="location.href='/trocar_material'">Trocar Material</button>
+        <button class="btn-admin" onclick="location.href='/historico_compras'">Histórico</button>
+    </div>
+    <a href="/perfil"><img src="{{ dados.foto }}" class="perfil"></a>
+    </header>
+    
 <header>
     <a href="/perfil"><img src="{{ dados.foto }}" class="perfil"></a>
 </header>
@@ -217,3 +231,4 @@ main {
 
 </body>
 </html>
+
