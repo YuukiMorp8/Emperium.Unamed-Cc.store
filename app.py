@@ -53,7 +53,7 @@ def get_usuario(nome):
     return usuarios_col.find_one({"nome": nome})
 
 #-----------------
-# LOGIN / REGISTRO
+# LOGIN / REGISTRO / LOGOUT
 #-----------------
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -95,6 +95,11 @@ def register():
             return "❌ Usuário já existe!"
 
     return render_template("register.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("usuario", None)
+    return redirect(url_for("login"))
 
 #-----------------
 # USUÁRIO / PERFIL / DASHBOARD
