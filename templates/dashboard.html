@@ -7,127 +7,130 @@
 /* Reset e base */
 html, body {
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: #111;
+    background: #0f0f0f;
     color: #eee;
     box-sizing: border-box;
 }
 
 /* Header */
 header {
-    background: linear-gradient(90deg, #992357, #b92121);
-    padding: 15px 20px;
+    background: linear-gradient(90deg, #4b2a5a, #991f36);
+    padding: 20px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.6);
     flex-wrap: wrap;
 }
 .header-left {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 .btn-admin {
-    padding: 12px 20px;
-    background: #ff5c5c;
+    padding: 14px 22px;
+    background: #d44242;
     color: #fff;
     font-weight: bold;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     border: none;
     transition: 0.3s;
     flex: 1 1 auto;
-    min-width: 140px;
-    font-size: 16px;
+    min-width: 150px;
+    font-size: 18px;
 }
-.btn-admin:hover { background: #ff7777; }
-.perfil { width: 60px; height: 60px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
+.btn-admin:hover { background: #ff6a6a; transform: scale(1.03); }
+.perfil { width: 70px; height: 70px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
 
 /* Main container */
 main {
-    padding: 25px;
+    padding: 30px;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 35px;
     max-width: 100%;
     width: 100%;
-    min-height: calc(100vh - 90px);
+    min-height: calc(100vh - 110px);
     box-sizing: border-box;
 }
 
 /* Embeds */
 .embed {
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.5);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     width: 100%;
     box-sizing: border-box;
-    transition: 0.3s;
+    transition: 0.4s;
 }
 .embed-title {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-/* Dashboard embed - vermelho */
+/* Dashboard embed - vermelho/rosa escuro */
 .embed.dashboard {
-    background: linear-gradient(135deg, #b92121, #992357);
+    background: linear-gradient(135deg, #991f36, #b22222, #d14a5a);
 }
+
+/* Preview embed - roxo/rosa */
+.embed.preview {
+    background: linear-gradient(135deg, #5d2a6b, #935fbb, #b95292);
+}
+
 .embed-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
     width: 100%;
 }
+
+/* Cards */
 .card {
-    background: rgba(30,30,30,0.85);
-    padding: 20px;
-    border-radius: 12px;
+    background: rgba(30,30,30,0.9);
+    padding: 30px;
+    border-radius: 14px;
     text-align: center;
-    font-size: 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    font-size: 20px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.5);
 }
 .card-title {
-    font-size: 16px;
+    font-size: 18px;
     color: #ddd;
-    margin-bottom: 10px;
-}
-
-/* Preview embed - roxo */
-.embed.preview {
-    background: linear-gradient(135deg, #935fbb, #b92121);
+    margin-bottom: 12px;
 }
 
 /* Botões internos */
 .btn-action {
-    padding: 12px 15px;
-    background: #ff77aa;
+    padding: 14px 20px;
+    background: #ff5c91;
     color: #fff;
     font-weight: bold;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     border: none;
-    margin-top: 12px;
+    margin-top: 15px;
     width: 100%;
-    font-size: 16px;
+    font-size: 18px;
     transition: 0.3s;
 }
-.btn-action:hover { background: #ff99cc; }
+.btn-action:hover { background: #ff84b0; transform: scale(1.02); }
 
 /* Responsivo */
 @media (max-width: 768px) {
-    main { padding: 15px; }
+    main { padding: 20px; }
     .embed-content { grid-template-columns: 1fr; }
     .header-left { justify-content: center; }
-    .btn-admin { min-width: 120px; flex: 1 1 45%; font-size: 14px; padding: 10px 12px; }
-    .card { font-size: 16px; padding: 15px; }
-    .embed-title { font-size: 20px; margin-bottom: 15px; }
+    .btn-admin { min-width: 130px; flex: 1 1 48%; font-size: 16px; padding: 12px 16px; }
+    .card { font-size: 18px; padding: 22px; }
+    .embed-title { font-size: 22px; margin-bottom: 18px; }
 }
 </style>
 </head>
