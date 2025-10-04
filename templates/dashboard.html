@@ -20,9 +20,9 @@ html, body {
 /* ========== CABEÇALHO ========== */
 header {
     background: linear-gradient(90deg, #2a1b35, #3d1f2d, #312014);
-    padding: 25px 30px;
+    padding: 20px 30px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 25px rgba(0,0,0,0.8);
     border-bottom: 1px solid rgba(245,214,123,0.25);
@@ -31,19 +31,38 @@ header {
     z-index: 10;
 }
 
-/* ========== PERFIL ========== */
+/* Botão Admin */
+.btn-admin {
+    padding: 14px 22px;
+    background: linear-gradient(135deg, #d4af37, #8a6f2e);
+    color: #111;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    border: none;
+    font-size: 18px;
+    box-shadow: 0 0 20px rgba(245,214,123,0.3);
+    transition: 0.3s;
+}
+.btn-admin:hover {
+    background: linear-gradient(135deg, #f5d67b, #b99232);
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(245,214,123,0.6);
+}
+
+/* Perfil */
 .perfil {
-    width: 75px;
-    height: 75px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
-    border: 2.5px solid rgba(245,214,123,0.8);
+    border: 2px solid rgba(245,214,123,0.8);
     box-shadow: 0 0 15px rgba(245,214,123,0.4);
     cursor: pointer;
 }
 
 /* ========== CONTEÚDO PRINCIPAL ========== */
 main {
-    padding: 50px 25px 160px;
+    padding: 50px 25px 180px;
     display: flex;
     flex-direction: column;
     gap: 40px;
@@ -107,27 +126,6 @@ main {
     text-shadow: 0 0 10px rgba(245,214,123,0.3);
 }
 
-/* ========== BOTÕES INTERNOS DOS EMBEDS ========== */
-.btn-action {
-    padding: 16px 22px;
-    background: linear-gradient(135deg, #d4af37, #8a6f2e);
-    color: #111;
-    font-weight: bold;
-    border-radius: 12px;
-    cursor: pointer;
-    border: none;
-    margin-top: 18px;
-    width: 100%;
-    font-size: 18px;
-    transition: 0.3s;
-    box-shadow: 0 0 20px rgba(245,214,123,0.3);
-}
-.btn-action:hover {
-    background: linear-gradient(135deg, #f5d67b, #b99232);
-    transform: scale(1.04);
-    box-shadow: 0 0 25px rgba(245,214,123,0.6);
-}
-
 /* ========== BARRA INFERIOR ========== */
 .nav-bottom {
     position: fixed;
@@ -143,7 +141,6 @@ main {
     box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
     z-index: 99;
 }
-
 .nav-bottom button {
     flex: 1;
     margin: 0 10px;
@@ -176,25 +173,25 @@ main {
 </head>
 <body>
 
-    <header>
+<header>
     <!-- Botão Admin no canto superior esquerdo -->
-    <button class="btn-admin" style="position:absolute; top:20px; left:20px; z-index:1000;"
+    <button class="btn-admin" style="margin-right:auto;"
             onclick="location.href='/admin_login'">Painel de Admin</button>
 
-    <div class="header-left" style="margin-left:160px;"> <!-- Espaço para o botão do Admin -->
+    <!-- Botões de ações principais -->
+    <div class="header-left" style="display:flex; gap:12px; margin-left:20px;">
         <button class="btn-admin" onclick="location.href='/adicionar_saldo'">Adicionar Saldo</button>
         <button class="btn-admin" onclick="location.href='/comprar'">Comprar</button>
         <button class="btn-admin" onclick="location.href='/trocar_material'">Trocar Material</button>
         <button class="btn-admin" onclick="location.href='/historico_compras'">Histórico</button>
     </div>
-    <a href="/perfil"><img src="{{ dados.foto }}" class="perfil"></a>
-    </header>
-    
-<header>
+
+    <!-- Perfil -->
     <a href="/perfil"><img src="{{ dados.foto }}" class="perfil"></a>
 </header>
 
 <main>
+    <!-- Dashboard -->
     <div class="embed">
         <div class="embed-title">📊 Dashboard</div>
         <div class="embed-content">
@@ -205,6 +202,7 @@ main {
         </div>
     </div>
 
+    <!-- Unamed Emperium -->
     <div class="embed">
         <div class="embed-title">🏢 Unamed Emperium</div>
         <div class="embed-content">
@@ -213,6 +211,7 @@ main {
         </div>
     </div>
 
+    <!-- Unamed Hall -->
     <div class="embed">
         <div class="embed-title">📢 Unamed Hall</div>
         <div class="embed-content">
@@ -231,4 +230,3 @@ main {
 
 </body>
 </html>
-
