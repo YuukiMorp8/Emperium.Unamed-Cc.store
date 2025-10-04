@@ -31,6 +31,7 @@
         border: 2px solid #d4af37;
         transition: 0.3s;
     }
+
     header img:hover {
         transform: scale(1.1);
         border-color: #f5d67b;
@@ -46,6 +47,7 @@
         cursor: pointer;
         transition: 0.3s;
     }
+
     header button:hover {
         background: linear-gradient(135deg, #f0c94b, #8c6a2a);
         transform: scale(1.05);
@@ -99,7 +101,7 @@
         transform: scale(1.03);
     }
 
-    /* Embeds especiais */
+    /* Embeds Especiais */
     .embeds-especiais {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -132,36 +134,62 @@
         color: #ccc;
     }
 
-    .embed strong {
-        color: #fff;
-    }
-
     /* Cards de material */
     .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 20px;
     }
 
     .card {
-        background: linear-gradient(160deg, #1a1a1a, #111);
-        padding: 20px;
-        border-radius: 12px;
-        text-align: center;
-        border: 1px solid rgba(212,175,55,0.2);
+        background: linear-gradient(160deg, #121010, #1b1a1a);
+        padding: 18px;
+        border-radius: 14px;
+        border: 1px solid rgba(212,175,55,0.25);
+        box-shadow: 0 0 15px rgba(212,175,55,0.1);
         transition: 0.3s;
     }
 
     .card:hover {
-        transform: scale(1.03);
-        border-color: rgba(212,175,55,0.4);
-        box-shadow: 0 0 15px rgba(212,175,55,0.2);
+        transform: scale(1.02);
+        box-shadow: 0 0 20px rgba(212,175,55,0.25);
     }
 
-    .card-title {
-        font-size: 14px;
-        color: #aaa;
-        margin-bottom: 5px;
+    /* Mini-embeds dentro do card */
+    .sub-embed {
+        background: rgba(25,25,25,0.9);
+        border-left: 4px solid #d4af37;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 10px;
+        box-shadow: inset 0 0 6px rgba(212,175,55,0.15);
+    }
+
+    .sub-embed p {
+        margin: 5px 0;
+        color: #ccc;
+    }
+
+    .sub-embed strong {
+        color: #fff;
+    }
+
+    .btn-buy {
+        width: 100%;
+        padding: 14px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #d4af37, #8a6f2e);
+        border: none;
+        color: #111;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-buy:hover {
+        background: linear-gradient(135deg, #f5d67b, #b99232);
+        transform: scale(1.03);
     }
 
     /* Modal */
@@ -195,19 +223,11 @@
         text-align: left;
     }
 
-    .msg {
-        margin-top: 10px;
-        color: #0f0;
-    }
-
-    .msg.err {
-        color: #f33;
-    }
+    .msg { margin-top: 10px; color: #0f0; }
+    .msg.err { color: #f33; }
 
     @media (max-width: 768px) {
         input, select, button { font-size: 15px; width: 100%; }
-        .embed h3 { font-size: 20px; }
-        .embed { padding: 18px; }
     }
 </style>
 </head>
@@ -233,33 +253,28 @@
         <button type="submit">Filtrar</button>
     </form>
 
-    <!-- Embeds Especiais -->
-    <div class="embeds-especiais">
-        {% for nivel, dados in top3_niveis %}
-        <div class="embed">
-            <h3>{{ nivel }}</h3>
-            <p><strong>Materiais:</strong> {{ dados.total }}</p>
-            <p><strong>Configurações:</strong> {{ dados.configs }}</p>
-        </div>
-        {% endfor %}
-    </div>
-
     <!-- Materiais -->
     <div class="grid">
         {% for mat in resultados %}
-            <div class="card">
-                <div class="card-title">💳 BIN</div>{{ mat.material }}
-                <div class="card-title">🏦 Banco</div>{{ mat.banco }}
-                <div class="card-title">💰 Valor</div>R$ {{ "%.2f"|format(mat.valor) }}
-                <div class="card-title">⭐ Nível</div>{{ mat.nivel }}
-                <button class="btn-buy" 
-                    data-id="{{ mat._id }}" 
-                    data-material="{{ mat.material }}" 
-                    data-nivel="{{ mat.nivel }}" 
-                    data-valor="{{ mat.valor }}">Comprar</button>
+        <div class="card">
+            <div class="sub-embed">
+                <p><strong>⭐ Nível:</strong> {{ mat.nivel }}</p>
+                <p><strong>💰 Valor:</strong> R$ {{ "%.2f"|format(mat.valor) }}</p>
             </div>
+            <div class="sub-embed">
+                <p><strong>💳 BIN:</strong> {{ mat.material }}</p>
+                <p><strong>🏦 Banco:</strong> {{ mat.banco }}</p>
+            </div>
+            <button class="btn-buy"
+                data-id="{{ mat._id }}"
+                data-material="{{ mat.material }}"
+                data-nivel="{{ mat.nivel }}"
+                data-valor="{{ mat.valor }}">
+                Comprar
+            </button>
+        </div>
         {% else %}
-            <p>Nenhum resultado encontrado.</p>
+        <p>Nenhum resultado encontrado.</p>
         {% endfor %}
     </div>
 </div>
@@ -329,4 +344,4 @@ document.getElementById("confirmBuyBtn").addEventListener("click", async ()=>{
 </script>
 
 </body>
-</html>
+               </html>
