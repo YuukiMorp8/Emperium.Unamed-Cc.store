@@ -2,74 +2,226 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Histórico de Compras</title>
+<title>Histórico de Compras - Emperium</title>
 <style>
-body { font-family: Arial; background:#111; color:#eee; margin:0; padding:0; }
-.container { padding:20px; max-width:900px; margin:0 auto; }
-.card { background:#1a1a1a; padding:15px; border-radius:10px; margin-bottom:12px; }
-.card-title { font-size:14px; color:#aaa; margin-bottom:5px; }
-.btn-action { padding:8px 12px; background:#ff9900; border:none; border-radius:8px; color:#111; font-weight:bold; cursor:pointer; margin-top:10px; }
-.btn-action:hover { background:#ffcc00; }
-.modal-back { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:999; }
-.modal { background:#1e1e1e; padding:20px; border-radius:12px; width:420px; color:#fff; }
-.modal h3 { color:#ff9900; margin-top:0; }
+    * { box-sizing: border-box; }
+    body {
+        font-family: "Poppins", Arial, sans-serif;
+        background: radial-gradient(circle at 30% 20%, #1a0f1f, #0a0a0a);
+        color: #f1f1f1;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 38px;
+        margin: 30px 0;
+        color: #f5d67b;
+        text-shadow: 0 0 20px rgba(245, 214, 123, 0.4);
+    }
+
+    .container {
+        padding: 30px;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    /* Card de compra */
+    .card {
+        background: linear-gradient(160deg, rgba(20, 20, 20, 0.95), rgba(40, 30, 20, 0.95));
+        border-radius: 18px;
+        padding: 22px 28px;
+        margin-bottom: 25px;
+        border: 1.5px solid rgba(212,175,55,0.4);
+        box-shadow: 0 0 18px rgba(212,175,55,0.2), inset 0 0 12px rgba(212,175,55,0.1);
+        transition: 0.3s ease;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 28px rgba(212,175,55,0.3), inset 0 0 20px rgba(212,175,55,0.15);
+    }
+
+    .card b {
+        color: #f5d67b;
+    }
+
+    .card div {
+        margin: 10px 0;
+        font-size: 17px;
+    }
+
+    /* Botão de ação */
+    .btn-action {
+        display: inline-block;
+        padding: 14px 24px;
+        background: linear-gradient(135deg, #d4af37, #8a6f2e);
+        border: none;
+        border-radius: 12px;
+        color: #111;
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+        box-shadow: 0 0 12px rgba(212,175,55,0.4);
+    }
+
+    .btn-action:hover {
+        background: linear-gradient(135deg, #f5d67b, #b99232);
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(245,214,123,0.6);
+    }
+
+    /* Modal flutuante */
+    .modal-back {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.85);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+        padding: 20px;
+    }
+
+    .modal {
+        background: linear-gradient(160deg, #1a1a1a, #251e17);
+        border: 2px solid #d4af37;
+        border-radius: 20px;
+        padding: 35px;
+        width: 90%;
+        max-width: 650px;
+        color: #fff;
+        text-align: left;
+        box-shadow: 0 0 30px rgba(212,175,55,0.3);
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal h3 {
+        margin-top: 0;
+        font-size: 26px;
+        color: #f5d67b;
+        border-bottom: 1px solid rgba(245,214,123,0.3);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        text-shadow: 0 0 10px rgba(245,214,123,0.5);
+    }
+
+    .modal h4 {
+        margin-bottom: 8px;
+        color: #f5d67b;
+    }
+
+    .modal-content {
+        background: rgba(30, 30, 30, 0.8);
+        padding: 18px 22px;
+        border-radius: 14px;
+        border-left: 5px solid #d4af37;
+        box-shadow: inset 0 0 10px rgba(212,175,55,0.2);
+        font-size: 16px;
+    }
+
+    .modal-content b {
+        color: #f5d67b;
+    }
+
+    #closeModal {
+        margin-top: 20px;
+        width: 100%;
+        padding: 16px;
+        font-size: 18px;
+        border-radius: 12px;
+        border: none;
+        font-weight: bold;
+        background: linear-gradient(135deg, #d4af37, #8a6f2e);
+        color: #111;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    #closeModal:hover {
+        background: linear-gradient(135deg, #f5d67b, #b99232);
+        transform: scale(1.03);
+        box-shadow: 0 0 20px rgba(245,214,123,0.6);
+    }
+
+    @media (max-width: 768px) {
+        .card { font-size: 15px; padding: 18px; }
+        .btn-action { width: 100%; text-align: center; font-size: 16px; padding: 12px; }
+        .modal { width: 95%; padding: 25px; }
+    }
 </style>
 </head>
 <body>
+
 <div class="container">
-    <h2>Histórico de Compras</h2>
+    <h2>🧾 Histórico de Compras</h2>
+
     {% for c in compras %}
     <div class="card">
-        <div><b>Valor da compra:</b> R$ {{ "%.2f"|format(c.valor|float) }}</div>
-        <div><b>Item comprado:</b> {{ c.numero_mask }} - ({{ c.nivel }})</div>
-        <div><b>Data de compra:</b> {{ c.data_str }} - Garantia de troca: 10 minutos</div>
+        <div><b>💰 Valor da compra:</b> R$ {{ "%.2f"|format(c.valor|float) }}</div>
+        <div><b>📦 Item comprado:</b> {{ c.numero_mask }} - ({{ c.nivel }})</div>
+        <div><b>🕒 Data da compra:</b> {{ c.data_str }}</div>
+        <div><b>🔄 Garantia de troca:</b> 10 minutos</div>
         <button class="btn-action view-btn" data-id="{{ c._id }}">Ver compra</button>
     </div>
+    {% else %}
+    <p style="text-align:center; color:#aaa;">Nenhuma compra encontrada.</p>
     {% endfor %}
 </div>
 
 <!-- Modal flutuante -->
 <div class="modal-back" id="modalBack">
     <div class="modal" id="modalContent">
-        <h3>Detalhes do Pedido</h3>
+        <h3>📋 Detalhes da Compra</h3>
         <div id="modalBody"></div>
-        <div style="margin-top:12px; text-align:right;">
-            <button class="btn-action" id="closeModal">Fechar</button>
-        </div>
+        <button id="closeModal">Fechar</button>
     </div>
 </div>
 
 <script>
-    document.querySelectorAll(".view-btn").forEach(btn=>{
+document.querySelectorAll(".view-btn").forEach(btn=>{
     btn.addEventListener("click", async ()=>{
         const id = btn.dataset.id;
-        try{
+        try {
             const resp = await fetch(`/api/compra/${id}`);
             const data = await resp.json();
             if(!data.ok){ alert(data.msg); return; }
             const c = data.compra;
 
             document.getElementById("modalBody").innerHTML = `
-                <h4>Pedido</h4>
-                <div style="background:#222; padding:10px; border-radius:8px;">
-                    <b>Número:</b> ${c.numero}<br>
-                    <b>Validade:</b> ${c.validade}<br>
-                    <b>CVV:</b> ${c.cvv}<br>
-                    <b>CPF:</b> ${c.cpf}<br>
-                    <b>Nome:</b> ${c.nome}<br>
-                    <b>Valor:</b> R$ ${parseFloat(c.valor).toFixed(2)}<br>
-                    <b>Data de compra:</b> ${c.data_str}<br>
-                    <b>Garantia de troca:</b> 10 minutos
+                <div class="modal-content">
+                    <h4>💳 Informações do Pedido</h4>
+                    <p><b>Número:</b> ${c.numero}</p>
+                    <p><b>Validade:</b> ${c.validade}</p>
+                    <p><b>CVV:</b> ${c.cvv}</p>
+                    <p><b>CPF:</b> ${c.cpf}</p>
+                    <p><b>Nome:</b> ${c.nome}</p>
+                    <p><b>Valor:</b> R$ ${parseFloat(c.valor).toFixed(2)}</p>
+                    <p><b>Data da compra:</b> ${c.data_str}</p>
+                    <p><b>Garantia de troca:</b> 10 minutos</p>
                 </div>
             `;
-            document.getElementById("modalBack").style.display="flex";
-        }catch(e){ 
+            document.getElementById("modalBack").style.display = "flex";
+        } catch (e) {
             console.error(e);
-            alert("Erro ao carregar detalhes."); 
+            alert("Erro ao carregar detalhes.");
         }
     });
 });
-document.getElementById("closeModal").addEventListener("click",()=>{document.getElementById("modalBack").style.display="none";});
+
+document.getElementById("closeModal").addEventListener("click", ()=>{
+    document.getElementById("modalBack").style.display="none";
+});
 </script>
+
 </body>
 </html>
