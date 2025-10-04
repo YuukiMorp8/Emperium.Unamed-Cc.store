@@ -146,7 +146,7 @@ def dashboard():
     if not user:
         return redirect(url_for("login"))
 
-    user_id = user["_id"]  # já é ObjectId
+    user_id = user["_id"]  # ObjectId
 
     # ====== Compras do usuário ======
     compras_usuario = list(compras_col.find({"usuario_id": user_id}))
@@ -166,7 +166,7 @@ def dashboard():
         nivel_usuario = "Lendário"
 
     # ====== Níveis disponíveis apenas dos materiais ======
-    niveis_disponiveis = materiais_col.distinct("nivel")  # retorna só os níveis presentes nos materiais
+    niveis_disponiveis = materiais_col.distinct("nivel")  # só níveis presentes nos materiais
 
     # ====== Total de materiais ======
     total_materiais = materiais_col.count_documents({})
