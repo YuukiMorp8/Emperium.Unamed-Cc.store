@@ -17,29 +17,37 @@
             align-items: center;
             box-sizing: border-box;
         }
+
         .container {
             background: linear-gradient(135deg, #10e894, #6fff00);
             padding: 40px;
             border-radius: 20px;
             width: 90%;
             max-width: 450px;
+            min-height: 80vh; /* altura mínima 80% da tela */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             text-align: center;
             box-shadow: 0 6px 20px rgba(0,0,0,0.5);
         }
+
         h1 {
             margin-bottom: 30px;
             font-size: 28px;
             color: #111;
         }
+
         input {
             width: 100%;
-            padding: 16px;
-            margin: 12px 0;
+            padding: 18px;
+            margin: 14px 0;
             border-radius: 12px;
             border: none;
             font-size: 18px;
             box-sizing: border-box;
         }
+
         button {
             padding: 18px;
             width: 100%;
@@ -52,6 +60,7 @@
             font-size: 18px;
             transition: 0.3s;
         }
+
         button:hover {
             background: #00ffaa;
         }
@@ -61,12 +70,13 @@
             .container {
                 padding: 30px;
                 width: 95%;
+                min-height: 80vh; /* garante 80% da tela */
             }
             h1 {
                 font-size: 24px;
             }
             input {
-                padding: 14px;
+                padding: 16px;
                 font-size: 16px;
             }
             button {
