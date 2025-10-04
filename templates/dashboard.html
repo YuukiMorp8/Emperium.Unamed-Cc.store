@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard - Emperium</title>
-    <style>
+<meta charset="UTF-8">
+<title>Dashboard - Emperium</title>
+<style>
+/* Reset e base */
 html, body {
     width: 100%;
     height: 100%;
@@ -14,13 +15,15 @@ html, body {
     color: #eee;
     box-sizing: border-box;
 }
+
+/* Header */
 header {
-    background: #222;
+    background: linear-gradient(90deg, #992357, #b92121);
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.5);
     flex-wrap: wrap;
 }
 .header-left {
@@ -30,55 +33,103 @@ header {
     flex-wrap: wrap;
 }
 .btn-admin {
-    padding: 8px 16px;
-    background: #ff9900;
-    color: #111;
+    padding: 12px 20px;
+    background: #ff5c5c;
+    color: #fff;
     font-weight: bold;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     border: none;
     transition: 0.3s;
     flex: 1 1 auto;
-    min-width: 120px;
+    min-width: 140px;
+    font-size: 16px;
 }
-.btn-admin:hover { background: #ffcc00; }
-.perfil { width: 60px; height: 60px; border-radius: 50%; cursor: pointer; border: 2px solid #eee; }
+.btn-admin:hover { background: #ff7777; }
+.perfil { width: 60px; height: 60px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
 
+/* Main container */
 main {
-    padding: 20px;
+    padding: 25px;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 25px;
+    gap: 30px;
     max-width: 100%;
     width: 100%;
-    min-height: calc(100vh - 90px); /* ocupa toda a altura da tela subtraindo header */
+    min-height: calc(100vh - 90px);
     box-sizing: border-box;
 }
 
+/* Embeds */
 .embed {
-    background: linear-gradient(135deg, #2e2e2e, #1a1a1a);
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 3px 15px rgba(0,0,0,0.5);
     width: 100%;
     box-sizing: border-box;
+    transition: 0.3s;
+}
+.embed-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
-.embed-title { font-size: 20px; color: #ff9900; margin-bottom: 15px; font-weight: bold; }
-.embed-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; width: 100%; }
-.card { background: #222; padding: 15px; border-radius: 10px; text-align: center; }
-.card-title { font-size: 14px; color: #aaa; margin-bottom: 5px; }
-.btn-action { padding: 8px 12px; background: #ff9900; color: #111; font-weight: bold; border-radius: 8px; cursor: pointer; border: none; margin-top: 10px; width: 100%; transition: 0.3s; }
-.btn-action:hover { background: #ffcc00; }
+/* Dashboard embed - vermelho */
+.embed.dashboard {
+    background: linear-gradient(135deg, #b92121, #992357);
+}
+.embed-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+.card {
+    background: rgba(30,30,30,0.85);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.card-title {
+    font-size: 16px;
+    color: #ddd;
+    margin-bottom: 10px;
+}
 
-/* RESPONSIVO PARA CELULAR */
+/* Preview embed - roxo */
+.embed.preview {
+    background: linear-gradient(135deg, #935fbb, #b92121);
+}
+
+/* Botões internos */
+.btn-action {
+    padding: 12px 15px;
+    background: #ff77aa;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    margin-top: 12px;
+    width: 100%;
+    font-size: 16px;
+    transition: 0.3s;
+}
+.btn-action:hover { background: #ff99cc; }
+
+/* Responsivo */
 @media (max-width: 768px) {
-    main { min-height: auto; padding: 15px; }
+    main { padding: 15px; }
     .embed-content { grid-template-columns: 1fr; }
     .header-left { justify-content: center; }
-    .btn-admin { min-width: 100px; flex: 1 1 45%; }
+    .btn-admin { min-width: 120px; flex: 1 1 45%; font-size: 14px; padding: 10px 12px; }
+    .card { font-size: 16px; padding: 15px; }
+    .embed-title { font-size: 20px; margin-bottom: 15px; }
 }
-    </style>
+</style>
 </head>
 <body>
 
@@ -94,17 +145,17 @@ main {
 </header>
 
 <main>
-    <!-- Embed 1: Dashboard -->
-    <div class="embed">
+    <!-- Dashboard embed -->
+    <div class="embed dashboard">
         <div class="embed-title">📊 Dashboard</div>
         <div class="embed-content">
             <div class="card">
                 <div class="card-title">💰 Saldo Atual</div>
-                {{ dados.saldo }}
+                R$ {{ dados.saldo }}
             </div>
             <div class="card">
                 <div class="card-title">💸 Total Gasto</div>
-                {{ dados.gasto }}
+                R$ {{ dados.gasto }}
             </div>
             <div class="card">
                 <div class="card-title">🛒 Compras Totais</div>
@@ -117,8 +168,8 @@ main {
         </div>
     </div>
 
-    <!-- Embed 2: Unamed Emperium -->
-    <div class="embed">
+    <!-- Preview embed / Unamed Emperium -->
+    <div class="embed preview">
         <div class="embed-title">🏢 Unamed Emperium</div>
         <div class="embed-content">
             <div class="card">
@@ -134,8 +185,8 @@ main {
         </div>
     </div>
 
-    <!-- Embed 3: Unamed Hall -->
-    <div class="embed">
+    <!-- Unamed Hall embed -->
+    <div class="embed preview">
         <div class="embed-title">📢 Unamed Hall</div>
         <div class="embed-content">
             <div class="card">
@@ -148,5 +199,3 @@ main {
 
 </body>
 </html>
-
-
