@@ -4,24 +4,32 @@
     <meta charset="UTF-8">
     <title>Adicionar Saldo - Emperium</title>
     <style>
-        body {
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
             background: #111;
             color: #fff;
-            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            box-sizing: border-box;
         }
         .container {
-            background: linear-gradient(135deg, #6fff00, #10e894);
+            background: linear-gradient(135deg, #10e894, #6fff00);
             padding: 40px;
-            border-radius: 15px;
+            border-radius: 20px;
             width: 90%;
             max-width: 450px;
             text-align: center;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 28px;
+            color: #111;
         }
         input {
             width: 100%;
@@ -35,9 +43,9 @@
         button {
             padding: 18px;
             width: 100%;
-            background: #10e894;
+            background: #00ff6a;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
             color: #111;
             font-weight: bold;
@@ -45,17 +53,25 @@
             transition: 0.3s;
         }
         button:hover {
-            background: #6fff00;
-            transform: scale(1.03);
+            background: #00ffaa;
         }
+
+        /* Responsivo para celular */
         @media (max-width: 768px) {
             .container {
-                width: 95%;
                 padding: 30px;
+                width: 95%;
             }
-            input, button {
-                font-size: 16px;
+            h1 {
+                font-size: 24px;
+            }
+            input {
                 padding: 14px;
+                font-size: 16px;
+            }
+            button {
+                padding: 16px;
+                font-size: 16px;
             }
         }
     </style>
