@@ -145,16 +145,14 @@ def dashboard():
     if not user:
         return redirect(url_for("login"))
 
-    user_id = ObjectId(user["_id"])  # manter como ObjectId
+    user_id = ObjectId(user["_id"])
 
-    # Buscar compras do usuário usando 'usuario_id'
+    # ====== Compras do usuário ======
     compras_usuario = list(compras_col.find({"usuario_id": user_id}))
     total_compras = len(compras_usuario)
-
-    # Calcular total gasto somando as compras
     total_gasto = sum(float(c.get("valor", 0)) for c in compras_usuario)
 
-    # Nível do usuário
+    # ====== Nível do usuário ======
     if total_gasto < 50:
         nivel_usuario = "Novato"
     elif total_gasto < 100:
@@ -166,11 +164,10 @@ def dashboard():
     else:
         nivel_usuario = "Lendário"
 
-    # Níveis disponíveis
-    niveis_cursor = niveis_col.find({}, {"_id": 0, "nome": 1})
-    niveis_disponiveis = [n.get("nome", "Desconhecido") for n in niveis_cursor]
+    # ====== Níveis disponíveis apenas dos materiais ======
+    niveis_disponiveis = materiais_col.distinct("nivel")  # retorna só os níveis presentes nos materiais
 
-    # Total de materiais
+    # ====== Total de materiais ======
     total_materiais = materiais_col.count_documents({})
 
     dados = {
@@ -184,7 +181,7 @@ def dashboard():
     }
 
     return render_template("dashboard.html", dados=dados, niveis=niveis_disponiveis)
-    
+
 #-----------------
 # ADMIN
 #-----------------
