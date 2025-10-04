@@ -30,22 +30,22 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 40px 25px;
+        padding: 55px 35px;
         box-sizing: border-box;
     }
 
     h2 {
-        font-size: 32px;
-        margin-bottom: 30px;
-        color: #b9894d; /* tom mais escuro e suave */
+        font-size: 42px; /* +30% */
+        margin-bottom: 40px;
+        color: #b9894d;
     }
 
     .embed {
         background: #2a2a2a;
         border-left: 5px solid #997733;
-        border-radius: 12px;
-        padding: 20px;
-        margin: 20px 0;
+        border-radius: 14px;
+        padding: 26px; /* +30% */
+        margin: 26px 0; /* +30% */
         width: 100%;
         box-sizing: border-box;
         text-align: left;
@@ -53,41 +53,41 @@
 
     .embed h3 {
         margin-top: 0;
-        font-size: 22px;
+        font-size: 28px; /* +30% */
         color: #ccaa77;
     }
 
     .embed p {
-        margin: 10px 0;
-        font-size: 16px;
+        margin: 14px 0; /* +30% */
+        font-size: 21px; /* +30% */
     }
 
     img {
-        margin: 15px auto;
+        margin: 20px auto; /* +30% */
         display: block;
-        width: 240px;
-        height: 240px;
+        width: 312px; /* +30% */
+        height: 312px; /* +30% */
         border: 4px solid #333;
-        border-radius: 12px;
+        border-radius: 14px;
     }
 
     .copia-cola {
         word-break: break-all;
         background: #1a1a1a;
-        padding: 12px;
-        border-radius: 10px;
-        margin-top: 10px;
-        font-size: 16px;
+        padding: 16px; /* +30% */
+        border-radius: 12px;
+        margin-top: 13px; /* +30% */
+        font-size: 21px; /* +30% */
     }
 
     button {
-        margin-top: 15px;
+        margin-top: 20px; /* +30% */
         width: 100%;
         max-width: 400px;
-        padding: 18px;
-        border-radius: 12px;
+        padding: 24px; /* +30% */
+        border-radius: 16px; /* +30% */
         border: none;
-        font-size: 18px;
+        font-size: 23px; /* +30% */
         font-weight: bold;
         cursor: pointer;
         transition: 0.3s;
@@ -109,7 +109,7 @@
     .confirm-btn {
         background: #228844;
         color: #fff;
-        margin-top: 25px;
+        margin-top: 32px; /* +30% */
     }
 
     .confirm-btn:hover {
@@ -119,20 +119,24 @@
     /* Responsivo para celular */
     @media (max-width: 768px) {
         .container {
-            padding: 30px 20px;
+            padding: 40px 25px; /* +30% do original responsivo */
         }
         h2 {
-            font-size: 28px;
+            font-size: 36px; /* +30% */
         }
         .embed h3 {
-            font-size: 20px;
+            font-size: 26px; /* +30% */
         }
         .embed p, .copia-cola {
-            font-size: 15px;
+            font-size: 19px; /* +30% */
         }
         button {
-            font-size: 17px;
-            padding: 16px;
+            font-size: 22px; /* +30% */
+            padding: 20px; /* +30% */
+        }
+        img {
+            width: 270px;
+            height: 270px;
         }
     }
 </style>
@@ -146,7 +150,7 @@
         <h3>💵 Detalhes do Pagamento</h3>
         <p><strong>Valor a ser pago:</strong> R$ {{ "%.2f"|format(dados.valor_total) }} (+10%)</p>
         <p><strong>Valor que será depositado:</strong> R$ {{ "%.2f"|format(dados.valor_depositado) }}</p>
-        <p style="font-size:13px; color:#aaa;">Pagamento automático com pequena taxa de custo.</p>
+        <p style="font-size:15px; color:#aaa;">Pagamento automático com pequena taxa de custo.</p>
     </div>
 
     <!-- Embed 2: QR Code e Copiar/Colar -->
