@@ -426,38 +426,25 @@ def historico_compras():
     if "usuario" not in session:
         return redirect(url_for("login"))
 
-    user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
-    if not user:
-        return redirect(url_for("login"))
+    user_id = ObjectId(session["usuario"])
+    user = usuarios_col.find_one({"_id": user_id})
 
-    # Pega todas as compras do usuário
-    compras = list(db.compras.find({"usuario_id": user["_id"]}))
-
-    # Lista que será passada para o template
-    compras_formatadas = []
+    compras = list(db.compras.find({"usuario_id": user_id}).sort("data", -1))
 
     for c in compras:
-        # Remove do DB após formatar
-        db.compras.delete_one({"_id": c["_id"]})
+        c["_id"] = str(c["_id"])
+        c["data_str"] = c["data"]
+        c["numero_mask"] = c["material"]  # BIN completo
 
-        compras_formatadas.append({
-            "_id": str(c["_id"]),
-            "numero": c.get("material", ""),
-            "numero_mask": c.get("material", ""),  # sem censura
-            "nivel": c.get("nivel", ""),
-            "banco": c.get("banco", ""),
-            "valor": float(c.get("valor", 0)),  # garante float
-            "data_str": c.get("data", ""),
-            "prazo_inicio_str": c.get("data", ""),
-            "prazo_fim_str": c.get("data", ""),
-            "expirado": False,
-            "validade": c.get("validade",""),
-            "cvv": c.get("cvv",""),
-            "nome": c.get("nome",""),
-            "cpf": c.get("cpf","")
-        })
+        # Garantia de troca fixa: 10 minutos
+        c["garantia_inicio"] = c["data_str"]
+        c["garantia_fim"] = time.strftime(
+            "%d/%m/%Y %H:%M:%S",
+            time.localtime(time.mktime(time.strptime(c["data_str"], "%d/%m/%Y %H:%M:%S")) + 600)
+        )
 
-    return render_template("historico_compras.html", usuario=user, compras=compras_formatadas)
+    return render_template("historico_compras.html", compras=compras, usuario=user)
+                    
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
