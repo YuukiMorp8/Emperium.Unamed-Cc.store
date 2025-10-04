@@ -45,16 +45,20 @@ def get_usuario(nome):
 #-----------------
 # LOGIN / REGISTRO
 #-----------------
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        usuario = usuarios_col.find_one({"nome": request.form["nome"]})
-        if usuario and usuario["senha"] == request.form["senha"]:
-            session.permanent = True  # 🔥 mantém sessão mesmo após fechar o navegador
-            session["usuario"] = str(usuario["_id"])
+        nome = request.form["nome"]
+        senha = request.form["senha"]
+        user = get_usuario(nome)
+
+        if user and user["senha"] == senha:
+            session.permanent = True  # 🔥 mantém login mesmo após fechar o navegador
+            session["usuario"] = str(user["_id"])
             return redirect(url_for("dashboard"))
-        else:
-            return "Usuário ou senha incorretos."
+
+        return "❌ Usuário ou senha incorretos!"
+
     return render_template("login.html")
 
 @app.route("/register", methods=["GET", "POST"])
@@ -70,10 +74,12 @@ def register():
 
         if criar_usuario(nome, senha, indicado_por):
             user = get_usuario(nome)
+            session.permanent = True  # 🔥 mantém login ativo após cadastro
             session["usuario"] = str(user["_id"])
             return redirect(url_for("dashboard"))
         else:
             return "❌ Usuário já existe!"
+
     return render_template("register.html")
 
 #-----------------
