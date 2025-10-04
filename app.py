@@ -141,16 +141,19 @@ def dashboard():
     if "usuario" not in session:
         return redirect(url_for("login"))
 
+    # Buscar usuário logado
     user = usuarios_col.find_one({"_id": ObjectId(session["usuario"])})
     if not user:
         return redirect(url_for("login"))
 
-    # === Buscar compras do usuário ===
-    compras_usuario = list(compras_col.find({"user_id": str(user["_id"])}))
+    # Buscar compras do usuário (campo correto é "usuario_id")
+    compras_usuario = list(compras_col.find({"usuario_id": ObjectId(user["_id"])}))
     compras_totais = len(compras_usuario)
+
+    # Somar valores das compras
     total_gasto = sum(float(c.get("valor", 0)) for c in compras_usuario)
 
-    # === Calcular nível ===
+    # Calcular nível baseado no total gasto
     if total_gasto < 50:
         nivel = "Novato"
     elif total_gasto < 100:
@@ -162,20 +165,26 @@ def dashboard():
     else:
         nivel = "Lendário"
 
-    # === Total de materiais ===
+    # Buscar níveis disponíveis no banco
+    niveis_disponiveis = [n["nome"] for n in niveis_col.find({}, {"_id": 0, "nome": 1})]
+
+    # Contar materiais totais
     total_materiais = materiais_col.count_documents({})
 
+    # Montar dados
     dados = {
         "nome": user["nome"],
         "saldo": f"R$ {float(user.get('saldo', 0)):.2f}",
-        "gasto": f"R$ {total_gasto:.2f}",
+        "gasto": f"R$ {float(total_gasto):.2f}",
         "compras": compras_totais,
         "nivel": nivel,
         "materiais": total_materiais,
         "foto": user.get("foto", "/static/default.png"),
+        "niveis_disponiveis": niveis_disponiveis
     }
 
     return render_template("dashboard.html", dados=dados)
+    
 #-----------------
 # ADMIN
 #-----------------
