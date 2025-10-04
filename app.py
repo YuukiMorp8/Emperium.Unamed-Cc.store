@@ -5,8 +5,11 @@ from pagamento import criar_pix, verificar_pagamento_efi  # função que verific
 import time
 import os
 
+from datetime import timedelta
+
 app = Flask(__name__)
-app.secret_key = "segredo_super_secreto"
+app.secret_key = "uma_chave_segura_aqui"  # já deve existir
+app.permanent_session_lifetime = timedelta(days=7)  # usuário fica logado 7 dias
 
 # =========================
 # Conexão com MongoDB
@@ -42,18 +45,17 @@ def get_usuario(nome):
 #-----------------
 # LOGIN / REGISTRO
 #-----------------
-@app.route("/", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        nome = request.form["nome"]
-        senha = request.form["senha"]
-        user = get_usuario(nome)
-        if user and user["senha"] == senha:
-            session["usuario"] = str(user["_id"])
+        usuario = usuarios_col.find_one({"nome": request.form["nome"]})
+        if usuario and usuario["senha"] == request.form["senha"]:
+            session.permanent = True  # 🔥 mantém sessão mesmo após fechar o navegador
+            session["usuario"] = str(usuario["_id"])
             return redirect(url_for("dashboard"))
-        return "❌ Usuário ou senha incorretos!"
+        else:
+            return "Usuário ou senha incorretos."
     return render_template("login.html")
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
