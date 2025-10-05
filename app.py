@@ -1,24 +1,39 @@
+# ===============
+# Importante
+# ===============
 from flask import Flask, render_template, request, redirect, url_for, session
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+
+# ---------
+# Pagamento
+# ---------
 from pagamento import criar_pix, verificar_pagamento_efi  # função que verifica o PIX
+
+# -------
+# Imports
+# -------
 import time
 import os
+import uuid
+from datetime import datetime, timedelta
 
-from datetime import timedelta
-
+# =====
+# Start
+# =====
 app = Flask(__name__)
 app.secret_key = "uma_chave_segura_aqui"
 
-# Mantém o login por 7 dias
+# ----------
+# Save Login
+# ----------
 app.permanent_session_lifetime = timedelta(days=7)
 
-# Garante que o cookie da sessão será salvo corretamente
 app.config.update(
     SESSION_COOKIE_NAME='session',
     SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SECURE=True,  # altere para True se usar HTTPS
-    SESSION_COOKIE_SAMESITE='None',  # ou 'None' se usar HTTPS e subdomínios
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_SAMESITE='None',
 )
 
 # =========================
@@ -118,9 +133,6 @@ def logout():
 #-----------------
 # USUÁRIO / PERFIL / DASHBOARD
 #-----------------
-import uuid
-import os
-
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
 def allowed_file(filename):
@@ -189,12 +201,10 @@ def dashboard():
 
     user_id = user["_id"]  # ObjectId
 
-    # ====== Compras do usuário ======
     compras_usuario = list(compras_col.find({"usuario_id": user_id}))
     total_compras = len(compras_usuario)
     total_gasto = sum(float(c.get("valor", 0)) for c in compras_usuario)
 
-    # ====== Nível do usuário baseado no gasto ======
     if total_gasto < 50:
         nivel_usuario = "Novato"
     elif total_gasto < 100:
@@ -206,13 +216,10 @@ def dashboard():
     else:
         nivel_usuario = "Lendário"
 
-    # ====== Níveis disponíveis apenas dos materiais ======
     niveis_disponiveis = materiais_col.distinct("nivel")  # só níveis presentes nos materiais
 
-    # ====== Total de materiais ======
     total_materiais = materiais_col.count_documents({})
 
-    # ====== Dados para o template ======
     dados = {
         "nome": user.get("nome", "Usuário"),
         "saldo": f"R$ {float(user.get('saldo', 0)):.2f}",
@@ -246,31 +253,48 @@ def admin_login():
 
     return render_template("admin_login.html")
 
+from datetime import datetime
 
-@app.route("/admin_panel")
+# Lista global para anúncios (em memória)
+anuncios = []
+
+@app.route("/admin_panel", methods=["GET", "POST"])
 def admin_panel():
     if "admin" not in session:
         return redirect(url_for("admin_login"))
+
+    global anuncios
+
+    # Se o admin enviou um novo anúncio
+    if request.method == "POST":
+        titulo = request.form.get("titulo")
+        assunto = request.form.get("assunto")
+        if titulo and assunto:
+            anuncios.append({
+                "titulo": titulo,
+                "assunto": assunto,
+                "data": datetime.now().strftime("%d/%m/%Y %H:%M"),
+                "criador": "Administrador"
+            })
+        return redirect(url_for("admin_panel"))
 
     usuarios = list(usuarios_col.find())
     niveis = list(niveis_col.find())
     materiais = list(materiais_col.find())
 
-    return render_template("admin_panel.html", usuarios=usuarios, niveis=niveis, materiais=materiais)
+    return render_template(
+        "admin_panel.html",
+        usuarios=usuarios,
+        niveis=niveis,
+        materiais=materiais,
+        anuncios=anuncios  # envia a lista de anúncios para o template
+    )
 
-
-@app.route("/add_nivel", methods=["POST"])
-def add_nivel():
-    if "admin" not in session:
-        return redirect(url_for("admin_login"))
-
-    nome = request.form.get("nivel_nome")
-    valor = request.form.get("nivel_valor")
-
-    if not nome or not valor:
-        return "❌ Preencha todos os campos!"
-
-    niveis_col.insert_one({"nome": nome, "valor": float(valor)})
+@app.route("/deletar_anuncio/<int:index>")
+def deletar_anuncio(index):
+    global anuncios
+    if 0 <= index < len(anuncios):
+        anuncios.pop(index)
     return redirect(url_for("admin_panel"))
 
 @app.route("/add_material", methods=["POST"])
@@ -441,8 +465,6 @@ def comprar():
         filtros=filtros,
         niveis=niveis
     )
-
-from datetime import datetime
 
 @app.route("/comprar_finalize", methods=["POST"])
 def comprar_finalize():
