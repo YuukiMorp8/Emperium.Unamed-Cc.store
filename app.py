@@ -518,7 +518,7 @@ def comprar_finalize():
     materiais_col.delete_one({"_id": ObjectId(material_id)})
 
     return {"ok": True, "msg": "Compra concluída!"}
-    
+
 @app.route("/historico_compras")
 def historico_compras():
     if "usuario" not in session:
@@ -534,11 +534,17 @@ def historico_compras():
         c["data_str"] = c["data"]
         c["numero_mask"] = c["material"]  # BIN completo
 
-        # Garantia de troca fixa: 10 minutos
+        try:
+            # tenta interpretar data com segundos
+            data_base = time.strptime(c["data_str"], "%d/%m/%Y %H:%M:%S")
+        except ValueError:
+            # se não tiver segundos, tenta sem
+            data_base = time.strptime(c["data_str"], "%d/%m/%Y %H:%M")
+
         c["garantia_inicio"] = c["data_str"]
         c["garantia_fim"] = time.strftime(
             "%d/%m/%Y %H:%M:%S",
-            time.localtime(time.mktime(time.strptime(c["data_str"], "%d/%m/%Y %H:%M:%S")) + 600)
+            time.localtime(time.mktime(data_base) + 600)
         )
 
     return render_template("historico_compras.html", compras=compras, usuario=user)
