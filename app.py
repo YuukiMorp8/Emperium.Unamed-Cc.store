@@ -209,6 +209,9 @@ def dashboard():
         "foto": user.get("foto", "/static/default.png"),
     }
 
+    global anuncios
+    anuncios_ativos = anuncios if anuncios else []
+
     return render_template("dashboard.html", dados=dados, niveis=niveis_disponiveis)
 
 #-----------------
