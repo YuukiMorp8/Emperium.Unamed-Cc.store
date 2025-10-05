@@ -271,7 +271,7 @@ def admin_panel():
             anuncios.append({
                 "titulo": titulo,
                 "assunto": assunto,
-                "data": datetime.now().strftime("%d/%m/%Y %H:%M"),
+                "data": horario_brasilia(),
                 "criador": "Administrador"
             })
         return redirect(url_for("admin_panel"))
