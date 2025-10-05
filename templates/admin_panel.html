@@ -4,19 +4,63 @@
     <meta charset="UTF-8">
     <title>Painel Admin - Emperium</title>
     <style>
-        body { font-family: Arial,sans-serif; background:#111; color:#eee; margin:0; padding:0; }
-        header { background:#222; padding:20px; text-align:center; font-size:24px; font-weight:bold; }
-        section { padding:20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px; }
-        .card { background:#1a1a1a; padding:20px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.5); }
-        .card h3 { margin-top:0; color:#ff9900; }
-        table { width:100%; border-collapse:collapse; margin-top:10px; }
-        th, td { padding:8px; border:1px solid #444; text-align:left; }
-        th { background:#222; }
-        input, select { width:100%; padding:8px; margin:5px 0 10px 0; border-radius:6px; border:none; }
-        .btn { padding:10px 15px; background:#4e9af1; color:#fff; border:none; border-radius:6px; cursor:pointer; }
-        .btn:hover { background:#6caef7; }
-        .form-section { display:none; margin-top:10px; }
+        body { font-family: Arial, sans-serif; background: #111; color: #eee; margin: 0; padding: 0; }
+        header { background: #222; padding: 20px; text-align: center; font-size: 26px; font-weight: bold; letter-spacing: 1px; }
+        section { padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+
+        .card {
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.6);
+        }
+        .card h3 { margin-top: 0; color: #ff9900; font-size: 22px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; border: 1px solid #444; text-align: left; font-size: 15px; }
+        th { background: #222; }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 12px 0;
+            border-radius: 8px;
+            border: none;
+            background: #222;
+            color: #eee;
+            font-size: 15px;
+        }
+
+        .btn {
+            padding: 12px 18px;
+            background: #4e9af1;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #6caef7; }
+
+        .btn-danger {
+            background: #c0392b;
+        }
+        .btn-danger:hover {
+            background: #e74c3c;
+        }
+
+        .form-section { display: none; margin-top: 10px; }
+        .anuncio {
+            background: #222;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.3);
+        }
     </style>
+
     <script>
         function toggleForm(id) {
             let form = document.getElementById(id);
@@ -35,8 +79,7 @@
                 return false;
             }
 
-            // Validar 16 números ou formato exemplo
-            const regex = /^\d{16}(\/\d{2}\/\d{2}\/\d+)$/;
+            const regex = /^\d{16}(\/\d{2}\/\d{2}\/\d+)?$/;
             if (!regex.test(numeros)) {
                 alert("O campo 'material' deve seguir o formato correto: 16 números ou ex: 4593830180936028/04/33/500");
                 return false;
@@ -46,9 +89,11 @@
         }
     </script>
 </head>
+
 <body>
     <header>Painel de Administração</header>
     <section>
+
         <!-- Usuários -->
         <div class="card">
             <h3>Usuários</h3>
@@ -119,6 +164,31 @@
                 </form>
             </div>
         </div>
+
+        <!-- 📣 Anúncios -->
+        <div class="card">
+            <h3>📣 Criar Anúncio</h3>
+            <form method="post" action="/admin">
+                <input type="text" name="titulo" placeholder="Título do anúncio" required>
+                <textarea name="assunto" rows="4" placeholder="Assunto do anúncio" required></textarea>
+                <button type="submit" class="btn">Enviar Anúncio</button>
+            </form>
+
+            <h3 style="margin-top:20px;">Anúncios Existentes</h3>
+            {% if anuncios %}
+                {% for a in anuncios %}
+                <div class="anuncio">
+                    <strong style="color:#ff9900;">{{ a.titulo }}</strong><br>
+                    {{ a.assunto }}<br>
+                    <small>📅 {{ a.data }} | 👤 {{ a.criador }}</small><br>
+                    <a href="/deletar_anuncio/{{ loop.index0 }}"><button class="btn btn-danger">Excluir</button></a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Nenhum anúncio criado ainda.</p>
+            {% endif %}
+        </div>
+
     </section>
 </body>
-                        </html>
+</html>
