@@ -79,6 +79,9 @@ def criar_usuario(nome, senha, indicado_por=None):
 def get_usuario(nome):
     return usuarios_col.find_one({"nome": nome})
 
+def horario_brasilia():
+    return (datetime.utcnow() - timedelta(hours=3)).strftime("%d/%m/%Y %H:%M")
+
 #--------------------------
 # LOGIN / REGISTRO / LOGOUT
 #--------------------------
@@ -504,7 +507,7 @@ def comprar_finalize():
         "nivel": nivel,
         "banco": material.get("banco", ""),
         "valor": valor,
-        "data": time.strftime("%d/%m/%Y %H:%M:%S"),
+        "data": horario_brasilia(),
         "validade": material.get("validade", ""),
         "cvv": material.get("cvv", ""),
         "nome": material.get("nome", ""),
