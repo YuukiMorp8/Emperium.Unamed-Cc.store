@@ -24,14 +24,28 @@ app.config.update(
 # =========================
 # Conexão com MongoDB
 # =========================
-MONGO_URI = os.environ.get("MONGO_URI")  # Defina essa variável no Render
+MONGO_URI = os.environ.get("MONGO_URI")
+
+# --------
+# Mongo Db
+# --------
 client = MongoClient(MONGO_URI)
-db = client["EMPERIUMCC"]  # nome do database
-usuarios_col = db["User"]  # nome da collection
+db = client["EMPERIUMCC"]
+
+# ---------
+# coleções
+# ---------
+usuarios_col = db["User"]
 niveis_col = db["Niveis"] 
 materiais_col = db["Materiais"]
 admins_col = db["Admins"]
 compras_col = db["compras"]
+
+# -------
+# Interno
+# -------
+anuncios = []
+
 # =========================
 # Funções de banco
 # =========================   
@@ -52,9 +66,9 @@ def criar_usuario(nome, senha, indicado_por=None):
 def get_usuario(nome):
     return usuarios_col.find_one({"nome": nome})
 
-#-----------------
+#--------------------------
 # LOGIN / REGISTRO / LOGOUT
-#-----------------
+#--------------------------
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -63,13 +77,12 @@ def login():
         user = get_usuario(nome)
 
         if user and user["senha"] == senha:
-            session.permanent = True  # 🔥 mantém login
+            session.permanent = True
             session["usuario"] = str(user["_id"])
             return redirect(url_for("dashboard"))
 
         return "❌ Usuário ou senha incorretos!"
 
-    # Se já estiver logado, pula direto pro dashboard
     if "usuario" in session:
         return redirect(url_for("dashboard"))
 
@@ -88,7 +101,8 @@ def register():
 
         if criar_usuario(nome, senha, indicado_por):
             user = get_usuario(nome)
-            session.permanent = True  # 🔥 mantém login ativo após cadastro
+            session.permanent = True
+
             session["usuario"] = str(user["_id"])
             return redirect(url_for("dashboard"))
         else:
