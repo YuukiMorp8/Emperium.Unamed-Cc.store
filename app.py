@@ -1,10 +1,7 @@
 # ===============
 # Importante
 # ===============
-from flask import[
-Flask, render_template,
-request, redirect, url_for, session
-]
+from flask import Flask, render_template, request, redirect, url_for, session
 
 # -------
 # Mongodb
@@ -62,12 +59,6 @@ niveis_col = db["Niveis"]
 materiais_col = db["Materiais"]
 admins_col = db["Admins"]
 compras_col = db["compras"]
-
-# -------
-# Interno
-# -------
-anuncios = []
-
 # =========================
 # Funções de banco
 # =========================   
@@ -260,9 +251,6 @@ def admin_login():
 
     return render_template("admin_login.html")
 
-from datetime import datetime
-
-# Lista global para anúncios (em memória)
 anuncios = []
 
 @app.route("/admin_panel", methods=["GET", "POST"])
@@ -272,7 +260,6 @@ def admin_panel():
 
     global anuncios
 
-    # Se o admin enviou um novo anúncio
     if request.method == "POST":
         titulo = request.form.get("titulo")
         assunto = request.form.get("assunto")
@@ -294,7 +281,7 @@ def admin_panel():
         usuarios=usuarios,
         niveis=niveis,
         materiais=materiais,
-        anuncios=anuncios  # envia a lista de anúncios para o template
+        anuncios=anuncios
     )
 
 @app.route("/deletar_anuncio/<int:index>")
