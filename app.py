@@ -1,7 +1,14 @@
 # ===============
 # Importante
 # ===============
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import[
+Flask, render_template,
+request, redirect, url_for, session
+]
+
+# -------
+# Mongodb
+# -------
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
