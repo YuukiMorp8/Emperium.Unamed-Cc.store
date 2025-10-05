@@ -184,9 +184,6 @@ def perfil():
 
     return render_template("perfil.html", usuario=user, mensagem=mensagem)
 
-from bson import ObjectId
-from flask import render_template, redirect, url_for, session
-
 @app.route("/dashboard")
 def dashboard():
     if "usuario" not in session:
@@ -231,7 +228,11 @@ def dashboard():
     global anuncios
     anuncios_ativos = anuncios if anuncios else []
 
-    return render_template("dashboard.html", dados=dados, niveis=niveis_disponiveis)
+    return render_template(
+"dashboard.html", dados=dados,
+niveis=niveis_disponiveis,
+anuncios=anuncios_ativos
+)
 
 #-----------------
 # ADMIN
