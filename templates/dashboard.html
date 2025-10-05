@@ -126,6 +126,30 @@ main {
     text-shadow: 0 0 10px rgba(245,214,123,0.3);
 }
 
+/* ======== ANÚNCIOS ======== */
+.anuncio-card {
+    background: rgba(25,25,25,0.9);
+    border: 2px solid rgba(245,214,123,0.2);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgba(245,214,123,0.15);
+}
+.anuncio-titulo {
+    font-size: 22px;
+    color: #ffcc4d;
+    margin-bottom: 8px;
+}
+.anuncio-assunto {
+    font-size: 17px;
+    color: #eee;
+    margin-bottom: 6px;
+}
+.anuncio-info {
+    font-size: 14px;
+    color: #aaa;
+}
+
 /* ========== BARRA INFERIOR ========== */
 .nav-bottom {
     position: fixed;
@@ -158,56 +182,56 @@ main {
     transform: scale(1.08);
     box-shadow: 0 0 35px rgba(245,214,123,0.6);
 }
-
-/* ========== RESPONSIVIDADE ========== */
-@media (max-width: 900px) {
-    header { padding: 20px; justify-content: center; }
-    .perfil { width: 65px; height: 65px; }
-    main { padding-bottom: 200px; }
-    .nav-bottom button { font-size: 18px; padding: 20px 8px; }
-    .embed { padding: 25px; }
-    .embed-title { font-size: 24px; }
-    .card { font-size: 18px; padding: 20px; }
-}
 </style>
 </head>
 <body>
 
 <header>
-    <!-- Botão Admin no canto superior esquerdo -->
     <button class="btn-admin" style="margin-right:auto;"
             onclick="location.href='/admin_login'">Painel de Admin</button>
-    
-    <!-- Perfil -->
     <a href="/perfil"><img src="{{ dados.foto }}" class="perfil"></a>
 </header>
 
 <main>
     <!-- Dashboard -->
     <div class="embed">
-    <div class="embed-title">📊 Dashboard</div>
-    <div class="embed-content">
-        <div class="card"><div class="card-title">💰 Saldo Atual</div>{{ dados.saldo }}</div>
-        <div class="card"><div class="card-title">💸 Total Gasto</div>{{ dados.gasto }}</div>
-        <div class="card"><div class="card-title">🛒 Compras Totais</div>{{ dados.compras }}</div>
-        <div class="card"><div class="card-title">⭐ Nível</div>{{ dados.nivel }}</div>
+        <div class="embed-title">📊 Dashboard</div>
+        <div class="embed-content">
+            <div class="card"><div class="card-title">💰 Saldo Atual</div>{{ dados.saldo }}</div>
+            <div class="card"><div class="card-title">💸 Total Gasto</div>{{ dados.gasto }}</div>
+            <div class="card"><div class="card-title">🛒 Compras Totais</div>{{ dados.compras }}</div>
+            <div class="card"><div class="card-title">⭐ Nível</div>{{ dados.nivel }}</div>
+        </div>
     </div>
-    </div>
+
     <!-- Unamed Emperium -->
     <div class="embed">
         <div class="embed-title">🏢 Unamed Emperium</div>
         <div class="embed-content">
             <div class="card"><div class="card-title">📚 Cards Disponíveis</div>{{ dados.materiais }}</div>
-            <div class="card"><div class="card-title">⭐ Níveis Disponíveis</div>{% for nivel in niveis %}<div>{{ nivel }}</div>{% endfor %}</div>
+            <div class="card"><div class="card-title">⭐ Níveis Disponíveis</div>
+                {% for nivel in niveis %}
+                <div>{{ nivel }}</div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
-    <!-- Unamed Hall -->
+    <!-- 📣 Unamed Hall (Anúncios) -->
     <div class="embed">
-        <div class="embed-title">📢 Unamed Hall</div>
-        <div class="embed-content">
-            <div class="card"><div class="card-title">📣 Anúncios</div>Em breve</div>
-        </div>
+        <div class="embed-title">📣 Unamed Hall</div>
+
+        {% if anuncios %}
+            {% for a in anuncios %}
+            <div class="anuncio-card">
+                <div class="anuncio-titulo">{{ a.titulo }}</div>
+                <div class="anuncio-assunto">{{ a.assunto }}</div>
+                <div class="anuncio-info">📅 {{ a.data }} | 👤 {{ a.criador }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align:center; color:#aaa;">Nenhum anúncio disponível no momento.</p>
+        {% endif %}
     </div>
 </main>
 
@@ -221,7 +245,3 @@ main {
 
 </body>
 </html>
-
-
-
-
