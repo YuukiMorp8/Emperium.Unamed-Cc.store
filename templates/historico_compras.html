@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Histórico de Compras - Emperium</title>
 <style>
-    * { box-sizing: border-box; }
     body {
         font-family: "Poppins", Arial, sans-serif;
         background: radial-gradient(circle at 30% 20%, #1a0f1f, #0a0a0a);
@@ -16,7 +15,7 @@
 
     h2 {
         text-align: center;
-        font-size: 38px;
+        font-size: 36px;
         margin: 30px 0;
         color: #f5d67b;
         text-shadow: 0 0 20px rgba(245, 214, 123, 0.4);
@@ -24,140 +23,51 @@
 
     .container {
         padding: 30px;
-        max-width: 1100px;
+        max-width: 900px;
         margin: 0 auto;
     }
 
-    /* Card de compra */
     .card {
-        background: linear-gradient(160deg, rgba(20, 20, 20, 0.95), rgba(40, 30, 20, 0.95));
-        border-radius: 18px;
-        padding: 22px 28px;
+        background: linear-gradient(160deg, rgba(25, 25, 25, 0.95), rgba(40, 30, 20, 0.95));
+        border-radius: 16px;
+        padding: 20px 25px;
         margin-bottom: 25px;
         border: 1.5px solid rgba(212,175,55,0.4);
-        box-shadow: 0 0 18px rgba(212,175,55,0.2), inset 0 0 12px rgba(212,175,55,0.1);
-        transition: 0.3s ease;
+        box-shadow: 0 0 18px rgba(212,175,55,0.2), inset 0 0 10px rgba(212,175,55,0.1);
     }
 
-    .card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 0 28px rgba(212,175,55,0.3), inset 0 0 20px rgba(212,175,55,0.15);
-    }
-
-    .card b {
-        color: #f5d67b;
-    }
+    .card b { color: #f5d67b; }
 
     .card div {
-        margin: 10px 0;
+        margin: 8px 0;
         font-size: 17px;
     }
 
-    /* Botão de ação */
     .btn-action {
         display: inline-block;
-        padding: 14px 24px;
+        padding: 12px 20px;
         background: linear-gradient(135deg, #d4af37, #8a6f2e);
         border: none;
-        border-radius: 12px;
+        border-radius: 10px;
         color: #111;
         font-weight: bold;
-        font-size: 18px;
         cursor: pointer;
         transition: 0.3s;
         margin-top: 10px;
-        box-shadow: 0 0 12px rgba(212,175,55,0.4);
     }
 
     .btn-action:hover {
         background: linear-gradient(135deg, #f5d67b, #b99232);
         transform: scale(1.05);
-        box-shadow: 0 0 20px rgba(245,214,123,0.6);
     }
 
-    /* Modal flutuante */
-    .modal-back {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.85);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 999;
-        padding: 20px;
-    }
-
-    .modal {
-        background: linear-gradient(160deg, #1a1a1a, #251e17);
-        border: 2px solid #d4af37;
-        border-radius: 20px;
-        padding: 35px;
-        width: 90%;
-        max-width: 650px;
-        color: #fff;
-        text-align: left;
-        box-shadow: 0 0 30px rgba(212,175,55,0.3);
-        animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-        from { transform: scale(0.9); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
-    }
-
-    .modal h3 {
-        margin-top: 0;
-        font-size: 26px;
-        color: #f5d67b;
-        border-bottom: 1px solid rgba(245,214,123,0.3);
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-        text-shadow: 0 0 10px rgba(245,214,123,0.5);
-    }
-
-    .modal h4 {
-        margin-bottom: 8px;
+    .empty {
+        text-align: center;
+        margin-top: 60px;
+        font-size: 20px;
         color: #f5d67b;
     }
 
-    .modal-content {
-        background: rgba(30, 30, 30, 0.8);
-        padding: 18px 22px;
-        border-radius: 14px;
-        border-left: 5px solid #d4af37;
-        box-shadow: inset 0 0 10px rgba(212,175,55,0.2);
-        font-size: 16px;
-    }
-
-    .modal-content b {
-        color: #f5d67b;
-    }
-
-    #closeModal {
-        margin-top: 20px;
-        width: 100%;
-        padding: 16px;
-        font-size: 18px;
-        border-radius: 12px;
-        border: none;
-        font-weight: bold;
-        background: linear-gradient(135deg, #d4af37, #8a6f2e);
-        color: #111;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-    #closeModal:hover {
-        background: linear-gradient(135deg, #f5d67b, #b99232);
-        transform: scale(1.03);
-        box-shadow: 0 0 20px rgba(245,214,123,0.6);
-    }
-
-    @media (max-width: 768px) {
-        .card { font-size: 15px; padding: 18px; }
-        .btn-action { width: 100%; text-align: center; font-size: 16px; padding: 12px; }
-        .modal { width: 95%; padding: 25px; }
-    }
 </style>
 </head>
 <body>
@@ -166,17 +76,17 @@
     <h2>Histórico de Compras</h2>
 
     {% if vazio %}
-        <div style="text-align:center; margin-top:50px; font-size:20px; color:#f5d67b;">
-            Você não tem nenhuma compra registrada.
-        </div>
+        <div class="empty">Você não tem nenhuma compra registrada.</div>
     {% else %}
+        {% set total = 0 %}
         {% for compra in compras %}
+            {% set total = total + (compra.valor|float if compra.valor is defined else 0) %}
             <div class="card">
-                <div><b>Nível:</b> {{ compra.nivel }}</div>
-                <div><b>Banco:</b> {{ compra.banco }}</div>
-                <div><b>Valor:</b> {{ compra.valor_str }}</div>
-                <div><b>Data:</b> {{ compra.data_str }}</div>
-                <button class="btn-action" onclick="verDetalhes('{{ compra._id }}')">Ver detalhes</button>
+                <div><b>Nível:</b> {{ compra.nivel or '-' }}</div>
+                <div><b>Banco:</b> {{ compra.banco or '-' }}</div>
+                <div><b>Valor:</b> R$ {{ "%.2f"|format(compra.valor|float if compra.valor is defined else 0) }}</div>
+                <div><b>Data:</b> {{ compra.data_str or 'Sem data' }}</div>
+                <button class="btn-action" onclick="alert('Detalhes da compra: {{ compra._id }}')">Ver detalhes</button>
             </div>
         {% endfor %}
 
@@ -185,6 +95,9 @@
         </div>
     {% endif %}
 </div>
+
+</body>
+</html>
 
 <div class="container">
     <h2>
