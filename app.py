@@ -1,8 +1,7 @@
 # ===============
 # Importante
 # ===============
-from flask import Flask, render_template, request, redirect, url_for, session
-
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 # -------
 # Mongodb
 # -------
@@ -549,40 +548,53 @@ def historico_compras():
 
     return render_template("historico_compras.html", compras=compras, usuario=user)
 
-from bson.objectid import ObjectId
-from flask import jsonify
-
 @app.route("/api/compra/<id>")
 def api_compra(id):
+    # Verifica se o usuário está logado
     if "usuario" not in session:
         return {"ok": False, "msg": "Não logado"}
 
-    compra = db.compras.find_one({"_id": ObjectId(id)})
+    try:
+        compra = db.compras.find_one({"_id": ObjectId(id)})
+    except Exception:
+        return {"ok": False, "msg": "ID inválido"}
+
     if not compra:
         return {"ok": False, "msg": "Compra não encontrada"}
 
+    # Processa o material (cartão)
     material_raw = compra.get("material", "")
     parts = material_raw.split("/")
-
     numero = parts[0] if len(parts) >= 1 else ""
     validade = f"{parts[1]}/{parts[2]}" if len(parts) >= 3 else ""
     cvv = parts[3] if len(parts) >= 4 else ""
 
+    # Trata o valor (pode ser dict do MongoDB ou float)
+    valor_raw = compra.get("valor", 0)
+    if isinstance(valor_raw, dict) and "$numberDouble" in valor_raw:
+        valor = float(valor_raw["$numberDouble"])
+    else:
+        try:
+            valor = float(valor_raw)
+        except:
+            valor = 0
+
+    # Monta os dados da compra para o front-end
     compra_data = {
         "_id": str(compra["_id"]),
         "numero": numero,
-        "numero_mask": numero[:6] + "*" * max(0,len(numero)-6),
+        "numero_mask": numero[:6] + "*" * max(0, len(numero)-6),
         "validade": validade,
         "cvv": cvv,
-        "nivel": compra.get("nivel",""),
-        "banco": compra.get("banco",""),
-        "valor": float(compra.get("valor",0)),
-        "data_str": compra.get("data",""),
-        "prazo_inicio_str": compra.get("prazo_inicio_str",""),
-        "prazo_fim_str": compra.get("prazo_fim_str",""),
+        "nivel": compra.get("nivel", ""),
+        "banco": compra.get("banco", ""),
+        "valor": valor,
+        "data_str": compra.get("data", ""),
+        "prazo_inicio_str": compra.get("prazo_inicio_str", ""),
+        "prazo_fim_str": compra.get("prazo_fim_str", ""),
         "expirado": compra.get("expirado", False),
-        "nome": compra.get("nome",""),
-        "cpf": compra.get("cpf","")
+        "nome": compra.get("nome", ""),
+        "cpf": compra.get("cpf", "")
     }
 
     return {"ok": True, "compra": compra_data}
