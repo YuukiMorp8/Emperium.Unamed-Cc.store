@@ -528,14 +528,31 @@ def historico_compras():
 
     compras = list(db.compras.find({"usuario_id": user_id}).sort("data", -1))
 
-    # Se o usuário não tiver compras, não gerar erro
+    # Se o usuário não tiver compras
     if not compras:
-        return render_template("historico_compras.html", compras=[], usuario=user, vazio=True)
+        return render_template(
+            "historico_compras.html",
+            compras=[],
+            usuario=user,
+            vazio=True,
+            total=0.00
+        )
+
+    total = 0.0  # Soma de todas as compras
 
     for c in compras:
         c["_id"] = str(c["_id"])
         c["data_str"] = c.get("data", "Sem data")
         c["numero_mask"] = c.get("material", "")
+
+        # Valor (pode vir como string)
+        valor = c.get("valor", 0)
+        try:
+            valor = float(valor)
+        except (ValueError, TypeError):
+            valor = 0
+        total += valor
+        c["valor_str"] = f"R$ {valor:.2f}"
 
         # Converte o campo de data, se existir
         data_str = c.get("data", "")
@@ -557,6 +574,15 @@ def historico_compras():
                 c["garantia_inicio"] = c["garantia_fim"] = "Desconhecida"
         else:
             c["garantia_inicio"] = c["garantia_fim"] = "Desconhecida"
+
+    # Agora enviamos 'total' e 'vazio'
+    return render_template(
+        "historico_compras.html",
+        compras=compras,
+        usuario=user,
+        vazio=False,
+        total=total
+    )
 
     return render_template("historico_compras.html", compras=compras, usuario=user, vazio=False)
 
