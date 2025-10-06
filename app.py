@@ -646,10 +646,6 @@ def deletar_historico():
         "ok": True,
         "msg": f"Histórico deletado. {total_cards} compras afetadas, total R$ {total_valor:.2f}"
     })
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
