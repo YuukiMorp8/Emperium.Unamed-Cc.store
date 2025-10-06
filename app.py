@@ -599,14 +599,6 @@ def api_compra(id):
 
     return {"ok": True, "compra": compra_data}
 
-def validar_senha(usuario_id, senha):
-    # Aqui você deve verificar no banco de usuários a senha
-    # Exemplo:
-    user = db.usuarios.find_one({"_id": ObjectId(usuario_id)})
-    if not user:
-        return False
-    return senha == user.get("senha")  # substitua conforme sua lógica de senha
-
 @app.route("/api/deletar_historico", methods=["POST"])
 def deletar_historico():
     if "usuario" not in session:
