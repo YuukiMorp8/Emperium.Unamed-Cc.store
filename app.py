@@ -613,13 +613,13 @@ def deletar_historico():
         return jsonify({"ok": False, "msg": "Senha incorreta"})
 
     # Busca todas as compras do usuário
-    compras = list(compras_col.find({"usuario_id": usuario_id}))
+    compras = list(db.compras.find({"usuario_id": usuario_id}))
     if not compras:
         return jsonify({"ok": False, "msg": "Nenhum histórico encontrado"})
 
-    # Remove todos os campos, exceto usuario_id e valor
+    # Limpa todos os campos de cada compra (mantém apenas usuario_id e valor)
     for c in compras:
-        compras_col.update_one(
+        db.compras.update_one(
             {"_id": c["_id"]},
             {"$unset": {
                 "material": "", "nivel": "", "banco": "",
