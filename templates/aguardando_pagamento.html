@@ -45,27 +45,27 @@ h2 {
 /* EMBED */
 .embed {
     background: rgba(20, 20, 20, 0.95);
-    border-left: 6px solid #c79b4b;
-    border-radius: 18px;
-    padding: 40px;
-    margin: 25px 0;
+    border-left: 8px solid #c79b4b;
+    border-radius: 20px;
+    padding: 55px; /* maior que antes */
+    margin: 30px 0;
     width: 100%;
-    max-width: 600px;
+    max-width: 650px; /* aumenta tamanho total */
     box-sizing: border-box;
-    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    box-shadow: 0 0 35px rgba(0,0,0,0.7);
     text-align: left;
 }
 
 .embed h3 {
     margin-top: 0;
-    font-size: 28px;
+    font-size: 32px; /* maior */
     color: #e0b76a;
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 }
 
 .embed p {
-    margin: 15px 0;
-    font-size: 20px;
+    margin: 16px 0;
+    font-size: 21px; /* maior */
     color: #ccc;
 }
 
@@ -74,7 +74,7 @@ button {
     margin-top: 20px;
     width: 100%;
     padding: 28px;
-    border-radius: 16px;
+    border-radius: 18px;
     border: none;
     font-size: 23px;
     font-weight: bold;
@@ -82,25 +82,28 @@ button {
     transition: 0.3s;
     background: linear-gradient(90deg, #c79b4b, #b28633);
     color: #fff;
-    box-shadow: 0 0 12px rgba(199, 155, 75, 0.3);
+    box-shadow: 0 0 14px rgba(199, 155, 75, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
 }
 
 button:hover {
     transform: scale(1.04);
     background: linear-gradient(90deg, #e0b76a, #c79b4b);
-    box-shadow: 0 0 16px rgba(199, 155, 75, 0.5);
+    box-shadow: 0 0 18px rgba(199, 155, 75, 0.5);
 }
 
 .confirm-btn {
     background: linear-gradient(90deg, #1e8a44, #28a055);
-    color: #fff;
     margin-top: 20px;
-    box-shadow: 0 0 14px rgba(30,138,68,0.4);
+    box-shadow: 0 0 16px rgba(30,138,68,0.45);
 }
 
 .confirm-btn:hover {
     background: linear-gradient(90deg, #2cbc63, #34d171);
-    box-shadow: 0 0 20px rgba(46,184,90,0.5);
+    box-shadow: 0 0 22px rgba(46,184,90,0.55);
 }
 
 .hidden {
@@ -110,30 +113,19 @@ button:hover {
 .buttons-confirmed {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 18px;
     width: 100%;
-    max-width: 600px;
-    margin-top: 20px;
+    max-width: 650px;
+    margin-top: 25px;
 }
 
 /* RESPONSIVO */
 @media (max-width: 768px) {
-    h2 {
-        font-size: 36px;
-    }
-    .embed {
-        padding: 30px;
-    }
-    .embed h3 {
-        font-size: 24px;
-    }
-    .embed p {
-        font-size: 18px;
-    }
-    button {
-        font-size: 21px;
-        padding: 24px;
-    }
+    h2 { font-size: 36px; }
+    .embed { padding: 40px; }
+    .embed h3 { font-size: 28px; }
+    .embed p { font-size: 19px; }
+    button { font-size: 21px; padding: 24px; }
 }
 </style>
 </head>
@@ -151,7 +143,7 @@ button:hover {
     <!-- EMBED 2: Verificação automática -->
     <div class="embed" id="embed-verificacao">
         <h3>
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" style="vertical-align:middle;">
                 <g fill="none" stroke="#3190bc" stroke-width="1.5">
                     <path d="M9.781 3.89c.564-.48.846-.72 1.14-.861a2.5 2.5 0 0 1 2.157 0c.295.14.577.38 1.14.861c.225.192.337.287.457.367a2.5 2.5 0 0 0 .908.376c.141.028.288.04.582.064c.739.058 1.108.088 1.416.197a2.5 2.5 0 0 1 1.525 1.524c.109.309.138.678.197 1.416c.023.294.035.441.063.583c.064.324.192.633.376.907c.08.12.176.232.367.457c.48.564.721.846.862 1.14a2.5 2.5 0 0 1 0 2.157c-.14.294-.381.576-.862 1.14a5 5 0 0 0-.367.457a2.5 2.5 0 0 0-.376.907c-.028.142-.04.289-.063.583c-.059.738-.088 1.108-.197 1.416a2.5 2.5 0 0 1-1.525 1.524c-.308.11-.677.139-1.416.197c-.294.024-.44.036-.582.064a2.5 2.5 0 0 0-.908.376a5 5 0 0 0-.456.367c-.564.48-.846.72-1.14.861a2.5 2.5 0 0 1-2.157 0c-.295-.14-.577-.38-1.14-.861a5 5 0 0 0-.457-.367a2.5 2.5 0 0 0-.908-.376a5 5 0 0 0-.582-.064c-.739-.058-1.108-.088-1.416-.197a2.5 2.5 0 0 1-1.525-1.524c-.109-.308-.138-.678-.197-1.416a5 5 0 0 0-.063-.583a2.5 2.5 0 0 0-.376-.907c-.08-.12-.176-.232-.367-.457c-.48-.564-.721-.846-.862-1.14a2.5 2.5 0 0 1 0-2.157c.141-.294.381-.576.862-1.14c.191-.225.287-.337.367-.457a2.5 2.5 0 0 0 .376-.907c.028-.142.04-.289.063-.583c.059-.738.088-1.107.197-1.416A2.5 2.5 0 0 1 6.42 4.894c.308-.109.677-.139 1.416-.197c.294-.024.44-.036.582-.064a2.5 2.5 0 0 0 .908-.376c.12-.08.232-.175.456-.367Z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" d="m8.5 12.5l2 2l5-5"/>
@@ -161,16 +153,35 @@ button:hover {
         </h3>
         <p id="mensagem">Estamos aguardando a confirmação do pagamento.</p>
         <p id="contador">Próxima tentativa em: 10s</p>
-        <button id="verificar">🔄 Verificar Pagamento</button>
+        <button id="verificar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                <g fill="none" stroke="#3190bc" stroke-width="1.5">
+                    <path d="M9.781 3.89c.564-.48.846-.72 1.14-.861a2.5 2.5 0 0 1 2.157 0c.295.14.577.38 1.14.861c.225.192.337.287.457.367a2.5 2.5 0 0 0 .908.376c.141.028.288.04.582.064c.739.058 1.108.088 1.416.197a2.5 2.5 0 0 1 1.525 1.524c.109.309.138.678.197 1.416c.023.294.035.441.063.583c.064.324.192.633.376.907c.08.12.176.232.367.457c.48.564.721.846.862 1.14a2.5 2.5 0 0 1 0 2.157c-.14.294-.381.576-.862 1.14a5 5 0 0 0-.367.457a2.5 2.5 0 0 0-.376.907c-.028.142-.04.289-.063.583c-.059.738-.088 1.108-.197 1.416a2.5 2.5 0 0 1-1.525 1.524c-.308.11-.677.139-1.416.197c-.294.024-.44.036-.582.064a2.5 2.5 0 0 0-.908.376a5 5 0 0 0-.456.367c-.564.48-.846.72-1.14.861a2.5 2.5 0 0 1-2.157 0c-.295-.14-.577-.38-1.14-.861a5 5 0 0 0-.457-.367a2.5 2.5 0 0 0-.908-.376a5 5 0 0 0-.582-.064c-.739-.058-1.108-.088-1.416-.197a2.5 2.5 0 0 1-1.525-1.524c-.109-.308-.138-.678-.197-1.416a5 5 0 0 0-.063-.583a2.5 2.5 0 0 0-.376-.907c-.08-.12-.176-.232-.367-.457c-.48-.564-.721-.846-.862-1.14a2.5 2.5 0 0 1 0-2.157c.141-.294.381-.576.862-1.14c.191-.225.287-.337.367-.457a2.5 2.5 0 0 0 .376-.907c.028-.142.04-.289.063-.583c.059-.738.088-1.107.197-1.416A2.5 2.5 0 0 1 6.42 4.894c.308-.109.677-.139 1.416-.197c.294-.024.44-.036.582-.064a2.5 2.5 0 0 0 .908-.376c.12-.08.232-.175.456-.367Z"/>
+<path stroke-linecap="round" stroke-linejoin="round" d="m8.5 12.5l2 2l5-5"/>
+                </g>
+            </svg>
+            Verificar Pagamento
+        </button>
     </div>
 
     <!-- EMBED 3: Botões finais -->
     <div class="embed buttons-confirmed hidden">
         <form action="{{ url_for('dashboard') }}" method="get">
-            <button type="submit">🏠 Voltar à Dashboard</button>
+            <button type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 16 16" style="vertical-align:middle;">
+                    <path fill="#17de20" fill-rule="evenodd" d="m2.87 7.75l1.97 1.97a.75.75 0 1 1-1.06 1.06L.53 7.53L0 7l.53-.53l3.25-3.25a.75.75 0 0 1 1.06 1.06L2.87 6.25h9.88a3.25 3.25 0 0 1 0 6.5h-2a.75.75 0 0 1 0-1.5h2a1.75 1.75 0 1 0 0-3.5z" clip-rule="evenodd"/>
+                </svg>
+                Voltar à Dashboard
+            </button>
         </form>
         <form action="{{ url_for('adicionar_saldo_user') }}" method="get">
-            <button type="submit" class="confirm-btn">💳 Adicionar Saldo Novamente</button>
+            <button type="submit" class="confirm-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" style="vertical-align:middle;">
+                    <path fill="#2f9786" d="m15.45 16.52l-3.01-3.01c-.11-.11-.24-.13-.31-.13s-.2.02-.31.13L8.8 16.53c-.34.34-.87.89-2.64.89l3.71 3.7a3 3 0 0 0 4.24 0l3.72-3.71c-.91 0-1.67-.18-2.38-.89M8.8 7.47l3.02 3.02c.08.08.2.13.31.13s.23-.05.31-.13l2.99-2.99c.71-.74 1.52-.91 2.43-.91l-3.72-3.71a3 3 0 0 0-4.24 0l-3.71 3.7c1.76 0 2.3.58 2.61.89"/>
+                    <path fill="#2f9786" d="m21.11 9.85l-2.25-2.26H17.6c-.54 0-1.08.22-1.45.61l-3 3c-.28.28-.65.42-1.02.42a1.5 1.5 0 0 1-1.02-.42L8.09 8.17c-.38-.38-.9-.6-1.45-.6H5.17l-2.29 2.3a3 3 0 0 0 0 4.24l2.29 2.3h1.48c.54 0 1.06-.22 1.45-.6l3.02-3.02c.28-.28.65-.42 1.02-.42s.74.14 1.02.42l3.01 3.01c.38.38.9.6 1.45.6h1.26l2.25-2.26a3.04 3.04 0 0 0-.02-4.29"/>
+                </svg>
+                Adicionar Saldo Novamente
+            </button>
         </form>
     </div>
 </div>
