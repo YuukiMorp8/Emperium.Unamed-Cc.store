@@ -163,6 +163,30 @@
 <body>
 
 <div class="container">
+    <h2>Histórico de Compras</h2>
+
+    {% if vazio %}
+        <div style="text-align:center; margin-top:50px; font-size:20px; color:#f5d67b;">
+            Você não tem nenhuma compra registrada.
+        </div>
+    {% else %}
+        {% for compra in compras %}
+            <div class="card">
+                <div><b>Nível:</b> {{ compra.nivel }}</div>
+                <div><b>Banco:</b> {{ compra.banco }}</div>
+                <div><b>Valor:</b> {{ compra.valor_str }}</div>
+                <div><b>Data:</b> {{ compra.data_str }}</div>
+                <button class="btn-action" onclick="verDetalhes('{{ compra._id }}')">Ver detalhes</button>
+            </div>
+        {% endfor %}
+
+        <div style="text-align:center; margin-top:30px; font-size:18px;">
+            <b>Total gasto:</b> R$ {{ "%.2f"|format(total) }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="container">
     <h2>
         <!-- Ícone Histórico de compras -->
         <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 5px;">
