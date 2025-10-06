@@ -599,29 +599,56 @@ def api_compra(id):
 
     return {"ok": True, "compra": compra_data}
 
-from flask import request, jsonify
-from bson import ObjectId
-from pymongo import MongoClient
-
+app = Flask(__name__)
 client = MongoClient("mongodb://localhost:27017/")
-db = client['seu_banco']
+db = client['seu_banco']  # substitua pelo nome do seu banco
+
+# Função fictícia para validar a senha do usuário
+def validar_senha(usuario_id, senha):
+    # Aqui você deve verificar no banco de usuários a senha
+    # Exemplo:
+    user = db.usuarios.find_one({"_id": ObjectId(usuario_id)})
+    if not user:
+        return False
+    return senha == user.get("senha")  # substitua conforme sua lógica de senha
 
 @app.route("/api/deletar_historico", methods=["POST"])
 def deletar_historico():
-    usuario_id = request.json.get("usuario_id")
-    senha = request.json.get("senha")
+    data = request.json
+    usuario_id = data.get("usuario_id")
+    senha = data.get("senha")
 
-    # Aqui você valida a senha do usuário
+    if not usuario_id or not senha:
+        return jsonify({"ok": False, "msg": "Usuário ou senha não fornecidos"})
+
+    # valida a senha
     if not validar_senha(usuario_id, senha):
         return jsonify({"ok": False, "msg": "Senha incorreta"})
 
-    # Atualiza todos os documentos do usuário
-    result = db.compras.update_many(
-        {"usuario_id": ObjectId(usuario_id)},
-        {"$set": {"valor": "$valor"}, "$unset": {"material": "", "nivel": "", "banco": "", "data": "", "validade": "", "cvv": "", "nome": "", "cpf": ""}}
-    )
+    # Busca todas as compras do usuário
+    compras = list(db.compras.find({"usuario_id": ObjectId(usuario_id)}))
 
-    return jsonify({"ok": True, "msg": f"{result.modified_count} registros atualizados"})
+    if not compras:
+        return jsonify({"ok": False, "msg": "Nenhum histórico encontrado"})
+
+    # Atualiza cada documento, removendo todos os campos exceto usuario_id e valor
+    for c in compras:
+        db.compras.update_one(
+            {"_id": c["_id"]},
+            {"$unset": {"material": "", "nivel": "", "banco": "", "data": "", 
+                        "validade": "", "cvv": "", "nome": "", "cpf": ""}}
+        )
+
+    total_cards = len(compras)
+    total_valor = sum([c.get("valor", 0) for c in compras])
+
+    return jsonify({
+        "ok": True,
+        "msg": f"Histórico deletado. {total_cards} compras afetadas, total R$ {total_valor:.2f}"
+    })
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 # =========================
 if __name__ == "__main__":
