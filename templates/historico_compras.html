@@ -288,5 +288,97 @@ document.getElementById("closeModal").addEventListener("click", () => {
 });
 </script>
 
+<!-- Botão Apagar Histórico -->
+<div style="text-align:center; margin: 30px 0;">
+    <button id="btnDeleteHistory" class="btn-action" style="background: linear-gradient(135deg, #cb2929, #8a1f1f);">
+        Apagar Histórico
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="#fff" d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z"/>
+        </svg>
+    </button>
+</div>
+
+<!-- Modal de confirmação -->
+<div id="modalDeleteBack" class="modal-back">
+    <div class="modal">
+        <h3>Apagar Histórico</h3>
+        <div id="modalDeleteBody" class="modal-content">
+            <p>Tem certeza que deseja apagar todo o seu histórico?</p>
+            <p>Ao concordar com isso você irá apagar <span id="totalCards">0</span> compras.</p>
+            <p>Não poderá ser restaurado.</p>
+            <p>
+                Por favor, digite sua senha para confirmar:
+                <input type="password" id="senhaConfirm" style="width:100%; padding:8px; margin-top:5px; border-radius:8px; border:none;">
+            </p>
+        </div>
+        <div style="margin-top:15px; display:flex; gap:10px;">
+            <button id="confirmDelete" class="btn-action" style="flex:1; background: linear-gradient(135deg, #cb2929, #8a1f1f);">Deletar Histórico</button>
+            <button id="cancelDelete" class="btn-action" style="flex:1; background: linear-gradient(135deg, #888, #555);">Desistir</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Função para contar todas as compras e somar os valores
+async function getTotalCompras(usuario_id) {
+    try {
+        const resp = await fetch(`/api/compras_usuario/${usuario_id}`);
+        const data = await resp.json();
+        if (!data.ok) return { totalCards: 0, totalValor: 0 };
+        const totalCards = data.compras.length;
+        const totalValor = data.compras.reduce((acc, c) => acc + parseFloat(c.valor || 0), 0);
+        return { totalCards, totalValor };
+    } catch(e) {
+        console.error(e);
+        return { totalCards: 0, totalValor: 0 };
+    }
+}
+
+// Abre o modal
+document.getElementById("btnDeleteHistory").addEventListener("click", async () => {
+    const usuario_id = "{{ usuario_id }}"; // Passe aqui o ID do usuário do template
+    const { totalCards } = await getTotalCompras(usuario_id);
+    document.getElementById("totalCards").textContent = totalCards;
+    document.getElementById("modalDeleteBack").style.display = "flex";
+});
+
+// Fecha o modal
+document.getElementById("cancelDelete").addEventListener("click", () => {
+    document.getElementById("modalDeleteBack").style.display = "none";
+});
+
+// Confirmação de deletar histórico
+document.getElementById("confirmDelete").addEventListener("click", async () => {
+    const usuario_id = "{{ usuario_id }}"; // Passe aqui o ID do usuário do template
+    const senha = document.getElementById("senhaConfirm").value;
+
+    if (!senha) {
+        alert("Por favor, digite sua senha.");
+        return;
+    }
+
+    try {
+        const resp = await fetch("/api/deletar_historico", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usuario_id, senha })
+        });
+
+        const data = await resp.json();
+        if (data.ok) {
+            alert(data.msg);
+            // Fecha o modal e atualiza a página
+            document.getElementById("modalDeleteBack").style.display = "none";
+            window.location.reload();
+        } else {
+            alert(data.msg || "Erro ao apagar histórico");
+        }
+    } catch(e) {
+        console.error(e);
+        alert("Erro ao apagar histórico");
+    }
+});
+</script>
+
 </body>
 </html>
