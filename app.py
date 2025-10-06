@@ -598,7 +598,31 @@ def api_compra(id):
     }
 
     return {"ok": True, "compra": compra_data}
-    
+
+from flask import request, jsonify
+from bson import ObjectId
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://localhost:27017/")
+db = client['seu_banco']
+
+@app.route("/api/deletar_historico", methods=["POST"])
+def deletar_historico():
+    usuario_id = request.json.get("usuario_id")
+    senha = request.json.get("senha")
+
+    # Aqui você valida a senha do usuário
+    if not validar_senha(usuario_id, senha):
+        return jsonify({"ok": False, "msg": "Senha incorreta"})
+
+    # Atualiza todos os documentos do usuário
+    result = db.compras.update_many(
+        {"usuario_id": ObjectId(usuario_id)},
+        {"$set": {"valor": "$valor"}, "$unset": {"material": "", "nivel": "", "banco": "", "data": "", "validade": "", "cvv": "", "nome": "", "cpf": ""}}
+    )
+
+    return jsonify({"ok": True, "msg": f"{result.modified_count} registros atualizados"})
+
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
