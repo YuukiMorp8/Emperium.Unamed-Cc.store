@@ -528,25 +528,37 @@ def historico_compras():
 
     compras = list(db.compras.find({"usuario_id": user_id}).sort("data", -1))
 
+    # Se o usuário não tiver compras, não gerar erro
+    if not compras:
+        return render_template("historico_compras.html", compras=[], usuario=user, vazio=True)
+
     for c in compras:
         c["_id"] = str(c["_id"])
-        c["data_str"] = c["data"]
-        c["numero_mask"] = c["material"]  # BIN completo
+        c["data_str"] = c.get("data", "Sem data")
+        c["numero_mask"] = c.get("material", "")
 
-        try:
-            # tenta interpretar data com segundos
-            data_base = time.strptime(c["data_str"], "%d/%m/%Y %H:%M:%S")
-        except ValueError:
-            # se não tiver segundos, tenta sem
-            data_base = time.strptime(c["data_str"], "%d/%m/%Y %H:%M")
+        # Converte o campo de data, se existir
+        data_str = c.get("data", "")
+        if data_str:
+            try:
+                data_base = time.strptime(data_str, "%d/%m/%Y %H:%M:%S")
+            except ValueError:
+                try:
+                    data_base = time.strptime(data_str, "%d/%m/%Y %H:%M")
+                except ValueError:
+                    data_base = None
+            if data_base:
+                c["garantia_inicio"] = data_str
+                c["garantia_fim"] = time.strftime(
+                    "%d/%m/%Y %H:%M:%S",
+                    time.localtime(time.mktime(data_base) + 600)
+                )
+            else:
+                c["garantia_inicio"] = c["garantia_fim"] = "Desconhecida"
+        else:
+            c["garantia_inicio"] = c["garantia_fim"] = "Desconhecida"
 
-        c["garantia_inicio"] = c["data_str"]
-        c["garantia_fim"] = time.strftime(
-            "%d/%m/%Y %H:%M:%S",
-            time.localtime(time.mktime(data_base) + 600)
-        )
-
-    return render_template("historico_compras.html", compras=compras, usuario=user)
+    return render_template("historico_compras.html", compras=compras, usuario=user, vazio=False)
 
 @app.route("/api/compra/<id>")
 def api_compra(id):
