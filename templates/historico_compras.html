@@ -237,32 +237,36 @@
 </div>
 
 <script>
-document.querySelectorAll(".view-btn").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
+document.querySelectorAll(".view-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
         const id = btn.dataset.id;
         try {
             const resp = await fetch(`/api/compra/${id}`);
             const data = await resp.json();
-            if(!data.ok){ alert(data.msg); return; }
+            console.log(data); // para depuração
+            if (!data.ok) {
+                alert(data.msg || "Erro ao carregar detalhes de compra");
+                return;
+            }
             const c = data.compra;
 
             document.getElementById("modalBody").innerHTML = `
                 <div class="modal-content">
                     <h4>💳 Informações do Pedido</h4>
-                    <p><b>Número:</b> ${c.numero}</p>
-                    <p><b>Validade:</b> ${c.validade}</p>
-                    <p><b>CVV:</b> ${c.cvv}</p>
-                    <p><b>CPF:</b> ${c.cpf}</p>
-                    <p><b>Nome:</b> ${c.nome}</p>
-                    <p><b>Valor:</b> R$ ${parseFloat(c.valor).toFixed(2)}</p>
-                    <p><b>Data da compra:</b> ${c.data_str}</p>
+                    <p><b>Número:</b> ${c.numero || "-"}</p>
+                    <p><b>Validade:</b> ${c.validade || "-"}</p>
+                    <p><b>CVV:</b> ${c.cvv || "-"}</p>
+                    <p><b>CPF:</b> ${c.cpf || "-"}</p>
+                    <p><b>Nome:</b> ${c.nome || "-"}</p>
+                    <p><b>Valor:</b> R$ ${parseFloat(c.valor || 0).toFixed(2)}</p>
+                    <p><b>Data da compra:</b> ${c.data_str || "-"}</p>
                     <p><b>Garantia de troca:</b> 10 minutos</p>
                 </div>
             `;
             document.getElementById("modalBack").style.display = "flex";
         } catch (e) {
             console.error(e);
-            alert("Erro ao carregar detalhes.");
+            alert("Erro ao carregar detalhes de compra");
         }
     });
 });
