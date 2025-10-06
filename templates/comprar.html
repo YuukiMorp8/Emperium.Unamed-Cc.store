@@ -254,29 +254,54 @@
     </form>
 
     <!-- Materiais -->
-    <div class="grid">
-        {% for mat in resultados %}
-        <div class="card">
-            <div class="sub-embed">
-                <p><strong>⭐ Nível:</strong> {{ mat.nivel }}</p>
-                <p><strong>💰 Valor:</strong> R$ {{ "%.2f"|format(mat.valor) }}</p>
-            </div>
-            <div class="sub-embed">
-                <p><strong>💳 BIN:</strong> {{ mat.material }}</p>
-                <p><strong>🏦 Banco:</strong> {{ mat.banco }}</p>
-            </div>
-            <button class="btn-buy"
-                data-id="{{ mat._id }}"
-                data-material="{{ mat.material }}"
-                data-nivel="{{ mat.nivel }}"
-                data-valor="{{ mat.valor }}">
-                Comprar
-            </button>
+
+<div class="grid">
+    {% for mat in resultados %}
+    <div class="card">
+        <div class="sub-embed">
+            <p>
+                <!-- Ícone Nível -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 5px;">
+                    <path fill="#d4e017" d="M14 4h-4C6.229 4 4.343 4 3.172 5.172c-.844.843-1.08 2.057-1.146 4.078h19.948c-.066-2.021-.302-3.235-1.146-4.078C19.657 4 17.771 4 14 4"/>
+                    <path fill="#d4e017" fill-rule="evenodd" d="M14 20h-4c-3.771 0-5.657 0-6.828-1.172S2 15.771 2 12q0-.662.002-1.25h19.996Q22 11.338 22 12c0 3.771 0 5.657-1.172 6.828S17.771 20 14 20m2.045-7.75c.433 0 .83 0 1.152.043c.356.048.731.16 1.04.47s.422.684.47 1.04c.043.323.043.72.043 1.152v.09c0 .433 0 .83-.043 1.152c-.048.356-.16.731-.47 1.04s-.684.422-1.04.47c-.323.043-.72.043-1.152.043h-.09c-.433 0-.83 0-1.152-.043c-.356-.048-.731-.16-1.04-.47s-.422-.684-.47-1.04c-.043-.323-.043-.72-.043-1.152v-.09"/>
+                </svg>
+                <strong>Nível:</strong> {{ mat.nivel }}
+            </p>
+            <p>
+                <!-- Ícone Valor -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 50 50" style="vertical-align: middle; margin-right: 5px;">
+                    <path fill="#17e03b" d="M34.682 25.801q-2.157-1.701-6.474-2.717L26 22.563v-9.43l.299.122C28.173 14.204 29.18 16 29.318 18h7.516c-.137-4-1.615-6.958-4.434-9.048C30.527 7.563 28.391 6.67 26 6.22V1h-7v5.06c-3.237.4-5.804 1.442-7.689 3.136Q7.609 12.523 7.61 17.55q0 5.51 3.783 8.1c1.412.979 3.957 1.888 7.607 2.73v10.216c-1.331-.367-2.374-.971-3.109-1.844c-.709-.848-1.184-1.752-1.426-3.752H7c0 4 1.411 6.87 4.234 9.096c2.038 1.606 4.632 2.582 7.766 3.005V49h7v-3.833c3.333-.399 6.024-1.463 8.062-3.204q3.965-3.39 3.965-8.519q0-5.002-3.345-7.643"/>
+                </svg>
+                <strong>Valor:</strong> R$ {{ "%.2f"|format(mat.valor) }}
+            </p>
         </div>
-        {% else %}
-        <p>Nenhum resultado encontrado.</p>
-        {% endfor %}
+        <div class="sub-embed">
+            <p>
+                <!-- Ícone BIN -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32" style="vertical-align: middle; margin-right: 5px;">
+                    <path fill="none" stroke="#64c3dd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 20h8M3 13h26m-6 7h2M5 7C4 7 3 8 3 9v14c0 1 1 2 2 2h22c1 0 2-1 2-2V9c0-1-1-2-2-2z"/>
+                </svg>
+                <strong>BIN:</strong> {{ mat.material }}
+            </p>
+            <p>
+                <!-- Ícone Banco -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 128 128" style="vertical-align: middle; margin-right: 5px;">
+                    <path fill="#cddfee" d="M64.64 3.84c-1.67.2-53.72 35.1-54.02 36.16c-.3 1.07-.42 12.19-.42 12.19l6.71 2.13l.03 8.84l3.59 7.35v31.07l-2.68 5.85l-7.35 2.17v5.26l-5.76 1.75s.08 4.51.08 5.26s.25 2.34 3.26 2.34s112.87-.51 113.98-.51s2.26-.22 2.32-2.21s-.06-4.8-.06-4.8l-5.58-2.76l-.02-4.41l-9.08-2.8l-2.19-6.2l.03-29.21l3.48-7.34l1.05-1.99v-7.9l5.85-2.21s.11-11.43-.06-11.76c-.15-.32-51.78-36.43-53.16-36.27"/>
+                </svg>
+                <strong>Banco:</strong> {{ mat.banco }}
+            </p>
+        </div>
+        <button class="btn-buy"
+            data-id="{{ mat._id }}"
+            data-material="{{ mat.material }}"
+            data-nivel="{{ mat.nivel }}"
+            data-valor="{{ mat.valor }}">
+            Comprar
+        </button>
     </div>
+    {% else %}
+    <p>Nenhum resultado encontrado.</p>
+    {% endfor %}
 </div>
 
 <!-- Modal -->
