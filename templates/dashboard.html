@@ -255,17 +255,32 @@ main {
 </div>
 
     <!-- Unamed Emperium -->
-    <div class="embed">
-        <div class="embed-title">🏢 Unamed Emperium</div>
-        <div class="embed-content">
-            <div class="card"><div class="card-title">📚 Cards Disponíveis</div>{{ dados.materiais }}</div>
-            <div class="card"><div class="card-title">⭐ Níveis Disponíveis</div>
-                {% for nivel in niveis %}
-                <div>{{ nivel }}</div>
-                {% endfor %}
+
+<div class="embed">
+    <div class="embed-title">🏢 Unamed Emperium</div>
+    <div class="embed-content">
+        <div class="card">
+            <div class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 32 32" style="vertical-align:middle;margin-right:8px;">
+                    <path fill="none" stroke="#64c3dd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 20h8M3 13h26m-6 7h2M5 7C4 7 3 8 3 9v14c0 1 1 2 2 2h22c1 0 2-1 2-2V9c0-1-1-2-2-2z"/>
+                </svg>
+                Cards Disponíveis
             </div>
+            {{ dados.materiais }}
+        </div>
+        <div class="card">
+            <div class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 32 32" style="vertical-align:middle;margin-right:8px;">
+                    <path fill="none" stroke="#64c3dd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 20h8M3 13h26m-6 7h2M5 7C4 7 3 8 3 9v14c0 1 1 2 2 2h22c1 0 2-1 2-2V9c0-1-1-2-2-2z"/>
+                </svg>
+                Níveis Disponíveis
+            </div>
+            {% for nivel in niveis %}
+            <div>{{ nivel }}</div>
+            {% endfor %}
         </div>
     </div>
+</div>
 
     <!-- 📣 Unamed Hall (Anúncios) -->
     <div class="embed">
