@@ -158,3 +158,37 @@
     transform: scale(1.05);
     box-shadow: 0 0 15px rgba(245, 214, 123, 0.3);
 }
+
+/* No theme-modal.css, adicione: */
+.theme-preview.vulcan {
+    background: linear-gradient(135deg, #000000, #2d0000, #5c0000);
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-preview.vulcan::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background: linear-gradient(to top, #ff4500, #ff0000, #8b0000);
+    border-radius: 0 0 8px 8px;
+}
+
+.theme-preview.vulcan::after {
+    content: '';
+    position: absolute;
+    bottom: 30%;
+    left: 0;
+    right: 0;
+    height: 20%;
+    background: rgba(255, 69, 0, 0.3);
+    animation: previewGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes previewGlow {
+    0% { background: rgba(255, 69, 0, 0.3); }
+    100% { background: rgba(255, 100, 0, 0.6); }
+}
