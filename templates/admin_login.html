@@ -4,10 +4,74 @@
     <meta charset="UTF-8">
     <title>Admin Login - Emperium</title>
     <style>
-        body { background:#111; color:#fff; font-family:Arial,sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
-        .container { background:#1e1e1e; padding:40px; border-radius:15px; width:400px; text-align:center; }
-        input { width:100%; padding:12px; margin:10px 0; border-radius:8px; border:none; }
-        button { padding:15px; width:100%; background:#ff9900; border:none; border-radius:10px; cursor:pointer; color:#111; font-weight:bold; }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            background: #101218; /* preto puxado para cinza */
+            color: #eee;
+            font-family: 'Poppins', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #1a1f2b; /* azul escuro acinzentado */
+            padding: 50px 40px;
+            border-radius: 16px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        h1 {
+            color: #6aa0d6; /* azul melancólico */
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: none;
+            background: #222a3c;
+            color: #eee;
+            font-size: 15px;
+            transition: background 0.3s;
+        }
+
+        input:focus {
+            background: #2b3b5a;
+            outline: none;
+        }
+
+        button {
+            padding: 15px;
+            width: 100%;
+            background: #4e9af1; /* azul melancólico */
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background: #6caef7;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
