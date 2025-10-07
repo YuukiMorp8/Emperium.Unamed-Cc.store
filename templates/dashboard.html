@@ -109,21 +109,23 @@ main {
 }
 
 /* ========== EMBEDS ========== */
+
 .embed {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(5px);
-    border: 2px solid rgba(245,214,123,0.15);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(3px);
+    border: 2px solid rgba(245,214,123,0.1);
     border-radius: 20px;
     padding: 35px 40px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     position: relative;
     transition: 0.3s;
     overflow: hidden;
 }
 .embed:hover {
     transform: scale(1.01);
-    box-shadow: 0 0 30px rgba(245,214,123,0.2);
-    border-color: rgba(245,214,123,0.3);
+    box-shadow: 0 0 25px rgba(245,214,123,0.15);
+    border-color: rgba(245,214,123,0.2);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .embed::before {
@@ -133,7 +135,7 @@ main {
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(to right, transparent, rgba(245,214,123,0.3), transparent);
+    background: linear-gradient(to right, transparent, rgba(245,214,123,0.2), transparent);
 }
 
 .embed-title {
@@ -141,7 +143,7 @@ main {
     font-weight: 700;
     color: #f5d67b;
     text-shadow: 0 0 12px rgba(245,214,123,0.4);
-    border-bottom: 1px solid rgba(245,214,123,0.2);
+    border-bottom: 1px solid rgba(245,214,123,0.15);
     padding-bottom: 10px;
     margin-bottom: 25px;
 }
