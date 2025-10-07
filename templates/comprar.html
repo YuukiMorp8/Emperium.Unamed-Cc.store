@@ -26,7 +26,6 @@
         z-index: -2;
         pointer-events: none;
         background: linear-gradient(to bottom, #0a0a2a, #1a1a3a, #0a0a1a);
-        /* REMOVIDO: animation: rotateBackground 120s linear infinite; */
     }
 
     .star {
@@ -209,14 +208,14 @@
         z-index: 0;
     }
 
-    /* Container para estrelas orbitantes */
+    /* Container para estrelas orbitantes - TAMANHO DOBRADO */
     .orbiting-stars {
         position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 1200px;
-        height: 1200px;
+        width: 2400px; /* DOBRADO: de 1200px para 2400px */
+        height: 2400px; /* DOBRADO: de 1200px para 2400px */
         z-index: -1;
         pointer-events: none;
     }
@@ -478,20 +477,20 @@
         to { transform: translate(-50%, -50%) rotate(-360deg); }
     }
 
-    /* Animação para as estrelas orbitantes */
+    /* Animação para as estrelas orbitantes - RAIO AUMENTADO */
     @keyframes orbitStar {
         0% {
             transform: 
                 translate(-50%, -50%) 
                 rotate(0deg) 
-                translateX(var(--orbit-radius, 300px)) 
+                translateX(var(--orbit-radius, 600px)) 
                 rotate(0deg);
         }
         100% {
             transform: 
                 translate(-50%, -50%) 
                 rotate(360deg) 
-                translateX(var(--orbit-radius, 300px)) 
+                translateX(var(--orbit-radius, 600px)) 
                 rotate(-360deg);
         }
     }
@@ -732,11 +731,11 @@ let energyBeams = [];
 
 // Criar estrelas no fundo (estáticas)
 function createStars() {
-    for (let i = 0; i < 250; i++) {
+    for (let i = 0; i < 100; i++) {
         const star = document.createElement('div');
         star.className = 'star';
 
-        const size = Math.random() * 16 + 4;
+        const size = Math.random() * 4 + 1;
         const posX = Math.random() * window.innerWidth;
         const posY = Math.random() * window.innerHeight;
 
@@ -752,21 +751,23 @@ function createStars() {
     }
 }
 
-// Criar estrelas orbitantes
+// Criar estrelas orbitantes - QUANTIDADE TRIPLICADA
 function createOrbitingStars() {
     const orbitingContainer = document.getElementById('orbitingStars');
     
-    for (let i = 0; i < 250; i++) {
+    // TRIPLICADO: de 25 para 75 estrelas
+    for (let i = 0; i < 75; i++) {
         const star = document.createElement('div');
         star.className = 'star orbiting-star';
         
         const size = Math.random() * 5 + 2;
-        const orbitRadius = Math.random() * 800 + 400; // Raio da órbita entre 200px e 600px
-        const orbitDuration = Math.random() * 160 + 80; // Duração da órbita entre 40s e 120s
+        // RAIO DOBRADO: de 200-600px para 400-1200px
+        const orbitRadius = Math.random() * 800 + 400;
+        const orbitDuration = Math.random() * 80 + 40;
         
         star.style.width = size + 'px';
         star.style.height = size + 'px';
-        star.style.opacity = Math.random() * 1.6 + 0.6;
+        star.style.opacity = Math.random() * 0.8 + 0.3;
         star.style.animation = `orbitStar ${orbitDuration}s linear infinite`;
         star.style.animationDelay = Math.random() * orbitDuration + 's';
         star.style.setProperty('--orbit-radius', orbitRadius + 'px');
@@ -782,8 +783,8 @@ function initializeBlackHole() {
     blackHole.style.height = '350px';
 
     // Horizonte de eventos
-    eventHorizon.style.width = '560px';
-    eventHorizon.style.height = '560px';
+    eventHorizon.style.width = '360px';
+    eventHorizon.style.height = '360px';
 
     // Discos de acreção próximos ao buraco negro
     accretionDisk.style.width = '450px';
@@ -855,18 +856,18 @@ function blackHoleFastPhase() {
     eventHorizon.style.height = '460px';
 
     // Expandir discos de acreção
-    accretionDisk.style.width = '860px';
-    accretionDisk.style.height = '860px';
-    accretionDiskVertical.style.width = '860px';
-    accretionDiskVertical.style.height = '860px';
+    accretionDisk.style.width = '600px';
+    accretionDisk.style.height = '600px';
+    accretionDiskVertical.style.width = '600px';
+    accretionDiskVertical.style.height = '600px';
 
     // Intensificar cores dos discos
     accretionDisk.style.opacity = '0.95';
     accretionDiskVertical.style.opacity = '0.85';
 
     // Aumentar efeito de distorção
-    spatialDistortion.style.width = '1000px';
-    spatialDistortion.style.height = '1000px';
+    spatialDistortion.style.width = '800px';
+    spatialDistortion.style.height = '800px';
     spatialDistortion.style.opacity = '0.5';
 
     // Sugar estrelas mais intensamente
@@ -874,7 +875,7 @@ function blackHoleFastPhase() {
         if (currentPhase === 'black_hole_fast') {
             suckStarWithSpiral();
             // Às vezes sugar duas estrelas de uma vez
-            if (Math.random() > 3.5) {
+            if (Math.random() > 0.7) {
                 setTimeout(() => suckStarWithSpiral(), 300);
             }
         } else {
@@ -903,7 +904,7 @@ function suckStarWithSpiral() {
     suckedStar.className = 'sucked-star';
 
     const originalSize = parseFloat(star.style.width);
-    const largerSize = originalSize * 6;
+    const largerSize = originalSize * 3;
 
     suckedStar.style.width = largerSize + 'px';
     suckedStar.style.height = largerSize + 'px';
@@ -920,8 +921,8 @@ function suckStarWithSpiral() {
     const centerY = window.innerHeight / 2;
 
     // Parâmetros da espiral
-    const startRadius = Math.sqrt(Math.pow(startX - centerX, 4) + Math.pow(startY - centerY, 4));
-    const spiralTurns = 6 + Math.random() * 2; // 3-5 voltas
+    const startRadius = Math.sqrt(Math.pow(startX - centerX, 2) + Math.pow(startY - centerY, 2));
+    const spiralTurns = 3 + Math.random() * 2; // 3-5 voltas
     const totalDuration = 4000 + Math.random() * 2000; // 4-6 segundos
 
     // Animação complexa em espiral
@@ -968,7 +969,7 @@ function createNewStar() {
     const star = document.createElement('div');
     star.className = 'star';
 
-    const size = Math.random() * 8 + 2;
+    const size = Math.random() * 4 + 1;
     const posX = Math.random() * window.innerWidth;
     const posY = Math.random() * window.innerHeight;
 
@@ -985,14 +986,14 @@ function createNewStar() {
 
 // Criar raio de energia do buraco branco
 function createEnergyBeam() {
-    if (Math.random() > 1.7) return; // 40% de chance
+    if (Math.random() > 0.4) return; // 40% de chance
 
     const beam = document.createElement('div');
     beam.className = 'energy-beam';
 
-    const angle = Math.random() * Math.PI * 4;
-    const length = Math.random() * 2200 + 1600;
-    const width = Math.random() * 160 + 80;
+    const angle = Math.random() * Math.PI * 2;
+    const length = Math.random() * 600 + 400;
+    const width = Math.random() * 40 + 20;
 
     beam.style.width = length + 'px';
     beam.style.height = width + 'px';
@@ -1041,19 +1042,19 @@ function compressionAndExplosion() {
         const currentHeight = parseInt(blackHole.style.height);
 
         if (currentWidth > 100) {
-            blackHole.style.width = (currentWidth - 40) + 'px';
-            blackHole.style.height = (currentHeight - 40) + 'px';
-            eventHorizon.style.width = (currentWidth - 30) + 'px';
-            eventHorizon.style.height = (currentHeight - 30) + 'px';
-            accretionDisk.style.width = (currentWidth + 100) + 'px';
-            accretionDisk.style.height = (currentHeight + 100) + 'px';
-            accretionDiskVertical.style.width = (currentWidth + 100) + 'px';
-            accretionDiskVertical.style.height = (currentHeight + 100) + 'px';
+            blackHole.style.width = (currentWidth - 20) + 'px';
+            blackHole.style.height = (currentHeight - 20) + 'px';
+            eventHorizon.style.width = (currentWidth - 15) + 'px';
+            eventHorizon.style.height = (currentHeight - 15) + 'px';
+            accretionDisk.style.width = (currentWidth + 50) + 'px';
+            accretionDisk.style.height = (currentHeight + 50) + 'px';
+            accretionDiskVertical.style.width = (currentWidth + 50) + 'px';
+            accretionDiskVertical.style.height = (currentHeight + 50) + 'px';
         } else {
             clearInterval(compressInterval);
             explodeIntoWhiteHole();
         }
-    }, 200);
+    }, 100);
 }
 
 // Explosão em Buraco Branco
@@ -1076,24 +1077,24 @@ function explodeIntoWhiteHole() {
     whiteHole.style.height = '200px';
 
     // Criar partículas de explosão
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 100; i++) {
         createExplosionParticle();
     }
 
     // Expandir buraco branco
     setTimeout(() => {
-        whiteHole.style.width = '600px';
-        whiteHole.style.height = '600px';
+        whiteHole.style.width = '400px';
+        whiteHole.style.height = '400px';
         whiteHole.style.animation = 'rotateReverse 15s linear infinite';
 
         // Expelir matéria e criar raios de energia
         const expelInterval = setInterval(() => {
             if (currentPhase === 'white_hole') {
-                createEnergyParticle(18);
+                createEnergyParticle(3);
                 createEnergyBeam();
 
                 // Criar novas estrelas
-                if (Math.random() > 2.8) {
+                if (Math.random() > 0.7) {
                     createNewStar();
                 }
             } else {
@@ -1165,8 +1166,8 @@ function createEnergyParticle(type) {
     // Posição baseada no tipo
     if (type === 1 || type === 2) {
         // Partículas sendo sugadas para o buraco negro
-        const angle = Math.random() * Math.PI * 4;
-        const distance = Math.random() * 1000 + 800;
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 500 + 400;
         const posX = window.innerWidth/2 + Math.cos(angle) * distance;
         const posY = window.innerHeight/2 + Math.sin(angle) * distance;
 
@@ -1187,12 +1188,12 @@ function createEnergyParticle(type) {
         particle.style.top = window.innerHeight/2 + 'px';
 
         const angle = Math.random() * Math.PI * 2;
-        const distance = Math.random() * 1200 + 600;
+        const distance = Math.random() * 600 + 300;
 
         // Animação de ser expelido
         particle.animate([
-            { opacity: 2, transform: 'scale(4) translate(0, 0)' },
-            { opacity: 0, transform: `scale(6) translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)` }
+            { opacity: 1, transform: 'scale(1) translate(0, 0)' },
+            { opacity: 0, transform: `scale(3) translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)` }
         ], {
             duration: 2500,
             easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
@@ -1215,7 +1216,7 @@ function createExplosionParticle() {
     const particle = document.createElement('div');
     particle.className = 'explosion-particle';
 
-    const size = Math.random() * 30 + 16;
+    const size = Math.random() * 15 + 8;
     particle.style.width = size + 'px';
     particle.style.height = size + 'px';
     particle.style.left = window.innerWidth/2 + 'px';
