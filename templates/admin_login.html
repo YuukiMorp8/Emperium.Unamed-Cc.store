@@ -1,78 +1,112 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Login - Emperium</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+<meta charset="UTF-8">
+<title>Admin Login - Emperium</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-        body {
-            background: #101218; /* preto puxado para cinza */
-            color: #eee;
-            font-family: 'Poppins', Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+    background: #101218;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    color: #eee;
+}
 
-        .container {
-            background: #1a1f2b; /* azul escuro acinzentado */
-            padding: 50px 40px;
-            border-radius: 16px;
-            width: 400px;
-            text-align: center;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
+/* Fundo do mar com bolhas */
+.bubble {
+    position: absolute;
+    bottom: -50px;
+    width: 15px;
+    height: 15px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    animation: rise 8s infinite ease-in;
+}
 
-        .container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-        }
+@keyframes rise {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    10% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+    100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+}
 
-        h1 {
-            color: #6aa0d6; /* azul melancólico */
-            margin-bottom: 30px;
-            font-size: 28px;
-        }
+/* Container principal */
+.container {
+    position: relative;
+    background: #1a1f2b;
+    padding: 50px 40px;
+    border-radius: 16px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+    z-index: 2;
+}
 
-        input {
-            width: 100%;
-            padding: 14px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border: none;
-            background: #222a3c;
-            color: #eee;
-            font-size: 15px;
-            transition: background 0.3s;
-        }
+/* Reflexo */
+.container::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(26,31,43,0.5), transparent);
+    transform: scaleY(-1);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 1;
+}
 
-        input:focus {
-            background: #2b3b5a;
-            outline: none;
-        }
+/* Textos e inputs */
+h1 {
+    color: #6aa0d6;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
 
-        button {
-            padding: 15px;
-            width: 100%;
-            background: #4e9af1; /* azul melancólico */
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            color: #fff;
-            font-weight: bold;
-            font-size: 16px;
-            transition: background 0.3s, transform 0.2s;
-        }
+input {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: none;
+    background: #222a3c;
+    color: #eee;
+    font-size: 15px;
+    transition: background 0.3s;
+}
 
-        button:hover {
-            background: #6caef7;
-            transform: translateY(-2px);
-        }
-    </style>
+input:focus {
+    background: #2b3b5a;
+    outline: none;
+}
+
+button {
+    padding: 15px;
+    width: 100%;
+    background: #4e9af1;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background: #6caef7;
+    transform: translateY(-2px);
+}
+</style>
 </head>
 <body>
     <div class="container">
@@ -83,5 +117,19 @@
             <button type="submit">Entrar</button>
         </form>
     </div>
+
+    <!-- Bolhas animadas -->
+    <script>
+        const colors = ['rgba(255,255,255,0.2)', 'rgba(255,255,255,0.15)', 'rgba(255,255,255,0.25)'];
+        for(let i=0;i<50;i++){
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.style.left = Math.random() * 100 + 'vw';
+            bubble.style.width = bubble.style.height = Math.random() * 15 + 5 + 'px';
+            bubble.style.animationDuration = (5 + Math.random() * 5) + 's';
+            bubble.style.background = colors[Math.floor(Math.random()*colors.length)];
+            document.body.appendChild(bubble);
+        }
+    </script>
 </body>
 </html>
