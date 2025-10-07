@@ -1,0 +1,24 @@
+/* Estilos globais do header e estrutura base */
+header {
+    background: rgba(26, 95, 150, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* Botões globais */
+.btn-admin { /* estilos */ }
+.perfil { /* estilos */ }
