@@ -1,6 +1,6 @@
-// static/js/theme-switcher.js - Sistema CORRIGIDO sem conflitos
+// static/js/theme-switcher.js - SISTEMA FINAL SEM CONFLITOS
 
-class SimpleThemeManager {
+class ThemeManager {
     constructor() {
         this.themes = ['ocean', 'vulcan'];
         this.currentTheme = this.getSavedTheme() || 'ocean';
@@ -9,7 +9,7 @@ class SimpleThemeManager {
     }
 
     init() {
-        console.log('Iniciando tema:', this.currentTheme);
+        console.log('🎨 Iniciando Sistema de Temas:', this.currentTheme);
         this.applyTheme(this.currentTheme);
         this.setupThemeButton();
         this.setupThemeModal();
@@ -24,30 +24,35 @@ class SimpleThemeManager {
     }
 
     applyTheme(themeName) {
-        console.log('Aplicando tema:', themeName);
+        console.log('🔄 Aplicando tema:', themeName);
         
-        // PARA TODOS os intervals anteriores
+        // 1. PARA todos os intervals e timeouts anteriores
         this.clearAllIntervals();
         
-        // REMOVE completamente elementos anteriores
+        // 2. REMOVE completamente todos os elementos de temas
         this.removeAllThemeElements();
         
-        // Atualiza classe do body
+        // 3. Atualiza classe do body (IMPORTANTE: remove classes antigas)
         document.body.className = '';
         document.body.classList.add(`theme-${themeName}`);
         
-        // Remove CSS anterior e carrega novo
+        // 4. Remove CSS anterior e carrega novo
         this.loadThemeCSS(themeName);
         
-        // Salva e atualiza estado
+        // 5. Salva e atualiza estado
         this.currentTheme = themeName;
         this.saveTheme(themeName);
         
-        // Cria elementos específicos do tema
+        // 6. Cria elementos específicos do tema
         this.createThemeElements(themeName);
         
-        // Atualiza UI
+        // 7. Inicia sistema dinâmico do tema (se necessário)
+        this.startThemeSystem(themeName);
+        
+        // 8. Atualiza UI
         this.updateThemeCards();
+        
+        console.log('✅ Tema aplicado com sucesso:', themeName);
     }
 
     clearAllIntervals() {
@@ -56,11 +61,25 @@ class SimpleThemeManager {
     }
 
     removeAllThemeElements() {
-        // Remove TODOS os elementos de temas
-        const elementsToRemove = document.querySelectorAll(
-            '.ocean-elements, .vulcan-elements, .theme-elements, .bubble, .lava-bubble, .eruption'
-        );
-        elementsToRemove.forEach(el => el.remove());
+        // Remove TODOS os elementos possíveis de temas
+        const selectors = [
+            '.ocean-elements', 
+            '.vulcan-elements', 
+            '.theme-elements',
+            '.bubble',
+            '.lava-bubble', 
+            '.eruption',
+            '.ocean-container',
+            '.lava-bottom',
+            '.sand-bottom',
+            '.wave',
+            '.smoke'
+        ];
+        
+        selectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => el.remove());
+        });
         
         // Remove CSS dinâmico
         const oldCSS = document.getElementById('dynamic-theme-css');
@@ -77,16 +96,14 @@ class SimpleThemeManager {
 
     createThemeElements(themeName) {
         const container = document.createElement('div');
-        container.className = 'theme-elements';
+        container.className = `${themeName}-elements`;
         
         switch(themeName) {
             case 'ocean':
                 container.innerHTML = this.createOceanElements();
-                this.startOceanSystem();
                 break;
             case 'vulcan':
                 container.innerHTML = this.createVulcanElements();
-                this.startVulcanSystem();
                 break;
         }
         
@@ -95,24 +112,20 @@ class SimpleThemeManager {
 
     createOceanElements() {
         return `
-            <div class="ocean-elements">
-                <div class="ocean-container">
-                    ${this.generateBubbles()}
-                </div>
-                <div class="sand-bottom"></div>
-                <div class="wave"></div>
-                <div class="wave"></div>
+            <div class="ocean-container">
+                ${this.generateBubbles()}
             </div>
+            <div class="sand-bottom"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
         `;
     }
 
     createVulcanElements() {
         return `
-            <div class="vulcan-elements">
-                <div class="lava-bottom"></div>
-                <div class="smoke"></div>
-                <div class="smoke"></div>
-            </div>
+            <div class="lava-bottom"></div>
+            <div class="smoke"></div>
+            <div class="smoke"></div>
         `;
     }
 
@@ -124,17 +137,26 @@ class SimpleThemeManager {
         return bubbles;
     }
 
-    startOceanSystem() {
-        // Sistema de bolhas do ocean (se precisar de JavaScript)
-        console.log('Sistema Ocean iniciado');
+    startThemeSystem(themeName) {
+        switch(themeName) {
+            case 'ocean':
+                // Ocean usa apenas CSS - nada para fazer aqui
+                break;
+            case 'vulcan':
+                this.startVulcanSystem();
+                break;
+        }
     }
 
     startVulcanSystem() {
-        // Sistema de lava do vulcão
+        console.log('🌋 Iniciando sistema Vulcão...');
+        
+        // Bolhas de lava
         const lavaInterval = setInterval(() => {
             this.createLavaBubble();
         }, 800);
         
+        // Erupções
         const eruptionInterval = setInterval(() => {
             if (Math.random() < 0.3) this.createEruption();
         }, 4000);
@@ -143,6 +165,9 @@ class SimpleThemeManager {
     }
 
     createLavaBubble() {
+        const vulcanElements = document.querySelector('.vulcan-elements');
+        if (!vulcanElements) return;
+
         const bubble = document.createElement('div');
         bubble.className = 'lava-bubble';
         
@@ -157,14 +182,23 @@ class SimpleThemeManager {
             top: -50px;
             animation-duration: ${duration}s;
             background: radial-gradient(circle, rgba(255,69,0,0.8) 0%, rgba(139,0,0,0.4) 70%);
+            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 69, 0, 0.6);
         `;
         
-        document.querySelector('.vulcan-elements')?.appendChild(bubble);
+        vulcanElements.appendChild(bubble);
         
-        setTimeout(() => bubble.remove(), duration * 1000);
+        // Remove após animação
+        setTimeout(() => {
+            if (bubble.parentNode) {
+                bubble.remove();
+            }
+        }, duration * 1000);
     }
 
     createEruption() {
+        const vulcanElements = document.querySelector('.vulcan-elements');
+        if (!vulcanElements) return;
+
         const eruption = document.createElement('div');
         eruption.className = 'eruption';
         
@@ -177,23 +211,44 @@ class SimpleThemeManager {
             animation-delay: ${Math.random() * 2}s;
         `;
         
-        document.querySelector('.vulcan-elements')?.appendChild(eruption);
+        vulcanElements.appendChild(eruption);
         
-        setTimeout(() => eruption.remove(), 4000);
+        // Remove após animação
+        setTimeout(() => {
+            if (eruption.parentNode) {
+                eruption.remove();
+            }
+        }, 4000);
     }
 
     setupThemeButton() {
         const header = document.querySelector('header');
-        if (!header || document.querySelector('.btn-change-theme')) return;
+        if (!header) return;
+
+        // Verifica se o botão já existe
+        if (document.querySelector('.btn-change-theme')) return;
 
         const themeBtn = document.createElement('button');
         themeBtn.className = 'btn-change-theme';
         themeBtn.innerHTML = '🎨 Mudar Tema';
         themeBtn.onclick = () => this.openModal();
 
+        // Insere no header
         const headerButtons = header.querySelector('.header-buttons');
         if (headerButtons) {
             headerButtons.insertBefore(themeBtn, headerButtons.firstChild);
+        } else {
+            // Cria container se não existir
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'header-buttons';
+            buttonsContainer.appendChild(themeBtn);
+            
+            const profile = header.querySelector('.perfil');
+            if (profile) {
+                buttonsContainer.appendChild(profile);
+            }
+            
+            header.appendChild(buttonsContainer);
         }
     }
 
@@ -237,16 +292,22 @@ class SimpleThemeManager {
     }
 
     setupModalListeners() {
-        // Overlay e botão fechar
-        document.getElementById('theme-overlay').onclick = () => this.closeModal();
-        document.querySelector('.theme-close').onclick = () => this.closeModal();
+        // Overlay
+        document.getElementById('theme-overlay').addEventListener('click', () => {
+            this.closeModal();
+        });
+
+        // Botão fechar
+        document.querySelector('.theme-close').addEventListener('click', () => {
+            this.closeModal();
+        });
 
         // Tecla ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') this.closeModal();
         });
 
-        // Clique nos cards
+        // Clique nos cards de tema
         document.addEventListener('click', (e) => {
             const card = e.target.closest('.theme-card');
             if (card) {
@@ -279,7 +340,16 @@ class SimpleThemeManager {
     }
 }
 
-// Inicialização SIMPLES
+// INICIALIZAÇÃO - Executa em todas as páginas
 document.addEventListener('DOMContentLoaded', () => {
-    window.themeManager = new SimpleThemeManager();
+    window.themeManager = new ThemeManager();
 });
+
+// Função global para debug
+window.debugTheme = function() {
+    console.log('🔍 Debug Temas:');
+    console.log('- Tema atual:', window.themeManager?.currentTheme);
+    console.log('- Elementos Ocean:', document.querySelectorAll('.ocean-elements, .bubble').length);
+    console.log('- Elementos Vulcan:', document.querySelectorAll('.vulcan-elements, .lava-bubble').length);
+    console.log('- Intervals ativos:', window.themeManager?.activeIntervals.length);
+};
