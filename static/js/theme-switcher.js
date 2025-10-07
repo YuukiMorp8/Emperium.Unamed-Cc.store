@@ -1,225 +1,233 @@
+// static/js/theme-switcher.js - Sistema CORRIGIDO sem conflitos
 
-class LavaSystem {
+class SimpleThemeManager {
     constructor() {
-        this.lavaContainer = null;
+        this.themes = ['ocean', 'vulcan'];
+        this.currentTheme = this.getSavedTheme() || 'ocean';
+        this.activeIntervals = [];
         this.init();
     }
 
     init() {
-        this.createLavaContainer();
-        this.startLavaGenerator();
-        this.startEruptions();
+        console.log('Iniciando tema:', this.currentTheme);
+        this.applyTheme(this.currentTheme);
+        this.setupThemeButton();
+        this.setupThemeModal();
     }
 
-    createLavaContainer() {
-        this.lavaContainer = document.createElement('div');
-        this.lavaContainer.className = 'vulcan-elements';
-        this.lavaContainer.innerHTML = `
-            <div class="lava-bottom"></div>
-            <div class="smoke"></div>
-            <div class="smoke"></div>
+    getSavedTheme() {
+        return localStorage.getItem('appTheme');
+    }
+
+    saveTheme(theme) {
+        localStorage.setItem('appTheme', theme);
+    }
+
+    applyTheme(themeName) {
+        console.log('Aplicando tema:', themeName);
+        
+        // PARA TODOS os intervals anteriores
+        this.clearAllIntervals();
+        
+        // REMOVE completamente elementos anteriores
+        this.removeAllThemeElements();
+        
+        // Atualiza classe do body
+        document.body.className = '';
+        document.body.classList.add(`theme-${themeName}`);
+        
+        // Remove CSS anterior e carrega novo
+        this.loadThemeCSS(themeName);
+        
+        // Salva e atualiza estado
+        this.currentTheme = themeName;
+        this.saveTheme(themeName);
+        
+        // Cria elementos específicos do tema
+        this.createThemeElements(themeName);
+        
+        // Atualiza UI
+        this.updateThemeCards();
+    }
+
+    clearAllIntervals() {
+        this.activeIntervals.forEach(interval => clearInterval(interval));
+        this.activeIntervals = [];
+    }
+
+    removeAllThemeElements() {
+        // Remove TODOS os elementos de temas
+        const elementsToRemove = document.querySelectorAll(
+            '.ocean-elements, .vulcan-elements, .theme-elements, .bubble, .lava-bubble, .eruption'
+        );
+        elementsToRemove.forEach(el => el.remove());
+        
+        // Remove CSS dinâmico
+        const oldCSS = document.getElementById('dynamic-theme-css');
+        if (oldCSS) oldCSS.remove();
+    }
+
+    loadThemeCSS(themeName) {
+        const link = document.createElement('link');
+        link.id = 'dynamic-theme-css';
+        link.rel = 'stylesheet';
+        link.href = `/static/themes/${themeName}.css`;
+        document.head.appendChild(link);
+    }
+
+    createThemeElements(themeName) {
+        const container = document.createElement('div');
+        container.className = 'theme-elements';
+        
+        switch(themeName) {
+            case 'ocean':
+                container.innerHTML = this.createOceanElements();
+                this.startOceanSystem();
+                break;
+            case 'vulcan':
+                container.innerHTML = this.createVulcanElements();
+                this.startVulcanSystem();
+                break;
+        }
+        
+        document.body.appendChild(container);
+    }
+
+    createOceanElements() {
+        return `
+            <div class="ocean-elements">
+                <div class="ocean-container">
+                    ${this.generateBubbles()}
+                </div>
+                <div class="sand-bottom"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+            </div>
         `;
-        document.body.appendChild(this.lavaContainer);
     }
 
-    createLavaBubble(isEruption = false) {
+    createVulcanElements() {
+        return `
+            <div class="vulcan-elements">
+                <div class="lava-bottom"></div>
+                <div class="smoke"></div>
+                <div class="smoke"></div>
+            </div>
+        `;
+    }
+
+    generateBubbles() {
+        let bubbles = '';
+        for (let i = 1; i <= 24; i++) {
+            bubbles += `<div class="bubble bubble-${i}"></div>`;
+        }
+        return bubbles;
+    }
+
+    startOceanSystem() {
+        // Sistema de bolhas do ocean (se precisar de JavaScript)
+        console.log('Sistema Ocean iniciado');
+    }
+
+    startVulcanSystem() {
+        // Sistema de lava do vulcão
+        const lavaInterval = setInterval(() => {
+            this.createLavaBubble();
+        }, 800);
+        
+        const eruptionInterval = setInterval(() => {
+            if (Math.random() < 0.3) this.createEruption();
+        }, 4000);
+        
+        this.activeIntervals.push(lavaInterval, eruptionInterval);
+    }
+
+    createLavaBubble() {
         const bubble = document.createElement('div');
-        bubble.classList.add('lava-bubble');
-
-        const size = isEruption ? Math.random() * 25 + 15 : Math.random() * 20 + 8;
+        bubble.className = 'lava-bubble';
+        
+        const size = Math.random() * 20 + 10;
         const left = Math.random() * 100;
-        const duration = isEruption ? Math.random() * 2 + 1 : Math.random() * 3 + 2;
-
-        bubble.style.width = `${size}px`;
-        bubble.style.height = `${size}px`;
-        bubble.style.left = `${left}%`;
-        bubble.style.top = '-50px';
-        bubble.style.animationDuration = `${duration}s`;
-
-        const lavaColors = [
-            'rgba(255, 69, 0, 0.8)',
-            'rgba(255, 100, 0, 0.7)',
-            'rgba(255, 140, 0, 0.6)',
-            'rgba(255, 165, 0, 0.5)'
-        ];
-
-        bubble.style.background = `radial-gradient(circle at 30% 30%, 
-            ${lavaColors[Math.floor(Math.random() * lavaColors.length)]}, 
-            rgba(139, 0, 0, 0.4) 70%)`;
-
-        this.lavaContainer.appendChild(bubble);
-
-        setTimeout(() => {
-            if (bubble.parentNode) {
-                bubble.parentNode.removeChild(bubble);
-            }
-        }, duration * 1000);
-    }
-
-    startLavaGenerator() {
-        setInterval(() => {
-            const bubbleCount = Math.floor(Math.random() * 6) + 3;
-            for(let i = 0; i < bubbleCount; i++) {
-                setTimeout(() => this.createLavaBubble(), Math.random() * 500);
-            }
-        }, 1000);
-
-        setInterval(() => {
-            if (Math.random() < 0.4) {
-                const burstCount = Math.floor(Math.random() * 20) + 15;
-                for(let i = 0; i < burstCount; i++) {
-                    setTimeout(() => this.createLavaBubble(true), Math.random() * 300);
-                }
-            }
-        }, 8000);
-    }
-
-    startEruptions() {
-        setInterval(() => {
-            if (Math.random() < 0.3) {
-                this.createEruption();
-            }
-        }, 6000);
+        const duration = Math.random() * 3 + 2;
+        
+        bubble.style.cssText = `
+            width: ${size}px;
+            height: ${size}px;
+            left: ${left}%;
+            top: -50px;
+            animation-duration: ${duration}s;
+            background: radial-gradient(circle, rgba(255,69,0,0.8) 0%, rgba(139,0,0,0.4) 70%);
+        `;
+        
+        document.querySelector('.vulcan-elements')?.appendChild(bubble);
+        
+        setTimeout(() => bubble.remove(), duration * 1000);
     }
 
     createEruption() {
         const eruption = document.createElement('div');
-        eruption.classList.add('eruption');
+        eruption.className = 'eruption';
+        
         const left = Math.random() * 80 + 10;
-        const width = Math.random() * 80 + 40;
-        const height = Math.random() * 100 + 100;
+        const width = Math.random() * 60 + 40;
         
-        eruption.style.left = `${left}%`;
-        eruption.style.width = `${width}px`;
-        eruption.style.height = `${height}px`;
-        eruption.style.animationDelay = `${Math.random() * 2}s`;
-
-        this.lavaContainer.appendChild(eruption);
-
-        setTimeout(() => {
-            if (eruption.parentNode) {
-                eruption.parentNode.removeChild(eruption);
-            }
-        }, 4000);
+        eruption.style.cssText = `
+            left: ${left}%;
+            width: ${width}px;
+            animation-delay: ${Math.random() * 2}s;
+        `;
+        
+        document.querySelector('.vulcan-elements')?.appendChild(eruption);
+        
+        setTimeout(() => eruption.remove(), 4000);
     }
 
-    destroy() {
-        if (this.lavaContainer && this.lavaContainer.parentNode) {
-            this.lavaContainer.parentNode.removeChild(this.lavaContainer);
+    setupThemeButton() {
+        const header = document.querySelector('header');
+        if (!header || document.querySelector('.btn-change-theme')) return;
+
+        const themeBtn = document.createElement('button');
+        themeBtn.className = 'btn-change-theme';
+        themeBtn.innerHTML = '🎨 Mudar Tema';
+        themeBtn.onclick = () => this.openModal();
+
+        const headerButtons = header.querySelector('.header-buttons');
+        if (headerButtons) {
+            headerButtons.insertBefore(themeBtn, headerButtons.firstChild);
         }
     }
-}
 
-// static/js/theme-switcher.js - Sistema simplificado de temas
+    setupThemeModal() {
+        if (document.getElementById('theme-modal')) return;
 
-class ThemeManager {
-    constructor() {
-        this.themes = ['ocean', 'vulcan'];
-        this.currentTheme = this.getSavedTheme() || 'ocean';
-        this.init();
-    }
+        const modalHTML = `
+            <div class="theme-modal-overlay" id="theme-overlay"></div>
+            <div class="theme-modal" id="theme-modal">
+                <div class="theme-header">
+                    <h3>🎨 Escolher Tema</h3>
+                    <button class="theme-close">&times;</button>
+                </div>
+                <div class="theme-grid" id="theme-grid">
+                    ${this.renderThemeCards()}
+                </div>
+            </div>
+        `;
 
-    init() {
-        this.loadTheme(this.currentTheme);
-        this.renderThemeCards();
-        this.addEventListeners();
-    }
-
-    getSavedTheme() {
-        return localStorage.getItem('selectedTheme');
-    }
-
-    saveTheme(theme) {
-        localStorage.setItem('selectedTheme', theme);
-    }
-
-    loadTheme(themeName) {
-        console.log('Carregando tema:', themeName);
-        
-        // Remove tema anterior
-        const oldTheme = document.getElementById('dynamic-theme');
-        if (oldTheme) oldTheme.remove();
-
-        // Remove elementos de temas anteriores
-        this.removePreviousThemeElements();
-
-        // Atualiza classe do body
-        document.body.className = `theme-${themeName}`;
-
-        // Carrega novo tema CSS
-        const link = document.createElement('link');
-        link.id = 'dynamic-theme';
-        link.rel = 'stylesheet';
-        link.href = `/static/themes/${themeName}.css`;
-        document.head.appendChild(link);
-
-        this.currentTheme = themeName;
-        this.saveTheme(themeName);
-        this.updateActiveThemeCard();
-
-        // Cria elementos do tema
-        this.createThemeElements(themeName);
-    }
-
-    removePreviousThemeElements() {
-        // Remove todos os elementos de temas
-        const themeElements = document.querySelectorAll('.ocean-elements, .vulcan-elements');
-        themeElements.forEach(element => element.remove());
-    }
-
-    createThemeElements(themeName) {
-        let elementsHTML = '';
-        
-        switch(themeName) {
-            case 'ocean':
-                elementsHTML = `
-                    <div class="ocean-elements">
-                        <div class="ocean-container" id="ocean">
-                            ${this.generateBubbles()}
-                        </div>
-                        <div class="sand-bottom"></div>
-                        <div class="wave"></div>
-                        <div class="wave"></div>
-                    </div>
-                `;
-                break;
-            case 'vulcan':
-                elementsHTML = `
-                    <div class="vulcan-elements">
-                        <div class="lava-bottom"></div>
-                        <div class="smoke"></div>
-                        <div class="smoke"></div>
-                    </div>
-                `;
-                break;
-        }
-
-        document.body.insertAdjacentHTML('afterbegin', elementsHTML);
-    }
-
-    generateBubbles() {
-        let bubblesHTML = '';
-        // Gera 24 bolhas com posições e tamanhos variados
-        for (let i = 1; i <= 24; i++) {
-            bubblesHTML += `<div class="bubble"></div>`;
-        }
-        return bubblesHTML;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        this.setupModalListeners();
     }
 
     renderThemeCards() {
-        const themeGrid = document.getElementById('theme-grid');
-        if (!themeGrid) return;
-
         const themesData = {
             'ocean': { name: '🌊 Oceano', desc: 'Tema aquático com bolhas' },
             'vulcan': { name: '🌋 Vulcão', desc: 'Tema infernal com lava' }
         };
 
-        themeGrid.innerHTML = this.themes.map(theme => {
-            const data = themesData[theme] || { name: theme, desc: 'Tema personalizado' };
+        return this.themes.map(theme => {
+            const data = themesData[theme];
+            const active = theme === this.currentTheme ? 'active' : '';
             return `
-                <div class="theme-card ${theme === this.currentTheme ? 'active' : ''}" 
-                     data-theme="${theme}">
+                <div class="theme-card ${active}" data-theme="${theme}">
                     <div class="theme-preview ${theme}"></div>
                     <div class="theme-name">${data.name}</div>
                     <div class="theme-desc">${data.desc}</div>
@@ -228,35 +236,22 @@ class ThemeManager {
         }).join('');
     }
 
-    addEventListeners() {
-        // Botão de abrir modal
-        const themeBtn = document.getElementById('btn-change-theme');
-        if (themeBtn) {
-            themeBtn.addEventListener('click', () => {
-                this.openModal();
-            });
-        }
-
-        // Fechar modal
-        document.getElementById('theme-overlay')?.addEventListener('click', () => {
-            this.closeModal();
-        });
-
-        document.querySelector('.theme-close')?.addEventListener('click', () => {
-            this.closeModal();
-        });
+    setupModalListeners() {
+        // Overlay e botão fechar
+        document.getElementById('theme-overlay').onclick = () => this.closeModal();
+        document.querySelector('.theme-close').onclick = () => this.closeModal();
 
         // Tecla ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') this.closeModal();
         });
 
-        // Clique nos cards de tema
+        // Clique nos cards
         document.addEventListener('click', (e) => {
-            const themeCard = e.target.closest('.theme-card');
-            if (themeCard) {
-                const theme = themeCard.dataset.theme;
-                this.loadTheme(theme);
+            const card = e.target.closest('.theme-card');
+            if (card) {
+                const theme = card.dataset.theme;
+                this.applyTheme(theme);
                 this.closeModal();
             }
         });
@@ -274,7 +269,7 @@ class ThemeManager {
         document.body.style.overflow = '';
     }
 
-    updateActiveThemeCard() {
+    updateThemeCards() {
         document.querySelectorAll('.theme-card').forEach(card => {
             card.classList.remove('active');
             if (card.dataset.theme === this.currentTheme) {
@@ -284,7 +279,7 @@ class ThemeManager {
     }
 }
 
-// Inicializa quando o DOM carregar
+// Inicialização SIMPLES
 document.addEventListener('DOMContentLoaded', () => {
-    window.themeManager = new ThemeManager();
+    window.themeManager = new SimpleThemeManager();
 });
