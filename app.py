@@ -247,6 +247,7 @@ def admin_login():
         admin = admins_col.find_one({"nome": nome_admin})
 
         if admin and admin.get("senha", "").strip() == senha_admin:
+            session.permanent = True
             session["admin"] = str(admin["_id"])
             return redirect(url_for("admin_panel"))
 
@@ -259,7 +260,6 @@ anuncios = []
 @app.route("/admin_panel", methods=["GET", "POST"])
 def admin_panel():
     if "admin" not in session:
-            session.permanent = True
         return redirect(url_for("admin_login"))
 
     global anuncios
