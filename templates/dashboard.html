@@ -430,7 +430,8 @@ main {
 </div>
 
 <script>
-// Sistema de bolhas - VELOCIDADE E QUANTIDADE DOBRADAS
+
+// Sistema de bolhas - QUANTIDADE TRIPLICADA E COBERTURA TOTAL
 const ocean = document.getElementById('ocean');
 let burstChance = 30;
 let burstCycle = 0;
@@ -440,29 +441,38 @@ function createBubble(isBurst = false) {
     const bubble = document.createElement('div');
     bubble.classList.add('bubble');
     
-    // Tamanho e posição
+    // Tamanho variado para mais realismo
     const size = isBurst ? 
-        Math.random() * 15 + 5 : // Bolhas menores na rajada
-        Math.random() * 25 + 10; // Bolhas normais
+        Math.random() * 12 + 3 : // Bolhas menores e mais numerosas na rajada
+        Math.random() * 20 + 5; // Bolhas normais variadas
     
+    // Posição aleatória por toda a largura da página
     const left = Math.random() * 100;
     
     bubble.style.width = `${size}px`;
     bubble.style.height = `${size}px`;
     bubble.style.left = `${left}%`;
-    bubble.style.bottom = '-20px';
+    bubble.style.bottom = '-50px'; // Começar mais abaixo para cobrir toda a altura
     
-    // VELOCIDADE DOBRADA - tempo de animação reduzido pela metade
+    // Velocidade variada (mantida rápida)
     const duration = isBurst ? 
-        Math.random() * 1.5 + 0.5 : // 0.5-2 segundos (era 1-4)
-        Math.random() * 4 + 2; // 2-6 segundos (era 4-12)
+        Math.random() * 1.5 + 0.5 : // 0.5-2 segundos
+        Math.random() * 4 + 2; // 2-6 segundos
     
     bubble.style.animationDuration = `${duration}s`;
     
-    // Opacidade
-    bubble.style.opacity = isBurst ? 
-        Math.random() * 0.4 + 0.3 : // Mais opacas na rajada
-        Math.random() * 0.3 + 0.1; // Mais sutis normalmente
+    // Efeitos visuais melhorados
+    bubble.style.background = `radial-gradient(circle at 30% 30%, 
+        rgba(255, 255, 255, ${0.4 + Math.random() * 0.3}), 
+        rgba(255, 255, 255, ${0.1 + Math.random() * 0.2}) 70%)`;
+    bubble.style.boxShadow = `
+        inset 0 0 8px rgba(255, 255, 255, 0.6),
+        0 0 12px rgba(255, 255, 255, 0.3)
+    `;
+    
+    // Movimento lateral sutil para mais naturalidade
+    bubble.style.animation = `float ${duration}s linear infinite, 
+        sway ${duration * 2}s ease-in-out infinite alternate`;
     
     ocean.appendChild(bubble);
     
@@ -474,18 +484,50 @@ function createBubble(isBurst = false) {
     }, duration * 1000);
 }
 
-// Criar rajada de bolhas - QUANTIDADE DOBRADA
+// Animação de balanço lateral
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes sway {
+        0% { transform: translateX(0) translateY(0); }
+        25% { transform: translateX(-5px) translateY(-2px); }
+        50% { transform: translateX(0) translateY(-4px); }
+        75% { transform: translateX(5px) translateY(-2px); }
+        100% { transform: translateX(0) translateY(0); }
+    }
+    
+    @keyframes float {
+        to {
+            transform: translateY(calc(-100vh - 100px));
+        }
+    }
+    
+    /* Efeito de brilho nas bolhas */
+    .bubble::after {
+        content: '';
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        width: 30%;
+        height: 30%;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        filter: blur(1px);
+    }
+`;
+document.head.appendChild(style);
+
+// Criar rajada de bolhas - QUANTIDADE TRIPLICADA
 function createBubbleBurst() {
-    // QUANTIDADE DOBRADA: 200-300 bolhas (era 100-150)
-    const bubbleCount = Math.floor(Math.random() * 101) + 200; // 200-300 bolhas
+    // QUANTIDADE TRIPLICADA: 300-450 bolhas
+    const bubbleCount = Math.floor(Math.random() * 151) + 300; // 300-450 bolhas
+    
+    console.log(`🔥 RAJADA MASSIVA: ${bubbleCount} bolhas!`);
     
     for (let i = 0; i < bubbleCount; i++) {
         setTimeout(() => {
             createBubble(true);
-        }, Math.random() * 300); // Criar mais rápido (era 500ms)
+        }, Math.random() * 200); // Criar muito rápido para efeito explosivo
     }
-    
-    console.log('RAJADA INTENSA de bolhas ativada!');
 }
 
 // Verificar rajada
@@ -501,28 +543,66 @@ function checkBubbleBurst() {
     }
     
     // Verificação mais frequente para rajadas
-    setTimeout(checkBubbleBurst, 15000); // 15 segundos
+    setTimeout(checkBubbleBurst, 12000); // 12 segundos
 }
 
-// Inicializar sistema de bolhas - QUANTIDADE DOBRADA
+// Criar múltiplas bolhas de uma vez
+function createBubbleGroup(count) {
+    for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+            createBubble();
+        }, Math.random() * 100);
+    }
+}
+
+// Inicializar sistema de bolhas - QUANTIDADE TRIPLICADA
 function initBubbles() {
-    // BOLHAS NORMAIS - QUANTIDADE DOBRADA
+    // BOLHAS NORMAIS - QUANTIDADE TRIPLICADA
     setInterval(() => {
-        // Criar 2 bolhas por vez em vez de 1
-        if (Math.random() < 0.8) { // 80% de chance
-            createBubble(); // Primeira bolha
+        // Criar 3-5 bolhas por ciclo em vez de 1
+        const bubbleCount = Math.floor(Math.random() * 3) + 3; // 3-5 bolhas
+        
+        createBubbleGroup(bubbleCount);
+        
+    }, 300); // A cada 300ms - MUITO MAIS RÁPIDO
+    
+    // Bolhas extras em intervalos aleatórios
+    setInterval(() => {
+        if (Math.random() < 0.4) { // 40% de chance
+            createBubbleGroup(8 + Math.floor(Math.random() * 7)); // 8-15 bolhas extras
         }
-        if (Math.random() < 0.6) { // 60% de chance adicional
-            createBubble(); // Segunda bolha (quantidade dobrada)
-        }
-    }, 500); // A cada 500ms (era 1000ms) - VELOCIDADE DOBRADA
+    }, 2000);
+    
+    // Iniciar com uma explosão inicial
+    setTimeout(() => {
+        createBubbleGroup(50); // 50 bolhas iniciais
+    }, 1000);
     
     // Iniciar sistema de rajadas
-    setTimeout(checkBubbleBurst, 3000);
+    setTimeout(checkBubbleBurst, 5000);
 }
+
+// Otimização: Limpar bolhas antigas periodicamente
+setInterval(() => {
+    const bubbles = document.querySelectorAll('.bubble');
+    if (bubbles.length > 500) {
+        for (let i = 0; i < 100; i++) {
+            if (bubbles[i]) {
+                bubbles[i].remove();
+            }
+        }
+    }
+}, 10000);
 
 // Iniciar quando a página carregar
 window.addEventListener('load', initBubbles);
+
+// Recriar bolhas se o usuário redimensionar a janela
+window.addEventListener('resize', () => {
+    // Pequena pausa e depois recomeçar
+    setTimeout(initBubbles, 500);
+});
+
 </script>
 
 </body>
