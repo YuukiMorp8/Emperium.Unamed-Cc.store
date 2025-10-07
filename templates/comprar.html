@@ -754,12 +754,6 @@ function blackHoleFastPhase() {
     currentPhase = 'black_hole_fast';
     phaseStartTime = Date.now();
 
-    // Aumentar velocidade de rotação
-    blackHole.style.animation = 'rotateFast 12s linear infinite';
-    eventHorizon.style.animation = 'rotateFast 10s linear infinite';
-    accretionDisk.style.animation = 'rotateFast 8s linear infinite';
-    accretionDiskVertical.style.animation = 'rotateFastReverse 15s linear infinite';
-
     // Aumentar tamanho do buraco negro
     blackHole.style.width = '450px';
     blackHole.style.height = '450px';
@@ -895,7 +889,7 @@ function createNewStar() {
     star.style.height = size + 'px';
     star.style.left = posX + 'px';
     star.style.top = posY + 'px';
-    star.style.opacity = Math.random() * 0.8 + 0.2;
+    star.style.opacity = Math.random() * 1.6 + 0.4;
     star.style.animationDelay = Math.random() * 4 + 's';
 
     spaceBackground.appendChild(star);
@@ -910,8 +904,8 @@ function createEnergyBeam() {
     beam.className = 'energy-beam';
 
     const angle = Math.random() * Math.PI * 2;
-    const length = Math.random() * 600 + 400;
-    const width = Math.random() * 40 + 20;
+    const length = Math.random() * 800 + 600;
+    const width = Math.random() * 80 + 40;
 
     beam.style.width = length + 'px';
     beam.style.height = width + 'px';
@@ -1127,6 +1121,70 @@ function createEnergyParticle(type) {
             energyParticles = energyParticles.filter(p => p !== particle);
         }
     }, 2500);
+}
+
+// Criar partículas de explosão
+function createExplosionParticle() {
+    const particle = document.createElement('div');
+    particle.className = 'explosion-particle';
+
+    const size = Math.random() * 15 + 8;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = window.innerWidth/2 + 'px';
+    particle.style.top = window.innerHeight/2 + 'px';
+
+    container.appendChild(particle);
+    explosionParticles.push(particle);
+
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 500 + 200;
+
+    particle.animate([
+        { opacity: 1, transform: 'scale(1) translate(0, 0)' },
+        { opacity: 0, transform: `scale(0.1) translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)` }
+    ], {
+        duration: 1500,
+        easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+    });
+
+    setTimeout(() => {
+        if (particle.parentNode) {
+            particle.parentNode.removeChild(particle);
+            explosionParticles = explosionParticles.filter(p => p !== particle);
+        }
+    }, 1500);
+}
+
+// Animações CSS
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes rotateSlow {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    @keyframes rotateSlowReverse {
+        from { transform: translate(-50%, -50%) rotate(0deg) rotate(90deg); }
+        to { transform: translate(-50%, -50%) rotate(-360deg) rotate(90deg); }
+    }
+    
+    @keyframes rotateFast {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    @keyframes rotateFastReverse {
+        from { transform: translate(-50%, -50%) rotate(0deg) rotate(90deg); }
+        to { transform: translate(-50%, -50%) rotate(-360deg) rotate(90deg); }
+    }
+    
+    @keyframes rotateReverse {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+`;
+document.head.appendChild(style);
 
 // Iniciar o ciclo
 createStars();
