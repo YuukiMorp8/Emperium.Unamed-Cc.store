@@ -23,140 +23,7 @@
     pointer-events: none;
     overflow: hidden;
 }
-
-
-<script>
-// Sistema de bolhas MAIORES no estilo simplificado
-function createBubbles() {
-    const colors = [
-        'rgba(255,255,255,0.25)', 
-        'rgba(255,255,255,0.20)', 
-        'rgba(255,255,255,0.30)',
-        'rgba(255,255,255,0.18)',
-        'rgba(255,255,255,0.22)'
-    ];
-
-    // Criar bolhas iniciais
-    for(let i = 0; i < 25; i++){
-        const bubble = document.createElement('div');
-        bubble.classList.add('bubble');
-        bubble.style.left = Math.random() * 100 + 'vw';
-
-        // BOLHAS MAIORES: 15-40px (era 5-20px)
-        const size = Math.random() * 25 + 15;
-        bubble.style.width = size + 'px';
-        bubble.style.height = size + 'px';
-
-        // Velocidade variada
-        bubble.style.animationDuration = (4 + Math.random() * 6) + 's';
-
-        // Cor aleatória
-        bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
-
-        // Atraso inicial para distribuição
-        bubble.style.animationDelay = (Math.random() * 5) + 's';
-
-        document.body.appendChild(bubble);
-    }
-}
-
-// Função para criar bolhas continuamente
-function startBubbleGenerator() {
-    createBubbles(); // Bolhas iniciais
-
-    // Criar mais bolhas a cada 2 segundos
-    setInterval(() => {
-        const colors = [
-            'rgba(255,255,255,0.25)', 
-            'rgba(255,255,255,0.20)', 
-            'rgba(255,255,255,0.30)'
-        ];
-
-        // Criar 8-15 bolhas por ciclo
-        const bubbleCount = Math.floor(Math.random() * 8) + 8;
-
-        for(let i = 0; i < bubbleCount; i++){
-            const bubble = document.createElement('div');
-            bubble.classList.add('bubble');
-            bubble.style.left = Math.random() * 100 + 'vw';
-
-            // BOLHAS MAIORES
-            const size = Math.random() * 25 + 15;
-            bubble.style.width = size + 'px';
-            bubble.style.height = size + 'px';
-
-            bubble.style.animationDuration = (4 + Math.random() * 6) + 's';
-            bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
-
-            document.body.appendChild(bubble);
-
-            // Remover após animação
-            setTimeout(() => {
-                if (bubble.parentNode) {
-                    bubble.parentNode.removeChild(bubble);
-                }
-            }, (4 + Math.random() * 6) * 1000);
-        }
-    }, 2000);
-
-    // Rajadas intensas a cada 15 segundos
-    setInterval(() => {
-        if (Math.random() < 0.6) { // 60% de chance
-            const colors = [
-                'rgba(255,255,255,0.30)', 
-                'rgba(255,255,255,0.25)', 
-                'rgba(255,255,255,0.35)'
-            ];
-
-            // Rajada de 40-60 bolhas grandes
-            const burstCount = Math.floor(Math.random() * 21) + 40;
-
-            for(let i = 0; i < burstCount; i++){
-                setTimeout(() => {
-                    const bubble = document.createElement('div');
-                    bubble.classList.add('bubble');
-                    bubble.style.left = Math.random() * 100 + 'vw';
-
-                    // Bolhas ainda maiores na rajada
-                    const size = Math.random() * 30 + 20;
-                    bubble.style.width = size + 'px';
-                    bubble.style.height = size + 'px';
-
-                    // Mais rápidas na rajada
-                    bubble.style.animationDuration = (2 + Math.random() * 4) + 's';
-                    bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
-
-                    document.body.appendChild(bubble);
-
-                    // Remover após animação
-                    setTimeout(() => {
-                        if (bubble.parentNode) {
-                            bubble.parentNode.removeChild(bubble);
-                        }
-                    }, (2 + Math.random() * 4) * 1000);
-
-                }, Math.random() * 800);
-            }
-        }
-    }, 15000);
-}
-
-// Iniciar quando a página carregar
-window.addEventListener('load', startBubbleGenerator);
-
-// Limpeza periódica de bolhas antigas
-setInterval(() => {
-    const bubbles = document.querySelectorAll('.bubble');
-    if (bubbles.length > 150) {
-        for (let i = 0; i < 50; i++) {
-            if (bubbles[i]) {
-                bubbles[i].remove();
-            }
-        }
-    }
-}, 10000);
-</script>
-
+           
 /* ========== BASE DO TEMA OCEAN ========== */
 body.theme-ocean {
     background: var(--bg-primary);
@@ -435,3 +302,135 @@ body.theme-ocean .btn-change-theme:hover {
     transform: scale(1.05);
     box-shadow: 0 0 15px rgba(245, 214, 123, 0.3);
 }
+
+<script>
+// Sistema de bolhas MAIORES no estilo simplificado
+function createBubbles() {
+    const colors = [
+        'rgba(255,255,255,0.25)', 
+        'rgba(255,255,255,0.20)', 
+        'rgba(255,255,255,0.30)',
+        'rgba(255,255,255,0.18)',
+        'rgba(255,255,255,0.22)'
+    ];
+
+    // Criar bolhas iniciais
+    for(let i = 0; i < 25; i++){
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        bubble.style.left = Math.random() * 100 + 'vw';
+
+        // BOLHAS MAIORES: 15-40px (era 5-20px)
+        const size = Math.random() * 25 + 15;
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+
+        // Velocidade variada
+        bubble.style.animationDuration = (4 + Math.random() * 6) + 's';
+
+        // Cor aleatória
+        bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+        // Atraso inicial para distribuição
+        bubble.style.animationDelay = (Math.random() * 5) + 's';
+
+        document.body.appendChild(bubble);
+    }
+}
+
+// Função para criar bolhas continuamente
+function startBubbleGenerator() {
+    createBubbles(); // Bolhas iniciais
+
+    // Criar mais bolhas a cada 2 segundos
+    setInterval(() => {
+        const colors = [
+            'rgba(255,255,255,0.25)', 
+            'rgba(255,255,255,0.20)', 
+            'rgba(255,255,255,0.30)'
+        ];
+
+        // Criar 8-15 bolhas por ciclo
+        const bubbleCount = Math.floor(Math.random() * 8) + 8;
+
+        for(let i = 0; i < bubbleCount; i++){
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.style.left = Math.random() * 100 + 'vw';
+
+            // BOLHAS MAIORES
+            const size = Math.random() * 25 + 15;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+
+            bubble.style.animationDuration = (4 + Math.random() * 6) + 's';
+            bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            document.body.appendChild(bubble);
+
+            // Remover após animação
+            setTimeout(() => {
+                if (bubble.parentNode) {
+                    bubble.parentNode.removeChild(bubble);
+                }
+            }, (4 + Math.random() * 6) * 1000);
+        }
+    }, 2000);
+
+    // Rajadas intensas a cada 15 segundos
+    setInterval(() => {
+        if (Math.random() < 0.6) { // 60% de chance
+            const colors = [
+                'rgba(255,255,255,0.30)', 
+                'rgba(255,255,255,0.25)', 
+                'rgba(255,255,255,0.35)'
+            ];
+
+            // Rajada de 40-60 bolhas grandes
+            const burstCount = Math.floor(Math.random() * 21) + 40;
+
+            for(let i = 0; i < burstCount; i++){
+                setTimeout(() => {
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('bubble');
+                    bubble.style.left = Math.random() * 100 + 'vw';
+
+                    // Bolhas ainda maiores na rajada
+                    const size = Math.random() * 30 + 20;
+                    bubble.style.width = size + 'px';
+                    bubble.style.height = size + 'px';
+
+                    // Mais rápidas na rajada
+                    bubble.style.animationDuration = (2 + Math.random() * 4) + 's';
+                    bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+                    document.body.appendChild(bubble);
+
+                    // Remover após animação
+                    setTimeout(() => {
+                        if (bubble.parentNode) {
+                            bubble.parentNode.removeChild(bubble);
+                        }
+                    }, (2 + Math.random() * 4) * 1000);
+
+                }, Math.random() * 800);
+            }
+        }
+    }, 15000);
+}
+
+// Iniciar quando a página carregar
+window.addEventListener('load', startBubbleGenerator);
+
+// Limpeza periódica de bolhas antigas
+setInterval(() => {
+    const bubbles = document.querySelectorAll('.bubble');
+    if (bubbles.length > 150) {
+        for (let i = 0; i < 50; i++) {
+            if (bubbles[i]) {
+                bubbles[i].remove();
+            }
+        }
+    }
+}, 10000);
+</script>
