@@ -4,15 +4,71 @@
 <meta charset="UTF-8">
 <title>Aguardando Pagamento - Emperium</title>
 <style>
+/* ===== BASE ===== */
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
     font-family: "Segoe UI", Arial, sans-serif;
-    background: #0b0b0b;
+    background: linear-gradient(to bottom, #1a5f96, #0b2b45, #051524);
     color: #fff;
     box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ===== EFEITO ÁGUA ===== */
+.ocean-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+}
+
+/* ===== AREIA NO FUNDO ===== */
+.sand-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, #d4af37 20%, #b8941f 60%, #8a6f2e);
+    z-index: -1;
+    border-top-left-radius: 50% 20px;
+    border-top-right-radius: 50% 20px;
+    box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* ===== ONDULAÇÕES ===== */
+.wave {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230b2b45" fill-opacity="0.3" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+    background-size: cover;
+    animation: wave 15s linear infinite;
+    z-index: -1;
+}
+
+.wave:nth-child(2) {
+    bottom: 70px;
+    opacity: 0.5;
+    animation: wave 12s linear infinite reverse;
+}
+
+@keyframes wave {
+    0% {
+        background-position-x: 0;
+    }
+    100% {
+        background-position-x: 1440px;
+    }
 }
 
 body {
@@ -24,7 +80,7 @@ body {
 .container {
     width: 100%;
     min-height: 100%;
-    background: linear-gradient(135deg, #101010, #181818);
+    background: transparent;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -38,35 +94,42 @@ h2 {
     font-size: 44px;
     margin-bottom: 35px;
     text-align: center;
-    color: #c79b4b;
-    text-shadow: 0 0 10px rgba(199, 155, 75, 0.4);
+    color: #f5d67b;
+    text-shadow: 0 0 15px rgba(245,214,123,0.4);
 }
 
-/* EMBED */
+/* EMBED TRANSPARENTE */
 .embed {
-    background: rgba(20, 20, 20, 0.95);
-    border-left: 8px solid #c79b4b;
+    background: rgba(25, 25, 25, 0.4);
+    backdrop-filter: blur(5px);
+    border-left: 8px solid rgba(212, 175, 55, 0.7);
     border-radius: 20px;
-    padding: 55px; /* maior que antes */
+    padding: 55px;
     margin: 30px 0;
     width: 100%;
-    max-width: 650px; /* aumenta tamanho total */
+    max-width: 650px;
     box-sizing: border-box;
-    box-shadow: 0 0 35px rgba(0,0,0,0.7);
     text-align: left;
+    transition: 0.3s;
+}
+
+.embed:hover {
+    background: rgba(35, 35, 35, 0.5);
+    border-left-color: rgba(245, 214, 123, 0.9);
 }
 
 .embed h3 {
     margin-top: 0;
-    font-size: 32px; /* maior */
-    color: #e0b76a;
+    font-size: 32px;
+    color: #f5d67b;
     margin-bottom: 18px;
+    text-shadow: 0 0 10px rgba(245,214,123,0.3);
 }
 
 .embed p {
     margin: 16px 0;
-    font-size: 21px; /* maior */
-    color: #ccc;
+    font-size: 21px;
+    color: #ddd;
 }
 
 /* BOTÕES */
@@ -80,9 +143,9 @@ button {
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
-    background: linear-gradient(90deg, #c79b4b, #b28633);
-    color: #fff;
-    box-shadow: 0 0 14px rgba(199, 155, 75, 0.35);
+    background: linear-gradient(135deg, #d4af37, #8a6f2e);
+    color: #111;
+    box-shadow: 0 0 30px rgba(245,214,123,0.35);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -91,19 +154,19 @@ button {
 
 button:hover {
     transform: scale(1.04);
-    background: linear-gradient(90deg, #e0b76a, #c79b4b);
-    box-shadow: 0 0 18px rgba(199, 155, 75, 0.5);
+    background: linear-gradient(135deg, #f5d67b, #b99232);
+    box-shadow: 0 0 40px rgba(245,214,123,0.6);
 }
 
 .confirm-btn {
-    background: linear-gradient(90deg, #1e8a44, #28a055);
+    background: linear-gradient(135deg, #a9f58a, #6ccf5a);
     margin-top: 20px;
-    box-shadow: 0 0 16px rgba(30,138,68,0.45);
+    box-shadow: 0 0 35px rgba(160,255,120,0.25);
 }
 
 .confirm-btn:hover {
-    background: linear-gradient(90deg, #2cbc63, #34d171);
-    box-shadow: 0 0 22px rgba(46,184,90,0.55);
+    background: linear-gradient(135deg, #c7ff9e, #84e870);
+    box-shadow: 0 0 50px rgba(160,255,120,0.5);
 }
 
 .hidden {
@@ -119,6 +182,21 @@ button:hover {
     margin-top: 25px;
 }
 
+/* BOLHAS MAIORES */
+.bubble {
+    position: fixed;
+    border-radius: 50%;
+    animation: float linear infinite;
+    z-index: 0;
+    bottom: -100px;
+}
+
+@keyframes float {
+    to {
+        transform: translateY(calc(-100vh - 200px));
+    }
+}
+
 /* RESPONSIVO */
 @media (max-width: 768px) {
     h2 { font-size: 36px; }
@@ -130,6 +208,13 @@ button:hover {
 </style>
 </head>
 <body>
+
+<!-- Efeito de água com bolhas -->
+<div class="ocean-container" id="ocean"></div>
+<div class="sand-bottom"></div>
+<div class="wave"></div>
+<div class="wave"></div>
+
 <div class="container">
     <h2>💰 Aguardando Pagamento</h2>
 
@@ -144,7 +229,7 @@ button:hover {
     <div class="embed" id="embed-verificacao">
         <h3>
             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" style="vertical-align:middle;">
-                <g fill="none" stroke="#3190bc" stroke-width="1.5">
+                <g fill="none" stroke="#64c3dd" stroke-width="1.5">
                     <path d="M9.781 3.89c.564-.48.846-.72 1.14-.861a2.5 2.5 0 0 1 2.157 0c.295.14.577.38 1.14.861c.225.192.337.287.457.367a2.5 2.5 0 0 0 .908.376c.141.028.288.04.582.064c.739.058 1.108.088 1.416.197a2.5 2.5 0 0 1 1.525 1.524c.109.309.138.678.197 1.416c.023.294.035.441.063.583c.064.324.192.633.376.907c.08.12.176.232.367.457c.48.564.721.846.862 1.14a2.5 2.5 0 0 1 0 2.157c-.14.294-.381.576-.862 1.14a5 5 0 0 0-.367.457a2.5 2.5 0 0 0-.376.907c-.028.142-.04.289-.063.583c-.059.738-.088 1.108-.197 1.416a2.5 2.5 0 0 1-1.525 1.524c-.308.11-.677.139-1.416.197c-.294.024-.44.036-.582.064a2.5 2.5 0 0 0-.908.376a5 5 0 0 0-.456.367c-.564.48-.846.72-1.14.861a2.5 2.5 0 0 1-2.157 0c-.295-.14-.577-.38-1.14-.861a5 5 0 0 0-.457-.367a2.5 2.5 0 0 0-.908-.376a5 5 0 0 0-.582-.064c-.739-.058-1.108-.088-1.416-.197a2.5 2.5 0 0 1-1.525-1.524c-.109-.308-.138-.678-.197-1.416a5 5 0 0 0-.063-.583a2.5 2.5 0 0 0-.376-.907c-.08-.12-.176-.232-.367-.457c-.48-.564-.721-.846-.862-1.14a2.5 2.5 0 0 1 0-2.157c.141-.294.381-.576.862-1.14c.191-.225.287-.337.367-.457a2.5 2.5 0 0 0 .376-.907c.028-.142.04-.289.063-.583c.059-.738.088-1.107.197-1.416A2.5 2.5 0 0 1 6.42 4.894c.308-.109.677-.139 1.416-.197c.294-.024.44-.036.582-.064a2.5 2.5 0 0 0 .908-.376c.12-.08.232-.175.456-.367Z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" d="m8.5 12.5l2 2l5-5"/>
                 </g>
@@ -155,9 +240,9 @@ button:hover {
         <p id="contador">Próxima tentativa em: 10s</p>
         <button id="verificar">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
-                <g fill="none" stroke="#3190bc" stroke-width="1.5">
+                <g fill="none" stroke="#64c3dd" stroke-width="1.5">
                     <path d="M9.781 3.89c.564-.48.846-.72 1.14-.861a2.5 2.5 0 0 1 2.157 0c.295.14.577.38 1.14.861c.225.192.337.287.457.367a2.5 2.5 0 0 0 .908.376c.141.028.288.04.582.064c.739.058 1.108.088 1.416.197a2.5 2.5 0 0 1 1.525 1.524c.109.309.138.678.197 1.416c.023.294.035.441.063.583c.064.324.192.633.376.907c.08.12.176.232.367.457c.48.564.721.846.862 1.14a2.5 2.5 0 0 1 0 2.157c-.14.294-.381.576-.862 1.14a5 5 0 0 0-.367.457a2.5 2.5 0 0 0-.376.907c-.028.142-.04.289-.063.583c-.059.738-.088 1.108-.197 1.416a2.5 2.5 0 0 1-1.525 1.524c-.308.11-.677.139-1.416.197c-.294.024-.44.036-.582.064a2.5 2.5 0 0 0-.908.376a5 5 0 0 0-.456.367c-.564.48-.846.72-1.14.861a2.5 2.5 0 0 1-2.157 0c-.295-.14-.577-.38-1.14-.861a5 5 0 0 0-.457-.367a2.5 2.5 0 0 0-.908-.376a5 5 0 0 0-.582-.064c-.739-.058-1.108-.088-1.416-.197a2.5 2.5 0 0 1-1.525-1.524c-.109-.308-.138-.678-.197-1.416a5 5 0 0 0-.063-.583a2.5 2.5 0 0 0-.376-.907c-.08-.12-.176-.232-.367-.457c-.48-.564-.721-.846-.862-1.14a2.5 2.5 0 0 1 0-2.157c.141-.294.381-.576.862-1.14c.191-.225.287-.337.367-.457a2.5 2.5 0 0 0 .376-.907c.028-.142.04-.289.063-.583c.059-.738.088-1.107.197-1.416A2.5 2.5 0 0 1 6.42 4.894c.308-.109.677-.139 1.416-.197c.294-.024.44-.036.582-.064a2.5 2.5 0 0 0 .908-.376c.12-.08.232-.175.456-.367Z"/>
-<path stroke-linecap="round" stroke-linejoin="round" d="m8.5 12.5l2 2l5-5"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.5 12.5l2 2l5-5"/>
                 </g>
             </svg>
             Verificar Pagamento
@@ -187,6 +272,137 @@ button:hover {
 </div>
 
 <script>
+// Sistema de bolhas MAIORES no estilo simplificado
+function createBubbles() {
+    const colors = [
+        'rgba(255,255,255,0.25)', 
+        'rgba(255,255,255,0.20)', 
+        'rgba(255,255,255,0.30)',
+        'rgba(255,255,255,0.18)',
+        'rgba(255,255,255,0.22)'
+    ];
+
+    // Criar bolhas iniciais
+    for(let i = 0; i < 25; i++){
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        bubble.style.left = Math.random() * 100 + 'vw';
+
+        // BOLHAS MAIORES: 15-40px
+        const size = Math.random() * 25 + 15;
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+
+        // Velocidade variada
+        bubble.style.animationDuration = (4 + Math.random() * 6) + 's';
+
+        // Cor aleatória
+        bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+        // Atraso inicial para distribuição
+        bubble.style.animationDelay = (Math.random() * 5) + 's';
+
+        document.getElementById('ocean').appendChild(bubble);
+    }
+}
+
+// Função para criar bolhas continuamente
+function startBubbleGenerator() {
+    createBubbles(); // Bolhas iniciais
+
+    // Criar mais bolhas a cada 2 segundos
+    setInterval(() => {
+        const colors = [
+            'rgba(255,255,255,0.25)', 
+            'rgba(255,255,255,0.20)', 
+            'rgba(255,255,255,0.30)'
+        ];
+
+        // Criar 8-15 bolhas por ciclo
+        const bubbleCount = Math.floor(Math.random() * 8) + 8;
+
+        for(let i = 0; i < bubbleCount; i++){
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.style.left = Math.random() * 100 + 'vw';
+
+            // BOLHAS MAIORES
+            const size = Math.random() * 25 + 15;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+
+            bubble.style.animationDuration = (4 + Math.random() * 6) + 's';
+            bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            document.getElementById('ocean').appendChild(bubble);
+
+            // Remover após animação
+            setTimeout(() => {
+                if (bubble.parentNode) {
+                    bubble.parentNode.removeChild(bubble);
+                }
+            }, (4 + Math.random() * 6) * 1000);
+        }
+    }, 2000);
+
+    // Rajadas intensas a cada 15 segundos
+    setInterval(() => {
+        if (Math.random() < 0.6) { // 60% de chance
+            const colors = [
+                'rgba(255,255,255,0.30)', 
+                'rgba(255,255,255,0.25)', 
+                'rgba(255,255,255,0.35)'
+            ];
+
+            // Rajada de 40-60 bolhas grandes
+            const burstCount = Math.floor(Math.random() * 21) + 40;
+
+            for(let i = 0; i < burstCount; i++){
+                setTimeout(() => {
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('bubble');
+                    bubble.style.left = Math.random() * 100 + 'vw';
+
+                    // Bolhas ainda maiores na rajada
+                    const size = Math.random() * 30 + 20;
+                    bubble.style.width = size + 'px';
+                    bubble.style.height = size + 'px';
+
+                    // Mais rápidas na rajada
+                    bubble.style.animationDuration = (2 + Math.random() * 4) + 's';
+                    bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+                    document.getElementById('ocean').appendChild(bubble);
+
+                    // Remover após animação
+                    setTimeout(() => {
+                        if (bubble.parentNode) {
+                            bubble.parentNode.removeChild(bubble);
+                        }
+                    }, (2 + Math.random() * 4) * 1000);
+
+                }, Math.random() * 800);
+            }
+        }
+    }, 15000);
+}
+
+// Iniciar quando a página carregar
+window.addEventListener('load', startBubbleGenerator);
+
+// Limpeza periódica de bolhas antigas
+setInterval(() => {
+    const bubbles = document.querySelectorAll('.bubble');
+    if (bubbles.length > 150) {
+        for (let i = 0; i < 50; i++) {
+            if (bubbles[i]) {
+                bubbles[i].remove();
+            }
+        }
+    }
+}, 10000);
+
+// Código original da verificação de pagamento
 let txid = "{{ txid }}";
 const botao = document.getElementById("verificar");
 const contadorEl = document.getElementById("contador");
