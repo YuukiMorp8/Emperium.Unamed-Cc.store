@@ -11,24 +11,92 @@ html, body {
     width: 100%;
     height: 100%;
     font-family: "Poppins", Arial, sans-serif;
-    background: radial-gradient(circle at center, #0b0b0b, #090808, #070707);
+    background: linear-gradient(to bottom, #1a5f96, #0b2b45, #051524);
     color: #fff;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ===== EFEITO ÁGUA ===== */
+.ocean-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+}
+
+/* ===== AREIA NO FUNDO ===== */
+.sand-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, #d4af37 20%, #b8941f 60%, #8a6f2e);
+    z-index: -1;
+    border-top-left-radius: 50% 20px;
+    border-top-right-radius: 50% 20px;
+    box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* ===== ONDULAÇÕES ===== */
+.wave {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230b2b45" fill-opacity="0.3" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+    background-size: cover;
+    animation: wave 15s linear infinite;
+    z-index: -1;
+}
+
+.wave:nth-child(2) {
+    bottom: 70px;
+    opacity: 0.5;
+    animation: wave 12s linear infinite reverse;
+}
+
+@keyframes wave {
+    0% {
+        background-position-x: 0;
+    }
+    100% {
+        background-position-x: 1440px;
+    }
 }
 
 /* ===== CONTAINER ===== */
 .container {
-    background: radial-gradient(circle at top left, #141313, #0c0c0c);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
     width: 95%;
     max-width: 800px;
     padding: 50px 40px;
     border-radius: 20px;
-    border: 2px solid rgba(245,214,123,0.25);
-    box-shadow: 0 0 40px rgba(245,214,123,0.15), inset 0 0 25px rgba(245,214,123,0.08);
+    border: 2px solid rgba(245,214,123,0.15);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
     text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(245,214,123,0.3), transparent);
 }
 
 /* ===== TÍTULO ===== */
@@ -41,18 +109,19 @@ h1 {
 
 /* ===== EMBED ===== */
 .embed {
-    background: rgba(15,15,15,0.9);
-    border-left: 6px solid #d4af37;
+    background: rgba(25, 25, 25, 0.4);
+    backdrop-filter: blur(5px);
+    border-left: 6px solid rgba(212, 175, 55, 0.7);
     border-radius: 16px;
     padding: 30px 25px;
     text-align: left;
     margin-bottom: 40px;
-    box-shadow: 0 0 25px rgba(245,214,123,0.15);
     transition: 0.3s;
 }
 .embed:hover {
     transform: scale(1.01);
-    box-shadow: 0 0 35px rgba(245,214,123,0.25);
+    background: rgba(35, 35, 35, 0.5);
+    border-left-color: rgba(245, 214, 123, 0.9);
 }
 
 .embed h2 {
@@ -77,16 +146,17 @@ input {
     margin: 20px 0;
     border-radius: 12px;
     border: 1px solid rgba(245,214,123,0.25);
-    background: rgba(20,20,20,0.95);
+    background: rgba(20,20,20,0.6);
     color: #fff;
     font-size: 20px;
     text-align: center;
-    box-shadow: inset 0 0 15px rgba(245,214,123,0.1);
+    backdrop-filter: blur(5px);
     transition: 0.3s;
 }
 input:focus {
     outline: none;
     border-color: #f5d67b;
+    background: rgba(30,30,30,0.7);
     box-shadow: 0 0 20px rgba(245,214,123,0.3);
 }
 
@@ -109,6 +179,22 @@ button:hover {
     background: linear-gradient(135deg, #f5d67b, #b99232);
     transform: scale(1.05);
     box-shadow: 0 0 40px rgba(245,214,123,0.6);
+}
+
+/* ===== BOLHAS ===== */
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.5);
+    animation: float linear infinite;
+    z-index: -1;
+}
+
+@keyframes float {
+    to {
+        transform: translateY(-100vh);
+    }
 }
 
 /* ===== RESPONSIVO ===== */
@@ -134,6 +220,12 @@ button:hover {
 </head>
 <body>
 
+<!-- Efeito de água com bolhas -->
+<div class="ocean-container" id="ocean"></div>
+<div class="sand-bottom"></div>
+<div class="wave"></div>
+<div class="wave"></div>
+
 <div class="container">
     <h1>💰 Adicionar Saldo</h1>
 
@@ -148,6 +240,180 @@ button:hover {
         <button type="submit">Gerar Pagamento</button>
     </form>
 </div>
+
+<script>
+// Sistema de bolhas - QUANTIDADE TRIPLICADA E COBERTURA TOTAL
+const ocean = document.getElementById('ocean');
+let burstChance = 30;
+let burstCycle = 0;
+
+// Criar bolhas normais
+function createBubble(isBurst = false) {
+    const bubble = document.createElement('div');
+    bubble.classList.add('bubble');
+    
+    // Tamanho variado para mais realismo
+    const size = isBurst ? 
+        Math.random() * 12 + 3 : // Bolhas menores e mais numerosas na rajada
+        Math.random() * 20 + 5; // Bolhas normais variadas
+    
+    // Posição aleatória por toda a largura da página
+    const left = Math.random() * 100;
+    
+    bubble.style.width = `${size}px`;
+    bubble.style.height = `${size}px`;
+    bubble.style.left = `${left}%`;
+    bubble.style.bottom = '-50px'; // Começar mais abaixo para cobrir toda a altura
+    
+    // Velocidade variada (mantida rápida)
+    const duration = isBurst ? 
+        Math.random() * 1.5 + 0.5 : // 0.5-2 segundos
+        Math.random() * 4 + 2; // 2-6 segundos
+    
+    bubble.style.animationDuration = `${duration}s`;
+    
+    // Efeitos visuais melhorados
+    bubble.style.background = `radial-gradient(circle at 30% 30%, 
+        rgba(255, 255, 255, ${0.4 + Math.random() * 0.3}), 
+        rgba(255, 255, 255, ${0.1 + Math.random() * 0.2}) 70%)`;
+    bubble.style.boxShadow = `
+        inset 0 0 8px rgba(255, 255, 255, 0.6),
+        0 0 12px rgba(255, 255, 255, 0.3)
+    `;
+    
+    // Movimento lateral sutil para mais naturalidade
+    bubble.style.animation = `float ${duration}s linear infinite, 
+        sway ${duration * 2}s ease-in-out infinite alternate`;
+    
+    ocean.appendChild(bubble);
+    
+    // Remover após animação
+    setTimeout(() => {
+        if (bubble.parentNode) {
+            bubble.parentNode.removeChild(bubble);
+        }
+    }, duration * 1000);
+}
+
+// Animação de balanço lateral
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes sway {
+        0% { transform: translateX(0) translateY(0); }
+        25% { transform: translateX(-5px) translateY(-2px); }
+        50% { transform: translateX(0) translateY(-4px); }
+        75% { transform: translateX(5px) translateY(-2px); }
+        100% { transform: translateX(0) translateY(0); }
+    }
+    
+    @keyframes float {
+        to {
+            transform: translateY(calc(-100vh - 100px));
+        }
+    }
+    
+    /* Efeito de brilho nas bolhas */
+    .bubble::after {
+        content: '';
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        width: 30%;
+        height: 30%;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        filter: blur(1px);
+    }
+`;
+document.head.appendChild(style);
+
+// Criar rajada de bolhas - QUANTIDADE TRIPLICADA
+function createBubbleBurst() {
+    // QUANTIDADE TRIPLICADA: 300-450 bolhas
+    const bubbleCount = Math.floor(Math.random() * 151) + 300; // 300-450 bolhas
+    
+    console.log(`🔥 RAJADA MASSIVA: ${bubbleCount} bolhas!`);
+    
+    for (let i = 0; i < bubbleCount; i++) {
+        setTimeout(() => {
+            createBubble(true);
+        }, Math.random() * 200); // Criar muito rápido para efeito explosivo
+    }
+}
+
+// Verificar rajada
+function checkBubbleBurst() {
+    burstCycle++;
+    
+    // Chance de rajada (dobra a cada ciclo sem rajada)
+    const currentChance = Math.min(burstChance * Math.pow(2, burstCycle - 1), 100);
+    
+    if (Math.random() * 100 < currentChance) {
+        createBubbleBurst();
+        burstCycle = 0; // Resetar ciclo
+    }
+    
+    // Verificação mais frequente para rajadas
+    setTimeout(checkBubbleBurst, 12000); // 12 segundos
+}
+
+// Criar múltiplas bolhas de uma vez
+function createBubbleGroup(count) {
+    for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+            createBubble();
+        }, Math.random() * 100);
+    }
+}
+
+// Inicializar sistema de bolhas - QUANTIDADE TRIPLICADA
+function initBubbles() {
+    // BOLHAS NORMAIS - QUANTIDADE TRIPLICADA
+    setInterval(() => {
+        // Criar 3-5 bolhas por ciclo em vez de 1
+        const bubbleCount = Math.floor(Math.random() * 3) + 3; // 3-5 bolhas
+        
+        createBubbleGroup(bubbleCount);
+        
+    }, 300); // A cada 300ms - MUITO MAIS RÁPIDO
+    
+    // Bolhas extras em intervalos aleatórios
+    setInterval(() => {
+        if (Math.random() < 0.4) { // 40% de chance
+            createBubbleGroup(8 + Math.floor(Math.random() * 7)); // 8-15 bolhas extras
+        }
+    }, 2000);
+    
+    // Iniciar com uma explosão inicial
+    setTimeout(() => {
+        createBubbleGroup(50); // 50 bolhas iniciais
+    }, 1000);
+    
+    // Iniciar sistema de rajadas
+    setTimeout(checkBubbleBurst, 5000);
+}
+
+// Otimização: Limpar bolhas antigas periodicamente
+setInterval(() => {
+    const bubbles = document.querySelectorAll('.bubble');
+    if (bubbles.length > 500) {
+        for (let i = 0; i < 100; i++) {
+            if (bubbles[i]) {
+                bubbles[i].remove();
+            }
+        }
+    }
+}, 10000);
+
+// Iniciar quando a página carregar
+window.addEventListener('load', initBubbles);
+
+// Recriar bolhas se o usuário redimensionar a janela
+window.addEventListener('resize', () => {
+    // Pequena pausa e depois recomeçar
+    setTimeout(initBubbles, 500);
+});
+</script>
 
 </body>
 </html>
