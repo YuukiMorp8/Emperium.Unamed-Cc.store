@@ -1,198 +1,798 @@
-/* ================== VARIÁVEIS ================== */
+/* static/themes/vulcan.css */
 :root {
-    --bg-primary: linear-gradient(to bottom, #000000, #2d0000, #5c0000);
-    --bg-secondary: rgba(40, 0, 0, 0.6);
-    --accent-color: #ff4500;
-    --accent-secondary: #ff8c00;
-    --text-primary: #ffffff;
-    --text-secondary: #dddddd;
-    --border-color: rgba(255,69,0,0.15);
-    --shadow-color: rgba(255,69,0,0.3);
+--bg-primary: linear-gradient(to bottom, #000000, #2d0000, #5c0000);
+--bg-secondary: rgba(40, 0, 0, 0.6);
+--accent-color: #ff6b35;
+--accent-secondary: #ff4500;
+--lava-color: linear-gradient(to bottom, transparent, #ff4500 20%, #ff0000 60%, #8b0000);
+--text-primary: #ffffff;
+--text-secondary: #ffcccc;
+--border-color: rgba(255, 107, 53, 0.3);
+--shadow-color: rgba(255, 69, 0, 0.4);
 }
 
-/* ================== BODY ================== */
-body.theme-vulcan {
-    margin: 0;
-    padding: 0;
-    font-family: "Poppins", Arial, sans-serif;
-    min-height: 100vh;
-    color: var(--text-primary);
-    background: var(--bg-primary);
-    overflow-x: hidden;
-    position: relative;
-}
-
-/* ================== ELEMENTOS VULCÃO ================== */
 .vulcan-elements {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: -2;
+display: block;
 }
 
-/* ================== LAVA BOTTOM ================== */
+.ocean-elements {
+display: none;
+}
+
+/* ========== BASE DO TEMA VULCÃO ========== */
+body.theme-vulcan {
+background: var(--bg-primary);
+color: var(--text-primary);
+font-family: "Poppins", Arial, sans-serif;
+margin: 0;
+padding: 0;
+min-height: 100vh;
+overflow-x: hidden;
+position: relative;
+}
+
+/* ========== ELEMENTOS VULCÃO ========== */
 .lava-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background: linear-gradient(to top, #8b0000, #ff4500, #ff8c00);
-    border-top-left-radius: 50% 20px;
-    border-top-right-radius: 50% 20px;
-    box-shadow: 0 -5px 20px rgba(255,69,0,0.4);
-    z-index: -1;
+position: fixed;
+bottom: 0;
+left: 0;
+width: 100%;
+height: 120px;
+background: linear-gradient(to bottom, transparent, #ff4500 10%, #ff0000 40%, #8b0000 80%, #400000);
+z-index: -1;
+border-top-left-radius: 50% 30px;
+border-top-right-radius: 50% 30px;
+box-shadow:
+0 -10px 30px rgba(255, 69, 0, 0.6),
+inset 0 10px 20px rgba(255, 100, 0, 0.4);
+animation: lavaGlow 3s ease-in-out infinite alternate;
 }
 
-/* ================== LAVA BOLHAS ================== */
-.lava-bubble {
-    position: absolute;
-    bottom: 50px;
-    border-radius: 50%;
-    opacity: 0.7;
-    animation-name: riseLava;
-    animation-timing-function: linear;
-}
-
-@keyframes riseLava {
-    0% { transform: translateY(0) scale(1); opacity: 0.7; }
-    50% { opacity: 1; }
-    100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
-}
-
-/* Diferentes bolhas de lava */
-.lava-bubble:nth-child(1)  { width: 15px; height: 15px; left: 5%;  animation-duration: 6s; animation-delay: 0s; background: rgba(255,69,0,0.8); }
-.lava-bubble:nth-child(2)  { width: 20px; height: 20px; left: 15%; animation-duration: 7s; animation-delay: 1s; background: rgba(255,100,0,0.7); }
-.lava-bubble:nth-child(3)  { width: 25px; height: 25px; left: 25%; animation-duration: 8s; animation-delay: 2s; background: rgba(255,140,0,0.6); }
-.lava-bubble:nth-child(4)  { width: 18px; height: 18px; left: 35%; animation-duration: 6.5s; animation-delay: 0.5s; background: rgba(255,165,0,0.5); }
-.lava-bubble:nth-child(5)  { width: 22px; height: 22px; left: 45%; animation-duration: 7.5s; animation-delay: 1.2s; background: rgba(255,100,0,0.7); }
-
-/* ================== FUMAÇA ================== */
 .smoke {
-    position: absolute;
-    bottom: 80px;
-    width: 40px;
-    height: 80px;
-    background: radial-gradient(circle, rgba(200,200,200,0.6) 0%, transparent 80%);
-    border-radius: 50%;
-    animation: riseSmoke 6s linear infinite;
+position: absolute;
+bottom: 120px;
+left: 0;
+width: 100%;
+height: 200px;
+background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23200" fill-opacity="0.4" d="M0,128L48,112C96,96,192,64,288,74.7C384,85,480,139,576,138.7C672,139,768,85,864,69.3C960,53,1056,75,1152,96C1248,117,1344,139,1392,149.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+background-size: cover;
+animation: smokeWave 8s linear infinite;
+z-index: -1;
 }
 
 .smoke:nth-child(2) {
-    left: 30%;
-    animation-delay: 1s;
+bottom: 100px;
+opacity: 0.3;
+animation: smokeWave 12s linear infinite reverse;
 }
 
-.smoke:nth-child(3) {
-    left: 60%;
-    animation-delay: 2s;
+@keyframes lavaGlow {
+0% {
+box-shadow:
+0 -10px 20px rgba(255, 69, 0, 0.4),
+inset 0 10px 15px rgba(255, 100, 0, 0.3);
+}
+100% {
+box-shadow:
+0 -15px 40px rgba(255, 69, 0, 0.8),
+inset 0 15px 25px rgba(255, 100, 0, 0.6);
+}
 }
 
-@keyframes riseSmoke {
-    0% { transform: translateY(0) scale(0.5); opacity: 0.5; }
-    50% { opacity: 0.7; }
-    100% { transform: translateY(-200px) scale(1.2); opacity: 0; }
+@keyframes smokeWave {
+0% {
+background-position-x: 0;
+}
+100% {
+background-position-x: 1440px;
+}
 }
 
-/* ================== ERUPÇÃO ================== */
+/* ========== BOLHAS DE LAVA ========== */
+.lava-bubble {
+position: absolute;
+border-radius: 50%;
+animation: lavaFall linear infinite;
+z-index: -1;
+top: -50px;
+}
+
+@keyframes lavaFall {
+to {
+transform: translateY(calc(100vh + 100px));
+}
+}
+
+/* ========== ERUPÇÕES ========== */
 .eruption {
-    position: absolute;
-    bottom: 50px;
-    border-radius: 50%;
-    opacity: 0.8;
-    animation: eruptionRise 3s ease-out forwards;
-    background: radial-gradient(circle, rgba(255,69,0,0.8) 0%, rgba(255,140,0,0.5) 70%);
+position: absolute;
+bottom: 120px;
+width: 100px;
+height: 150px;
+background: radial-gradient(ellipse at center, rgba(255, 69, 0, 0.8) 0%, rgba(255, 69, 0, 0) 70%);
+border-radius: 50% 50% 0 0;
+opacity: 0;
+animation: erupt 4s ease-out infinite;
+z-index: -1;
 }
 
-@keyframes eruptionRise {
-    0% { transform: translateY(0) scale(1); opacity: 0.8; }
-    50% { opacity: 1; }
-    100% { transform: translateY(-150px) scale(2); opacity: 0; }
+@keyframes erupt {
+0% {
+transform: scale(0) translateY(0);
+opacity: 0;
+}
+20% {
+opacity: 0.8;
+}
+50% {
+transform: scale(1) translateY(-100px);
+opacity: 0.6;
+}
+100% {
+transform: scale(1.2) translateY(-200px);
+opacity: 0;
+}
 }
 
-/* ================== HEADER, BOTÕES, CARDS ================== */
-header {
-    background: rgba(40,0,0,0.7);
-    backdrop-filter: blur(10px);
-    padding: 20px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border-color);
-    position: sticky;
-    top: 0;
-    z-index: 10;
+/* ========== CABEÇALHO ========== */
+body.theme-vulcan header {
+background: rgba(139, 0, 0, 0.7);
+backdrop-filter: blur(10px);
+padding: 20px 30px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+box-shadow: 0 4px 25px rgba(139, 0, 0, 0.8);
+border-bottom: 1px solid var(--border-color);
+position: sticky;
+top: 0;
+z-index: 10;
 }
 
-.btn-admin {
-    padding: 14px 22px;
-    background: linear-gradient(135deg, #ff4500, #ff8c00);
-    color: #111;
-    font-weight: bold;
-    border-radius: 12px;
-    cursor: pointer;
-    border: none;
-    font-size: 18px;
-    box-shadow: 0 0 20px var(--shadow-color);
-    transition: 0.3s;
+body.theme-vulcan .header-buttons {
+display: flex;
+align-items: center;
+gap: 15px;
 }
 
-.btn-admin:hover {
-    background: linear-gradient(135deg, #ff6347, #ffa500);
-    transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255,69,0,0.6);
+/* Botão Admin */
+body.theme-vulcan .btn-admin {
+padding: 14px 22px;
+background: linear-gradient(135deg, #ff6b35, #ff4500);
+color: #fff;
+font-weight: bold;
+border-radius: 12px;
+cursor: pointer;
+border: none;
+font-size: 18px;
+box-shadow: 0 0 20px var(--shadow-color);
+transition: 0.3s;
 }
 
-.card {
-    background: rgba(40, 0, 0, 0.6);
-    backdrop-filter: blur(5px);
-    padding: 28px;
-    border-radius: 14px;
-    border-left: 5px solid rgba(255,69,0,0.7);
-    text-align: center;
-    color: var(--text-primary);
-    transition: 0.3s;
+body.theme-vulcan .btn-admin:hover {
+background: linear-gradient(135deg, #ff8c00, #ff4500);
+transform: scale(1.05);
+box-shadow: 0 0 25px rgba(255, 69, 0, 0.8);
 }
 
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 15px rgba(255,69,0,0.3);
+/* Perfil */
+body.theme-vulcan .perfil {
+width: 70px;
+height: 70px;
+border-radius: 50%;
+border: 2px solid rgba(255, 107, 53, 0.8);
+box-shadow: 0 0 15px rgba(255, 69, 0, 0.6);
+cursor: pointer;
 }
 
-/* ================== NAV INFERIOR ================== */
-.nav-bottom {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(40,0,0,0.85);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255,69,0,0.25);
-    display: flex;
-    justify-content: space-around;
-    padding: 16px 15px;
-    z-index: 99;
+/* ========== CONTEÚDO PRINCIPAL ========== */
+body.theme-vulcan main {
+padding: 50px 25px 180px;
+display: flex;
+flex-direction: column;
+gap: 40px;
+max-width: 1100px;
+margin: 0 auto;
 }
 
-.nav-bottom button {
-    flex: 1;
-    margin: 0 10px;
-    padding: 22px 10px;
-    background: linear-gradient(135deg, #ff4500, #ff8c00);
-    border: none;
-    border-radius: 14px;
-    font-size: 20px;
-    color: #111;
-    font-weight: bold;
-    box-shadow: 0 0 25px rgba(255,69,0,0.35);
-    transition: 0.3s;
+/* ========== EMBEDS ========== */
+body.theme-vulcan .embed {
+background: var(--bg-secondary);
+backdrop-filter: blur(5px);
+border: 2px solid var(--border-color);
+border-radius: 20px;
+padding: 35px 40px;
+box-shadow: 0 0 20px rgba(139, 0, 0, 0.3);
+position: relative;
+transition: 0.3s;
+overflow: hidden;
 }
 
-.nav-bottom button:hover {
-    transform: scale(1.08);
-    box-shadow: 0 0 35px rgba(255,69,0,0.6);
+body.theme-vulcan .embed:hover {
+transform: scale(1.01);
+background: rgba(60, 0, 0, 0.7);
+border-color: rgba(255, 107, 53, 0.5);
+box-shadow: 0 0 25px rgba(255, 69, 0, 0.4);
 }
+
+body.theme-vulcan .embed::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 1px;
+background: linear-gradient(to right, transparent, rgba(255, 107, 53, 0.5), transparent);
+}
+
+body.theme-vulcan .embed-title {
+font-size: 28px;
+font-weight: 700;
+color: var(--accent-color);
+text-shadow: 0 0 12px rgba(255, 69, 0, 0.6);
+border-bottom: 1px solid rgba(255, 107, 53, 0.3);
+padding-bottom: 10px;
+margin-bottom: 25px;
+}
+
+/* ========== CONTEÚDO DOS EMBEDS ========== */
+body.theme-vulcan .embed-content {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+gap: 25px;
+}
+
+/* ========== CARDS ========== */
+body.theme-vulcan .card {
+background: rgba(30, 0, 0, 0.6);
+backdrop-filter: blur(5px);
+padding: 28px;
+border-radius: 14px;
+border-left: 5px solid rgba(255, 107, 53, 0.7);
+text-align: center;
+font-size: 20px;
+color: var(--text-primary);
+transition: 0.3s;
+position: relative;
+overflow: hidden;
+}
+
+body.theme-vulcan .card:hover {
+transform: translateY(-3px);
+box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
+background: rgba(40, 0, 0, 0.7);
+}
+
+body.theme-vulcan .card-title {
+font-size: 20px;
+color: var(--accent-color);
+margin-bottom: 12px;
+text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+}
+
+/* ======== ANÚNCIOS ======== */
+body.theme-vulcan .anuncio-card {
+background: rgba(40, 0, 0, 0.6);
+border: 2px solid var(--border-color);
+border-radius: 15px;
+padding: 20px;
+margin-bottom: 20px;
+backdrop-filter: blur(5px);
+transition: 0.3s;
+}
+
+body.theme-vulcan .anuncio-card:hover {
+background: rgba(50, 0, 0, 0.7);
+border-color: rgba(255, 107, 53, 0.5);
+}
+
+body.theme-vulcan .anuncio-titulo {
+font-size: 22px;
+color: #ff8c00;
+margin-bottom: 8px;
+}
+
+body.theme-vulcan .anuncio-assunto {
+font-size: 17px;
+color: var(--text-secondary);
+margin-bottom: 6px;
+}
+
+body.theme-vulcan .anuncio-info {
+font-size: 14px;
+color: #ff9999;
+}
+
+/* ========== BARRA INFERIOR ========== */
+body.theme-vulcan .nav-bottom {
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+background: rgba(30, 0, 0, 0.9);
+backdrop-filter: blur(10px);
+border-top: 1px solid rgba(255, 107, 53, 0.3);
+display: flex;
+justify-content: space-around;
+padding: 16px 15px;
+box-shadow: 0 -5px 20px rgba(139, 0, 0, 0.6);
+z-index: 99;
+}
+
+body.theme-vulcan .nav-bottom button {
+flex: 1;
+margin: 0 10px;
+padding: 22px 10px;
+background: linear-gradient(135deg, #ff6b35, #ff4500);
+border: none;
+border-radius: 14px;
+font-size: 20px;
+color: #fff;
+font-weight: bold;
+box-shadow: 0 0 25px rgba(255, 69, 0, 0.5);
+transition: 0.3s;
+}
+
+body.theme-vulcan .nav-bottom button:hover {
+transform: scale(1.08);
+box-shadow: 0 0 35px rgba(255, 69, 0, 0.8);
+}
+
+/* ========== BOTÃO MUDAR TEMA ========== */
+body.theme-vulcan .btn-change-theme {
+padding: 12px 20px;
+background: rgba(255, 107, 53, 0.2);
+border: 1px solid rgba(255, 107, 53, 0.4);
+border-radius: 10px;
+color: var(--accent-color);
+cursor: pointer;
+transition: 0.3s;
+font-size: 14px;
+display: flex;
+align-items: center;
+gap: 8px;
+margin-right: 15px;
+}
+
+body.theme-vulcan .btn-change-theme:hover {
+background: rgba(255, 107, 53, 0.3);
+transform: scale(1.05);
+box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
+}
+
+/* static/themes/ocean.css */
+:root {
+--bg-primary: linear-gradient(to bottom, #1a5f96, #0b2b45, #051524);
+--bg-secondary: rgba(25, 25, 25, 0.4);
+--accent-color: #f5d67b;
+--accent-secondary: #64c3dd;
+--sand-color: linear-gradient(to bottom, transparent, #d4af37 20%, #b8941f 60%, #8a6f2e);
+--text-primary: #ffffff;
+--text-secondary: #dddddd;
+--border-color: rgba(245,214,123,0.15);
+--shadow-color: rgba(245,214,123,0.3);
+}
+
+/* ========== ELEMENTOS DO TEMA OCEAN ========== */
+.ocean-elements {
+display: block;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -2;
+pointer-events: none;
+overflow: hidden;
+}
+
+/* ========== BASE DO TEMA OCEAN ========== */
+body.theme-ocean {
+background: var(--bg-primary);
+color: var(--text-primary);
+font-family: "Poppins", Arial, sans-serif;
+margin: 0;
+padding: 0;
+min-height: 100vh;
+overflow-x: hidden;
+position: relative;
+}
+
+/* ========== AREIA NO FUNDO ========== */
+.sand-bottom {
+position: fixed;
+bottom: 0;
+left: 0;
+width: 100%;
+height: 80px;
+background: var(--sand-color);
+z-index: -1;
+border-top-left-radius: 50% 20px;
+border-top-right-radius: 50% 20px;
+box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* ========== ONDULAÇÕES ========== */
+.wave {
+position: absolute;
+bottom: 80px;
+left: 0;
+width: 100%;
+height: 15px;
+background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230b2b45" fill-opacity="0.3" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+background-size: cover;
+animation: wave 15s linear infinite;
+z-index: -1;
+}
+
+.wave:nth-child(2) {
+bottom: 70px;
+opacity: 0.5;
+animation: wave 12s linear infinite reverse;
+}
+
+@keyframes wave {
+0% {
+background-position-x: 0;
+}
+100% {
+background-position-x: 1440px;
+}
+}
+
+/* ========== CABEÇALHO ========== */
+body.theme-ocean header {
+background: rgba(26, 95, 150, 0.7);
+backdrop-filter: blur(10px);
+padding: 20px 30px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+box-shadow: 0 4px 25px rgba(0,0,0,0.8);
+border-bottom: 1px solid var(--border-color);
+position: sticky;
+top: 0;
+z-index: 10;
+}
+
+body.theme-ocean .header-buttons {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+
+/* Botão Admin */
+body.theme-ocean .btn-admin {
+padding: 14px 22px;
+background: linear-gradient(135deg, #d4af37, #8a6f2e);
+color: #111;
+font-weight: bold;
+border-radius: 12px;
+cursor: pointer;
+border: none;
+font-size: 18px;
+box-shadow: 0 0 20px var(--shadow-color);
+transition: 0.3s;
+}
+
+body.theme-ocean .btn-admin:hover {
+background: linear-gradient(135deg, #f5d67b, #b99232);
+transform: scale(1.05);
+box-shadow: 0 0 25px rgba(245,214,123,0.6);
+}
+
+/* Perfil */
+body.theme-ocean .perfil {
+width: 70px;
+height: 70px;
+border-radius: 50%;
+border: 2px solid rgba(245,214,123,0.8);
+box-shadow: 0 0 15px rgba(245,214,123,0.4);
+cursor: pointer;
+}
+
+/* ========== CONTEÚDO PRINCIPAL ========== */
+body.theme-ocean main {
+padding: 50px 25px 180px;
+display: flex;
+flex-direction: column;
+gap: 40px;
+max-width: 1100px;
+margin: 0 auto;
+}
+
+/* ========== EMBEDS ========== */
+body.theme-ocean .embed {
+background: var(--bg-secondary);
+backdrop-filter: blur(5px);
+border: 2px solid var(--border-color);
+border-radius: 20px;
+padding: 35px 40px;
+box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+position: relative;
+transition: 0.3s;
+overflow: hidden;
+}
+
+body.theme-ocean .embed:hover {
+transform: scale(1.01);
+background: rgba(35, 35, 35, 0.5);
+border-color: rgba(245,214,123,0.25);
+box-shadow: 0 0 25px rgba(245,214,123,0.15);
+}
+
+body.theme-ocean .embed::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 1px;
+background: linear-gradient(to right, transparent, rgba(245,214,123,0.3), transparent);
+}
+
+body.theme-ocean .embed-title {
+font-size: 28px;
+font-weight: 700;
+color: var(--accent-color);
+text-shadow: 0 0 12px rgba(245,214,123,0.4);
+border-bottom: 1px solid rgba(245,214,123,0.2);
+padding-bottom: 10px;
+margin-bottom: 25px;
+}
+
+/* ========== CONTEÚDO DOS EMBEDS ========== */
+body.theme-ocean .embed-content {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+gap: 25px;
+}
+
+/* ========== CARDS ========== */
+body.theme-ocean .card {
+background: rgba(20, 20, 20, 0.4);
+backdrop-filter: blur(5px);
+padding: 28px;
+border-radius: 14px;
+border-left: 5px solid rgba(212, 175, 55, 0.7);
+text-align: center;
+font-size: 20px;
+color: var(--text-primary);
+transition: 0.3s;
+position: relative;
+overflow: hidden;
+}
+
+body.theme-ocean .card:hover {
+transform: translateY(-3px);
+box-shadow: 0 0 15px rgba(212,175,55,0.3);
+background: rgba(30, 30, 30, 0.5);
+}
+
+body.theme-ocean .card-title {
+font-size: 20px;
+color: var(--accent-color);
+margin-bottom: 12px;
+text-shadow: 0 0 10px rgba(245,214,123,0.3);
+}
+
+/* ======== ANÚNCIOS ======== */
+body.theme-ocean .anuncio-card {
+background: rgba(25, 25, 25, 0.4);
+border: 2px solid var(--border-color);
+border-radius: 15px;
+padding: 20px;
+margin-bottom: 20px;
+backdrop-filter: blur(5px);
+transition: 0.3s;
+}
+
+body.theme-ocean .anuncio-card:hover {
+background: rgba(35, 35, 35, 0.5);
+border-color: rgba(245,214,123,0.3);
+}
+
+body.theme-ocean .anuncio-titulo {
+font-size: 22px;
+color: #ffcc4d;
+margin-bottom: 8px;
+}
+
+body.theme-ocean .anuncio-assunto {
+font-size: 17px;
+color: var(--text-secondary);
+margin-bottom: 6px;
+}
+
+body.theme-ocean .anuncio-info {
+font-size: 14px;
+color: #aaa;
+}
+
+/* ========== BARRA INFERIOR ========== */
+body.theme-ocean .nav-bottom {
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+background: rgba(20,20,20,0.85);
+backdrop-filter: blur(10px);
+border-top: 1px solid rgba(245,214,123,0.25);
+display: flex;
+justify-content: space-around;
+padding: 16px 15px;
+box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
+z-index: 99;
+}
+
+body.theme-ocean .nav-bottom button {
+flex: 1;
+margin: 0 10px;
+padding: 22px 10px;
+background: linear-gradient(135deg, #d4af37, #8a6f2e);
+border: none;
+border-radius: 14px;
+font-size: 20px;
+color: #111;
+font-weight: bold;
+box-shadow: 0 0 25px rgba(245,214,123,0.35);
+transition: 0.3s;
+}
+
+body.theme-ocean .nav-bottom button:hover {
+transform: scale(1.08);
+box-shadow: 0 0 35px rgba(245,214,123,0.6);
+}
+
+/* Botão de mudar tema */
+body.theme-ocean .btn-change-theme {
+padding: 12px 20px;
+background: rgba(245, 214, 123, 0.1);
+border: 1px solid rgba(245, 214, 123, 0.3);
+border-radius: 10px;
+color: #f5d67b;
+cursor: pointer;
+transition: 0.3s;
+font-size: 14px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+body.theme-ocean .btn-change-theme:hover {
+background: rgba(245, 214, 123, 0.2);
+transform: scale(1.05);
+box-shadow: 0 0 15px rgba(245, 214, 123, 0.3);
+}
+
+<script>  
+// Sistema de bolhas MAIORES no estilo simplificado  
+function createBubbles() {  
+    const colors = [  
+        'rgba(255,255,255,0.25)',   
+        'rgba(255,255,255,0.20)',   
+        'rgba(255,255,255,0.30)',  
+        'rgba(255,255,255,0.18)',  
+        'rgba(255,255,255,0.22)'  
+    ];  
+  
+    // Criar bolhas iniciais  
+    for(let i = 0; i < 25; i++){  
+        const bubble = document.createElement('div');  
+        bubble.classList.add('bubble');  
+        bubble.style.left = Math.random() * 100 + 'vw';  
+  
+        // BOLHAS MAIORES: 15-40px (era 5-20px)  
+        const size = Math.random() * 25 + 15;  
+        bubble.style.width = size + 'px';  
+        bubble.style.height = size + 'px';  
+  
+        // Velocidade variada  
+        bubble.style.animationDuration = (4 + Math.random() * 6) + 's';  
+  
+        // Cor aleatória  
+        bubble.style.background = colors[Math.floor(Math.random() * colors.length)];  
+  
+        // Atraso inicial para distribuição  
+        bubble.style.animationDelay = (Math.random() * 5) + 's';  
+  
+        document.body.appendChild(bubble);  
+    }  
+}  
+  
+// Função para criar bolhas continuamente  
+function startBubbleGenerator() {  
+    createBubbles(); // Bolhas iniciais  
+  
+    // Criar mais bolhas a cada 2 segundos  
+    setInterval(() => {  
+        const colors = [  
+            'rgba(255,255,255,0.25)',   
+            'rgba(255,255,255,0.20)',   
+            'rgba(255,255,255,0.30)'  
+        ];  
+  
+        // Criar 8-15 bolhas por ciclo  
+        const bubbleCount = Math.floor(Math.random() * 8) + 8;  
+  
+        for(let i = 0; i < bubbleCount; i++){  
+            const bubble = document.createElement('div');  
+            bubble.classList.add('bubble');  
+            bubble.style.left = Math.random() * 100 + 'vw';  
+  
+            // BOLHAS MAIORES  
+            const size = Math.random() * 25 + 15;  
+            bubble.style.width = size + 'px';  
+            bubble.style.height = size + 'px';  
+  
+            bubble.style.animationDuration = (4 + Math.random() * 6) + 's';  
+            bubble.style.background = colors[Math.floor(Math.random() * colors.length)];  
+  
+            document.body.appendChild(bubble);  
+  
+            // Remover após animação  
+            setTimeout(() => {  
+                if (bubble.parentNode) {  
+                    bubble.parentNode.removeChild(bubble);  
+                }  
+            }, (4 + Math.random() * 6) * 1000);  
+        }  
+    }, 2000);  
+  
+    // Rajadas intensas a cada 15 segundos  
+    setInterval(() => {  
+        if (Math.random() < 0.6) { // 60% de chance  
+            const colors = [  
+                'rgba(255,255,255,0.30)',   
+                'rgba(255,255,255,0.25)',   
+                'rgba(255,255,255,0.35)'  
+            ];  
+  
+            // Rajada de 40-60 bolhas grandes  
+            const burstCount = Math.floor(Math.random() * 21) + 40;  
+  
+            for(let i = 0; i < burstCount; i++){  
+                setTimeout(() => {  
+                    const bubble = document.createElement('div');  
+                    bubble.classList.add('bubble');  
+                    bubble.style.left = Math.random() * 100 + 'vw';  
+  
+                    // Bolhas ainda maiores na rajada  
+                    const size = Math.random() * 30 + 20;  
+                    bubble.style.width = size + 'px';  
+                    bubble.style.height = size + 'px';  
+  
+                    // Mais rápidas na rajada  
+                    bubble.style.animationDuration = (2 + Math.random() * 4) + 's';  
+                    bubble.style.background = colors[Math.floor(Math.random() * colors.length)];  
+  
+                    document.body.appendChild(bubble);  
+  
+                    // Remover após animação  
+                    setTimeout(() => {  
+                        if (bubble.parentNode) {  
+                            bubble.parentNode.removeChild(bubble);  
+                        }  
+                    }, (2 + Math.random() * 4) * 1000);  
+  
+                }, Math.random() * 800);  
+            }  
+        }  
+    }, 15000);  
+}  
+  
+// Iniciar quando a página carregar  
+window.addEventListener('load', startBubbleGenerator);  
+  
+// Limpeza periódica de bolhas antigas  
+setInterval(() => {  
+    const bubbles = document.querySelectorAll('.bubble');  
+    if (bubbles.length > 150) {  
+        for (let i = 0; i < 50; i++) {  
+            if (bubbles[i]) {  
+                bubbles[i].remove();  
+            }  
+        }  
+    }  
+}, 10000);  
+</script>
