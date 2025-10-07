@@ -110,12 +110,12 @@ class LavaSystem {
     }
 }
 
-// Sistema principal de temas
+// static/js/theme-switcher.js - Sistema simplificado de temas
+
 class ThemeManager {
     constructor() {
         this.themes = ['ocean', 'vulcan'];
         this.currentTheme = this.getSavedTheme() || 'ocean';
-        this.lavaSystem = null;
         this.init();
     }
 
@@ -157,46 +157,53 @@ class ThemeManager {
         this.saveTheme(themeName);
         this.updateActiveThemeCard();
 
-        // Inicializar sistema específico do tema
-        this.initializeThemeSystem(themeName);
+        // Cria elementos do tema
+        this.createThemeElements(themeName);
     }
 
     removePreviousThemeElements() {
-        if (this.lavaSystem) {
-            this.lavaSystem.destroy();
-            this.lavaSystem = null;
-        }
-
-        const vulcanElements = document.querySelector('.vulcan-elements');
-        if (vulcanElements) vulcanElements.remove();
-
-        const oceanElements = document.querySelector('.ocean-elements');
-        if (oceanElements) oceanElements.remove();
+        // Remove todos os elementos de temas
+        const themeElements = document.querySelectorAll('.ocean-elements, .vulcan-elements');
+        themeElements.forEach(element => element.remove());
     }
 
-    initializeThemeSystem(themeName) {
+    createThemeElements(themeName) {
+        let elementsHTML = '';
+        
         switch(themeName) {
-            case 'vulcan':
-                this.lavaSystem = new LavaSystem();
-                break;
             case 'ocean':
-                // Recria elementos do ocean
-                const oceanContainer = document.createElement('div');
-                oceanContainer.className = 'ocean-elements';
-                oceanContainer.innerHTML = `
-                    <div class="ocean-container" id="ocean"></div>
-                    <div class="sand-bottom"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
+                elementsHTML = `
+                    <div class="ocean-elements">
+                        <div class="ocean-container" id="ocean">
+                            ${this.generateBubbles()}
+                        </div>
+                        <div class="sand-bottom"></div>
+                        <div class="wave"></div>
+                        <div class="wave"></div>
+                    </div>
                 `;
-                document.body.appendChild(oceanContainer);
-                
-                // Reinicia bolhas
-                if (typeof startBubbleGenerator === 'function') {
-                    startBubbleGenerator();
-                }
+                break;
+            case 'vulcan':
+                elementsHTML = `
+                    <div class="vulcan-elements">
+                        <div class="lava-bottom"></div>
+                        <div class="smoke"></div>
+                        <div class="smoke"></div>
+                    </div>
+                `;
                 break;
         }
+
+        document.body.insertAdjacentHTML('afterbegin', elementsHTML);
+    }
+
+    generateBubbles() {
+        let bubblesHTML = '';
+        // Gera 24 bolhas com posições e tamanhos variados
+        for (let i = 1; i <= 24; i++) {
+            bubblesHTML += `<div class="bubble"></div>`;
+        }
+        return bubblesHTML;
     }
 
     renderThemeCards() {
