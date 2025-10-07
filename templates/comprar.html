@@ -756,12 +756,11 @@ function createOrbitingStars() {
     const orbitingContainer = document.getElementById('orbitingStars');
     
     // TRIPLICADO: de 25 para 75 estrelas
-    for (let i = 0; i < 75; i++) {
+    for (let i = 0; i < 250; i++) {
         const star = document.createElement('div');
         star.className = 'star orbiting-star';
         
-        const size = Math.random() * 5 + 2;
-        // RAIO DOBRADO: de 200-600px para 400-1200px
+        const size = Math.random() * 10 + 4;
         const orbitRadius = Math.random() * 800 + 400;
         const orbitDuration = Math.random() * 80 + 40;
         
@@ -783,15 +782,15 @@ function initializeBlackHole() {
     blackHole.style.height = '350px';
 
     // Horizonte de eventos
-    eventHorizon.style.width = '360px';
-    eventHorizon.style.height = '360px';
+    eventHorizon.style.width = '500px';
+    eventHorizon.style.height = '500px';
 
     // Discos de acreção próximos ao buraco negro
-    accretionDisk.style.width = '450px';
-    accretionDisk.style.height = '450px';
+    accretionDisk.style.width = '550px';
+    accretionDisk.style.height = '550px';
 
-    accretionDiskVertical.style.width = '450px';
-    accretionDiskVertical.style.height = '450px';
+    accretionDiskVertical.style.width = '550px';
+    accretionDiskVertical.style.height = '550px';
 
     // Buraco branco inicialmente invisível
     whiteHole.style.opacity = '0';
@@ -799,8 +798,8 @@ function initializeBlackHole() {
     whiteHole.style.height = '0px';
 
     // Efeito de distorção espacial
-    spatialDistortion.style.width = '600px';
-    spatialDistortion.style.height = '600px';
+    spatialDistortion.style.width = '800px';
+    spatialDistortion.style.height = '800px';
     spatialDistortion.style.opacity = '0.3';
     spatialDistortion.style.animation = 'spatialDistortion 15s linear infinite';
 }
@@ -850,24 +849,24 @@ function blackHoleFastPhase() {
     spatialDistortion.style.animation = 'spatialDistortion 10s linear infinite';
 
     // Aumentar tamanho do buraco negro
-    blackHole.style.width = '450px';
-    blackHole.style.height = '450px';
-    eventHorizon.style.width = '460px';
-    eventHorizon.style.height = '460px';
+    blackHole.style.width = '550px';
+    blackHole.style.height = '550px';
+    eventHorizon.style.width = '600px';
+    eventHorizon.style.height = '600px';
 
     // Expandir discos de acreção
-    accretionDisk.style.width = '600px';
-    accretionDisk.style.height = '600px';
-    accretionDiskVertical.style.width = '600px';
-    accretionDiskVertical.style.height = '600px';
+    accretionDisk.style.width = '800px';
+    accretionDisk.style.height = '800px';
+    accretionDiskVertical.style.width = '800px';
+    accretionDiskVertical.style.height = '800px';
 
     // Intensificar cores dos discos
     accretionDisk.style.opacity = '0.95';
     accretionDiskVertical.style.opacity = '0.85';
 
     // Aumentar efeito de distorção
-    spatialDistortion.style.width = '800px';
-    spatialDistortion.style.height = '800px';
+    spatialDistortion.style.width = '1000px';
+    spatialDistortion.style.height = '1000px';
     spatialDistortion.style.opacity = '0.5';
 
     // Sugar estrelas mais intensamente
@@ -969,7 +968,7 @@ function createNewStar() {
     const star = document.createElement('div');
     star.className = 'star';
 
-    const size = Math.random() * 4 + 1;
+    const size = Math.random() * 8 + 2;
     const posX = Math.random() * window.innerWidth;
     const posY = Math.random() * window.innerHeight;
 
@@ -986,14 +985,14 @@ function createNewStar() {
 
 // Criar raio de energia do buraco branco
 function createEnergyBeam() {
-    if (Math.random() > 0.4) return; // 40% de chance
+    if (Math.random() > 2) return; // 40% de chance
 
     const beam = document.createElement('div');
     beam.className = 'energy-beam';
 
     const angle = Math.random() * Math.PI * 2;
-    const length = Math.random() * 600 + 400;
-    const width = Math.random() * 40 + 20;
+    const length = Math.random() * 2200 + 1600;
+    const width = Math.random() * 200 + 100;
 
     beam.style.width = length + 'px';
     beam.style.height = width + 'px';
@@ -1090,11 +1089,11 @@ function explodeIntoWhiteHole() {
         // Expelir matéria e criar raios de energia
         const expelInterval = setInterval(() => {
             if (currentPhase === 'white_hole') {
-                createEnergyParticle(3);
+                createEnergyParticle(6);
                 createEnergyBeam();
 
                 // Criar novas estrelas
-                if (Math.random() > 0.7) {
+                if (Math.random() > 2.5) {
                     createNewStar();
                 }
             } else {
