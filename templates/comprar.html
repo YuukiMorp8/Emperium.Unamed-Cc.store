@@ -920,8 +920,8 @@ function suckStarWithSpiral() {
     const centerY = window.innerHeight / 2;
 
     // Parâmetros da espiral
-    const startRadius = Math.sqrt(Math.pow(startX - centerX, 2) + Math.pow(startY - centerY, 2));
-    const spiralTurns = 3 + Math.random() * 2; // 3-5 voltas
+    const startRadius = Math.sqrt(Math.pow(startX - centerX, 4) + Math.pow(startY - centerY, 4));
+    const spiralTurns = 6 + Math.random() * 2; // 3-5 voltas
     const totalDuration = 4000 + Math.random() * 2000; // 4-6 segundos
 
     // Animação complexa em espiral
@@ -968,7 +968,7 @@ function createNewStar() {
     const star = document.createElement('div');
     star.className = 'star';
 
-    const size = Math.random() * 16 + 4;
+    const size = Math.random() * 8 + 2;
     const posX = Math.random() * window.innerWidth;
     const posY = Math.random() * window.innerHeight;
 
@@ -985,7 +985,7 @@ function createNewStar() {
 
 // Criar raio de energia do buraco branco
 function createEnergyBeam() {
-    if (Math.random() > 1) return; // 40% de chance
+    if (Math.random() > 1.7) return; // 40% de chance
 
     const beam = document.createElement('div');
     beam.className = 'energy-beam';
@@ -1041,19 +1041,19 @@ function compressionAndExplosion() {
         const currentHeight = parseInt(blackHole.style.height);
 
         if (currentWidth > 100) {
-            blackHole.style.width = (currentWidth - 20) + 'px';
-            blackHole.style.height = (currentHeight - 20) + 'px';
-            eventHorizon.style.width = (currentWidth - 15) + 'px';
-            eventHorizon.style.height = (currentHeight - 15) + 'px';
-            accretionDisk.style.width = (currentWidth + 50) + 'px';
-            accretionDisk.style.height = (currentHeight + 50) + 'px';
-            accretionDiskVertical.style.width = (currentWidth + 50) + 'px';
-            accretionDiskVertical.style.height = (currentHeight + 50) + 'px';
+            blackHole.style.width = (currentWidth - 40) + 'px';
+            blackHole.style.height = (currentHeight - 40) + 'px';
+            eventHorizon.style.width = (currentWidth - 30) + 'px';
+            eventHorizon.style.height = (currentHeight - 30) + 'px';
+            accretionDisk.style.width = (currentWidth + 100) + 'px';
+            accretionDisk.style.height = (currentHeight + 100) + 'px';
+            accretionDiskVertical.style.width = (currentWidth + 100) + 'px';
+            accretionDiskVertical.style.height = (currentHeight + 100) + 'px';
         } else {
             clearInterval(compressInterval);
             explodeIntoWhiteHole();
         }
-    }, 100);
+    }, 200);
 }
 
 // Explosão em Buraco Branco
@@ -1076,24 +1076,24 @@ function explodeIntoWhiteHole() {
     whiteHole.style.height = '200px';
 
     // Criar partículas de explosão
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 200; i++) {
         createExplosionParticle();
     }
 
     // Expandir buraco branco
     setTimeout(() => {
-        whiteHole.style.width = '400px';
-        whiteHole.style.height = '400px';
+        whiteHole.style.width = '600px';
+        whiteHole.style.height = '600px';
         whiteHole.style.animation = 'rotateReverse 15s linear infinite';
 
         // Expelir matéria e criar raios de energia
         const expelInterval = setInterval(() => {
             if (currentPhase === 'white_hole') {
-                createEnergyParticle(6);
+                createEnergyParticle(18);
                 createEnergyBeam();
 
                 // Criar novas estrelas
-                if (Math.random() > 1.4) {
+                if (Math.random() > 2.8) {
                     createNewStar();
                 }
             } else {
@@ -1191,7 +1191,7 @@ function createEnergyParticle(type) {
 
         // Animação de ser expelido
         particle.animate([
-            { opacity: 1, transform: 'scale(2) translate(0, 0)' },
+            { opacity: 2, transform: 'scale(4) translate(0, 0)' },
             { opacity: 0, transform: `scale(6) translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)` }
         ], {
             duration: 2500,
