@@ -6,11 +6,12 @@ class ThemeManager {
         this.init();
     }
 
-    init() {
-        this.loadTheme(this.currentTheme);
-        this.renderThemeCards();
-        this.addEventListeners();
-    }
+init() {
+    this.loadTheme(this.currentTheme);
+    this.renderThemeCards();
+    this.addEventListeners();
+    this.listenForExternalChanges(); // <--- adiciona aqui
+}
 
     getSavedTheme() {
         return localStorage.getItem('selectedTheme');
@@ -113,3 +114,14 @@ class ThemeManager {
 document.addEventListener('DOMContentLoaded', () => {
     window.themeManager = new ThemeManager();
 });
+
+// --- SINCRONIZAÇÃO ENTRE PÁGINAS ---
+listenForExternalChanges() {
+    // Escuta quando outro site/aba muda o tema
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'selectedTheme' && event.newValue && event.newValue !== this.currentTheme) {
+            console.log('Tema atualizado por outra página:', event.newValue);
+            this.loadTheme(event.newValue);
+        }
+    });
+}
