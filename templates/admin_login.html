@@ -10,23 +10,33 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', Arial, sans-serif;
-    background: #101218;
     overflow: hidden;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
+    background: linear-gradient(to bottom, #6aa0d6 0%, #1a2a4d 100%); /* azul mais claro no topo */
     color: #eee;
+    position: relative;
 }
 
-/* Fundo do mar com bolhas */
+/* Fundo areia */
+.sand {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to top, #c2a76b 0%, rgba(194,167,107,0) 100%);
+    z-index: 0;
+}
+
+/* Bolhas animadas */
 .bubble {
     position: absolute;
     bottom: -50px;
     width: 15px;
     height: 15px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     animation: rise 8s infinite ease-in;
 }
@@ -41,13 +51,14 @@ body {
 /* Container principal */
 .container {
     position: relative;
-    background: #1a1f2b;
+    background: rgba(26,31,43,0.85); /* azul escuro translúcido */
     padding: 50px 40px;
     border-radius: 16px;
     width: 400px;
     text-align: center;
     box-shadow: 0 5px 25px rgba(0,0,0,0.5);
     z-index: 2;
+    backdrop-filter: blur(5px); /* efeito de “água” por trás */
 }
 
 /* Reflexo */
@@ -61,13 +72,12 @@ body {
     background: linear-gradient(to top, rgba(26,31,43,0.5), transparent);
     transform: scaleY(-1);
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     z-index: 1;
 }
 
 /* Textos e inputs */
 h1 {
-    color: #6aa0d6;
+    color: #9ec7f0; /* azul mais claro */
     margin-bottom: 30px;
     font-size: 28px;
 }
@@ -78,14 +88,14 @@ input {
     margin: 10px 0;
     border-radius: 10px;
     border: none;
-    background: #222a3c;
+    background: rgba(34, 58, 92, 0.8); /* azul transparente */
     color: #eee;
     font-size: 15px;
     transition: background 0.3s;
 }
 
 input:focus {
-    background: #2b3b5a;
+    background: rgba(43, 59, 90, 0.9);
     outline: none;
 }
 
@@ -109,27 +119,31 @@ button:hover {
 </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🔒 Admin Login</h1>
-        <form method="post">
-            <input type="text" name="nome_admin" placeholder="Nome do admin" required>
-            <input type="password" name="senha_admin" placeholder="Senha do admin" required>
-            <button type="submit">Entrar</button>
-        </form>
-    </div>
 
-    <!-- Bolhas animadas -->
-    <script>
-        const colors = ['rgba(255,255,255,0.2)', 'rgba(255,255,255,0.15)', 'rgba(255,255,255,0.25)'];
-        for(let i=0;i<50;i++){
-            const bubble = document.createElement('div');
-            bubble.classList.add('bubble');
-            bubble.style.left = Math.random() * 100 + 'vw';
-            bubble.style.width = bubble.style.height = Math.random() * 15 + 5 + 'px';
-            bubble.style.animationDuration = (5 + Math.random() * 5) + 's';
-            bubble.style.background = colors[Math.floor(Math.random()*colors.length)];
-            document.body.appendChild(bubble);
-        }
-    </script>
+<div class="sand"></div>
+
+<div class="container">
+    <h1>🔒 Admin Login</h1>
+    <form method="post">
+        <input type="text" name="nome_admin" placeholder="Nome do admin" required>
+        <input type="password" name="senha_admin" placeholder="Senha do admin" required>
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+
+<!-- Bolhas animadas -->
+<script>
+const colors = ['rgba(255,255,255,0.2)', 'rgba(255,255,255,0.15)', 'rgba(255,255,255,0.25)'];
+for(let i=0;i<50;i++){
+    const bubble = document.createElement('div');
+    bubble.classList.add('bubble');
+    bubble.style.left = Math.random() * 100 + 'vw';
+    bubble.style.width = bubble.style.height = Math.random() * 15 + 5 + 'px';
+    bubble.style.animationDuration = (5 + Math.random() * 5) + 's';
+    bubble.style.background = colors[Math.floor(Math.random()*colors.length)];
+    document.body.appendChild(bubble);
+}
+</script>
+
 </body>
 </html>
