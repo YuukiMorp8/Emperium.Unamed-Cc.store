@@ -14,6 +14,49 @@
 /* ========== ELEMENTOS DO TEMA OCEAN ========== */
 .ocean-elements {
     display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* ========== BOLHAS NO OCEAN.CSS ========== */
+.ocean-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    animation: float linear infinite;
+    z-index: -1;
+    bottom: -50px;
+}
+
+@keyframes float {
+    to {
+        transform: translateY(calc(-100vh - 100px));
+    }
+}
+
+/* ========== SISTEMA DE BOLHAS AUTOMÁTICO ========== */
+.ocean-container::before {
+    content: '';
+    /* As bolhas serão criadas via JavaScript específico do tema */
+}
+
+/* Estilos para as bolhas */
+.bubble {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 /* ========== BASE DO TEMA OCEAN ========== */
@@ -28,17 +71,6 @@ body.theme-ocean {
     position: relative;
 }
 
-/* ========== EFEITO ÁGUA ========== */
-.ocean-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-    overflow: hidden;
-}
-
 /* ========== AREIA NO FUNDO ========== */
 .sand-bottom {
     position: fixed;
@@ -51,21 +83,6 @@ body.theme-ocean {
     border-top-left-radius: 50% 20px;
     border-top-right-radius: 50% 20px;
     box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.3);
-}
-
-/* ========== BOLHAS ========== */
-.bubble {
-    position: absolute;
-    border-radius: 50%;
-    animation: float linear infinite;
-    z-index: -1;
-    bottom: -50px;
-}
-
-@keyframes float {
-    to {
-        transform: translateY(calc(-100vh - 100px));
-    }
 }
 
 /* ========== ONDULAÇÕES ========== */
@@ -95,6 +112,7 @@ body.theme-ocean {
         background-position-x: 1440px;
     }
 }
+
 
 /* ========== CABEÇALHO ========== */
 body.theme-ocean header {
