@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Troca de Material - Emperium</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            background: #101218;
+            color: #eee;
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            font-size: 28px;
+            font-weight: 600;
+            color: #6aa0d6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .embed {
+            background: #2b3b5a; /* azul escuro */
+            border-left: 5px solid #cb2929; /* vermelho acinzentado */
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .embed h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+
+        .embed p {
+            margin: 8px 0;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            background: #4e9af1;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px 0 0;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background: #6caef7;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #444;
+        }
+
+        .btn-secondary:hover {
+            background: #666;
+        }
+
+        form {
+            background: #1a1f2b;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 15px 0;
+            border-radius: 8px;
+            border: none;
+            background: #222a3c;
+            color: #eee;
+            font-size: 15px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>🔄 Troca de Material</header>
+    <div class="container">
+
+        <!-- Embed de instruções -->
+        <div class="embed">
+            <h3>Por favor escolha o método de troca de material</h3>
+            <p>Lembrando que:</p>
+            <ol>
+                <li>Vídeo testando Live</li>
+                <li>Deve enviar o material para análise</li>
+                <li>Caso garanta saldo, deve fazer o teste em algum site</li>
+            </ol>
+            <p>Caso não tenha algum desses, seu formulário será descartado. Caso tenha feito algum dos passos errado também será.</p>
+            <p>O prazo de troca é de <b>10 minutos</b>, caso tente nos passar a perna saberemos!</p>
+        </div>
+
+        <!-- Formulário de troca -->
+        <form id="trocaForm">
+            <label for="nome">Seu Nome:</label>
+            <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+
+            <label for="material">Material:</label>
+            <input type="text" id="material" name="material" placeholder="Digite o material" required>
+
+            <label>Método de envio:</label><br>
+            <button type="button" class="btn" onclick="enviarDiscord()">Nosso Discord de suporte</button>
+            <button type="button" class="btn btn-secondary" onclick="alert('Opção em construção, utilize nosso Discord no momento!')">Dentro do site</button>
+        </form>
+
+    </div>
+
+    <script>
+        function enviarDiscord() {
+            // Simulação: abrir link do Discord
+            window.open("https://discord.gg/seuServidor", "_blank");
+            alert("Você será redirecionado para o nosso Discord para enviar o formulário.");
+        }
+    </script>
+</body>
+</html>
