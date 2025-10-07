@@ -4,21 +4,69 @@
     <meta charset="UTF-8">
     <title>Painel Admin - Emperium</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #111; color: #eee; margin: 0; padding: 0; }
-        header { background: #222; padding: 20px; text-align: center; font-size: 26px; font-weight: bold; letter-spacing: 1px; }
-        section { padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: #101218; /* preto puxado para cinza */
+            color: #eee;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            background: #1c1f28;
+            padding: 20px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #6aa0d6; /* azul melancólico */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+        }
+
+        section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 20px;
+        }
 
         .card {
-            background: #1a1a1a;
+            background: #1a1f2b; /* azul escuro acinzentado */
             padding: 25px;
             border-radius: 14px;
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.6);
         }
-        .card h3 { margin-top: 0; color: #ff9900; font-size: 22px; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 10px; border: 1px solid #444; text-align: left; font-size: 15px; }
-        th { background: #222; }
+        .card h3 {
+            margin-top: 0;
+            font-size: 22px;
+            color: #6aa0d6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h3 svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #333;
+            text-align: left;
+            font-size: 15px;
+        }
+
+        th {
+            background: #11162a;
+        }
 
         input, select, textarea {
             width: 100%;
@@ -26,7 +74,7 @@
             margin: 8px 0 12px 0;
             border-radius: 8px;
             border: none;
-            background: #222;
+            background: #222a3c;
             color: #eee;
             font-size: 15px;
         }
@@ -42,22 +90,27 @@
             font-weight: bold;
             transition: background 0.3s;
         }
-        .btn:hover { background: #6caef7; }
+
+        .btn:hover {
+            background: #6caef7;
+        }
 
         .btn-danger {
-            background: #c0392b;
+            background: #8b2f3b; /* vermelho acinzentado */
         }
+
         .btn-danger:hover {
-            background: #e74c3c;
+            background: #b0404f;
         }
 
         .form-section { display: none; margin-top: 10px; }
+
         .anuncio {
-            background: #222;
+            background: #3e2f34; /* vermelho acinzentado sutil */
             padding: 15px;
             border-radius: 10px;
             margin-top: 10px;
-            box-shadow: 0 1px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 1px 8px rgba(0,0,0,0.4);
         }
     </style>
 
@@ -94,46 +147,12 @@
     <header>Painel de Administração</header>
     <section>
 
-        <!-- Usuários -->
-        <div class="card">
-            <h3>Usuários</h3>
-            <table>
-                <tr><th>Nome</th><th>Saldo</th><th>Gasto</th></tr>
-                {% for u in usuarios %}
-                <tr>
-                    <td>{{ u.nome }}</td>
-                    <td>R$ {{ u.saldo }}</td>
-                    <td>R$ {{ u.gasto }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-
-        <!-- Níveis -->
-        <div class="card">
-            <h3>Níveis</h3>
-            <table>
-                <tr><th>Nome</th><th>Valor</th></tr>
-                {% for n in niveis %}
-                <tr>
-                    <td>{{ n.nome }}</td>
-                    <td>R$ {{ n.valor }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            <button class="btn" onclick="toggleForm('form_add_nivel')">Adicionar Nível</button>
-            <div id="form_add_nivel" class="form-section">
-                <form method="post" action="/add_nivel">
-                    <input type="text" name="nivel_nome" placeholder="Nome do nível (ex: prata)" required>
-                    <input type="number" name="nivel_valor" placeholder="Valor do nível (ex: 20)" required>
-                    <button type="submit" class="btn">Adicionar Nível</button>
-                </form>
-            </div>
-        </div>
-
         <!-- Materiais -->
         <div class="card">
-            <h3>Materiais</h3>
+            <h3>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none"><path fill="#2871d4" d="M21.087 4.348H2.913A1.92 1.92 0 0 0 1 6.26v11.478a1.92 1.92 0 0 0 1.913 1.913h18.174A1.913 1.913 0 0 0 23 17.74V6.261a1.913 1.913 0 0 0-1.913-1.913"/><path fill="#2871d4" d="M2.913 4.348A1.92 1.92 0 0 0 1 6.26v11.478a1.92 1.92 0 0 0 1.572 1.879l15.272-15.27z"/><path stroke="#191919" stroke-linecap="round" stroke-linejoin="round" d="M23 6.26v1.914H1V6.26a1.92 1.92 0 0 1 1.913-1.913h18.174A1.913 1.913 0 0 1 23 6.26m0 1.914v9.565a1.913 1.913 0 0 1-1.913 1.913H2.913A1.92 1.92 0 0 1 1 17.74V8.174zM20.138 12h-2.87m-5.738 0H3.877m2.87 2.87h-2.87" stroke-width="1"/></g></svg>
+                Materiais
+            </h3>
             <table>
                 <tr><th>Nome</th><th>CPF</th><th>Nascimento</th><th>Nível</th><th>Banco</th></tr>
                 {% for m in materiais %}
@@ -165,9 +184,55 @@
             </div>
         </div>
 
-        <!-- 📣 Anúncios -->
+        <!-- Usuários -->
         <div class="card">
-            <h3>📣 Criar Anúncio</h3>
+            <h3>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#3390be" d="M16 17v2H2v-2s0-4 7-4s7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.4 3.4 0 0 0-1.93.59a5 5 0 0 1 0 5.82A3.4 3.4 0 0 0 15 11a3.5 3.5 0 0 0 0-7"/></svg>
+                Usuários
+            </h3>
+            <table>
+                <tr><th>Nome</th><th>Saldo</th><th>Gasto</th></tr>
+                {% for u in usuarios %}
+                <tr>
+                    <td>{{ u.nome }}</td>
+                    <td>R$ {{ u.saldo }}</td>
+                    <td>R$ {{ u.gasto }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Níveis -->
+        <div class="card">
+            <h3>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#beba15" stroke="#000" d="M24 42L4 18.5L9.69488 6L38.3051 6L44 18.5L24 42Z"/><path stroke="#bdcdbf" d="M32 18L24 27L16 18"/></g></svg>
+                Níveis
+            </h3>
+            <table>
+                <tr><th>Nome</th><th>Valor</th></tr>
+                {% for n in niveis %}
+                <tr>
+                    <td>{{ n.nome }}</td>
+                    <td>R$ {{ n.valor }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <button class="btn" onclick="toggleForm('form_add_nivel')">Adicionar Nível</button>
+            <div id="form_add_nivel" class="form-section">
+                <form method="post" action="/add_nivel">
+                    <input type="text" name="nivel_nome" placeholder="Nome do nível (ex: prata)" required>
+                    <input type="number" name="nivel_valor" placeholder="Valor do nível (ex: 20)" required>
+                    <button type="submit" class="btn">Adicionar Nível</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Criar Anúncios -->
+        <div class="card">
+            <h3>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#cb2929" d="M18 20v-3h-3v-2h3v-3h2v3h3v2h-3v3zM3 21q-.825 0-1.412-.587T1 19V5q0-.825.588-1.412T3 3h14q.825 0 1.413.588T19 5v5h-2V8H3v11h13v2z"/></svg>
+                Criar Anúncio
+            </h3>
             <form method="post" action="/admin_panel">
                 <input type="text" name="titulo" placeholder="Título do anúncio" required>
                 <textarea name="assunto" rows="4" placeholder="Assunto do anúncio" required></textarea>
@@ -178,7 +243,7 @@
             {% if anuncios %}
                 {% for a in anuncios %}
                 <div class="anuncio">
-                    <strong style="color:#ff9900;">{{ a.titulo }}</strong><br>
+                    <strong>{{ a.titulo }}</strong><br>
                     {{ a.assunto }}<br>
                     <small>📅 {{ a.data }} | 👤 {{ a.criador }}</small><br>
                     <a href="/deletar_anuncio/{{ loop.index0 }}"><button class="btn btn-danger">Excluir</button></a>
