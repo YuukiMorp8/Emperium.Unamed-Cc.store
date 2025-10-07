@@ -1,186 +1,104 @@
-/* ================== VARIÁVEIS ================== */
+/* =========================
+   TEMA OCEAN — VISUAL BASE
+========================= */
+
 :root {
-    --bg-primary: linear-gradient(to bottom, #1a5f96, #0b2b45, #051524);
-    --bg-secondary: rgba(25, 25, 25, 0.4);
-    --accent-color: #f5d67b;
-    --accent-secondary: #64c3dd;
-    --sand-color: linear-gradient(to bottom, transparent, #d4af37 20%, #b8941f 60%, #8a6f2e);
-    --text-primary: #ffffff;
-    --text-secondary: #dddddd;
-    --border-color: rgba(245,214,123,0.15);
-    --shadow-color: rgba(245,214,123,0.3);
+  --bg-primary: linear-gradient(to bottom, #1a5f96, #0b2b45, #051524);
+  --bg-secondary: rgba(25, 25, 25, 0.4);
+  --accent-color: #f5d67b;
+  --accent-secondary: #64c3dd;
+  --sand-color: linear-gradient(to bottom, transparent, #d4af37 20%, #b8941f 60%, #8a6f2e);
+  --text-primary: #ffffff;
+  --text-secondary: #dddddd;
+  --border-color: rgba(245,214,123,0.15);
+  --shadow-color: rgba(245,214,123,0.3);
 }
 
-/* ================== BODY ================== */
 body.theme-ocean {
-    margin: 0;
-    padding: 0;
-    font-family: "Poppins", Arial, sans-serif;
-    min-height: 100vh;
-    color: var(--text-primary);
-    background: var(--bg-primary);
-    overflow-x: hidden;
-    position: relative;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: "Poppins", Arial, sans-serif;
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* ================== ELEMENTOS OCEAN ================== */
+/* =========================
+   ELEMENTOS DO OCEAN
+========================= */
 .ocean-elements {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: -2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -2;
+  pointer-events: none;
 }
 
-/* ================== AREIA ================== */
+/* =========================
+   AREIA E ONDAS
+========================= */
 .sand-bottom {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background: var(--sand-color);
-    border-top-left-radius: 50% 20px;
-    border-top-right-radius: 50% 20px;
-    box-shadow: 0 -5px 15px rgba(212,175,55,0.3);
-    z-index: -1;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: var(--sand-color);
+  z-index: -1;
+  border-top-left-radius: 50% 20px;
+  border-top-right-radius: 50% 20px;
+  box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.3);
 }
 
-/* ================== ONDULAÇÕES ================== */
 .wave {
-    position: absolute;
-    bottom: 80px;
-    left: 0;
-    width: 100%;
-    height: 15px;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230b2b45" fill-opacity="0.3" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
-    background-size: cover;
-    animation: wave 15s linear infinite;
-    z-index: -1;
+  position: absolute;
+  bottom: 80px;
+  width: 100%;
+  height: 15px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'><path fill='%230b2b45' fill-opacity='0.3' d='M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'/></svg>");
+  background-size: cover;
+  animation: wave 15s linear infinite;
+  z-index: -1;
 }
 
 .wave:nth-child(2) {
-    bottom: 70px;
-    opacity: 0.5;
-    animation: wave 12s linear infinite reverse;
+  bottom: 70px;
+  opacity: 0.5;
+  animation: wave 12s linear infinite reverse;
 }
 
 @keyframes wave {
-    0% { background-position-x: 0; }
-    100% { background-position-x: 1440px; }
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: 1440px;
+  }
 }
 
-/* ================== BOLHAS ================== */
+/* =========================
+   BOLHAS ANIMADAS
+========================= */
 .bubble {
-    position: absolute;
-    bottom: 0;
-    border-radius: 50%;
-    opacity: 0.6;
-    animation-name: floatBubble;
-    animation-timing-function: linear;
-    pointer-events: none;
+  position: absolute;
+  bottom: -50px;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: bubbleUp linear forwards;
 }
 
-@keyframes floatBubble {
-    0% { transform: translateY(0) scale(1); opacity: 0.5; }
-    50% { opacity: 0.8; }
-    100% { transform: translateY(-120vh) scale(1.3); opacity: 0; }
-}
-
-/* Criando bolhas de diferentes tamanhos e posições */
-.bubble:nth-child(1)  { width: 15px; height: 15px; left: 5%;  animation-duration: 8s; animation-delay: 0s; background: rgba(255,255,255,0.25); }
-.bubble:nth-child(2)  { width: 20px; height: 20px; left: 15%; animation-duration: 10s; animation-delay: 2s; background: rgba(255,255,255,0.2); }
-.bubble:nth-child(3)  { width: 25px; height: 25px; left: 25%; animation-duration: 12s; animation-delay: 1s; background: rgba(255,255,255,0.3); }
-.bubble:nth-child(4)  { width: 18px; height: 18px; left: 35%; animation-duration: 9s; animation-delay: 3s; background: rgba(255,255,255,0.22); }
-.bubble:nth-child(5)  { width: 22px; height: 22px; left: 45%; animation-duration: 11s; animation-delay: 0.5s; background: rgba(255,255,255,0.28); }
-.bubble:nth-child(6)  { width: 16px; height: 16px; left: 55%; animation-duration: 7s; animation-delay: 2.5s; background: rgba(255,255,255,0.24); }
-.bubble:nth-child(7)  { width: 28px; height: 28px; left: 65%; animation-duration: 13s; animation-delay: 1.2s; background: rgba(255,255,255,0.3); }
-.bubble:nth-child(8)  { width: 20px; height: 20px; left: 75%; animation-duration: 10s; animation-delay: 2.8s; background: rgba(255,255,255,0.26); }
-.bubble:nth-child(9)  { width: 18px; height: 18px; left: 85%; animation-duration: 9s; animation-delay: 1.6s; background: rgba(255,255,255,0.2); }
-.bubble:nth-child(10) { width: 25px; height: 25px; left: 95%; animation-duration: 12s; animation-delay: 0.9s; background: rgba(255,255,255,0.3); }
-
-/* ================== HEADER, BOTÕES, CARDS ================== */
-header {
-    background: rgba(26, 95, 150, 0.7);
-    backdrop-filter: blur(10px);
-    padding: 20px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border-color);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.btn-admin {
-    padding: 14px 22px;
-    background: linear-gradient(135deg, #d4af37, #8a6f2e);
-    color: #111;
-    font-weight: bold;
-    border-radius: 12px;
-    cursor: pointer;
-    border: none;
-    font-size: 18px;
-    box-shadow: 0 0 20px var(--shadow-color);
-    transition: 0.3s;
-}
-
-.btn-admin:hover {
-    background: linear-gradient(135deg, #f5d67b, #b99232);
-    transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(245,214,123,0.6);
-}
-
-.card {
-    background: rgba(20, 20, 20, 0.4);
-    backdrop-filter: blur(5px);
-    padding: 28px;
-    border-radius: 14px;
-    border-left: 5px solid rgba(212, 175, 55, 0.7);
-    text-align: center;
-    color: var(--text-primary);
-    transition: 0.3s;
-}
-
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 15px rgba(212,175,55,0.3);
-}
-
-/* ================== NAV INFERIOR ================== */
-.nav-bottom {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(20,20,20,0.85);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(245,214,123,0.25);
-    display: flex;
-    justify-content: space-around;
-    padding: 16px 15px;
-    z-index: 99;
-}
-
-.nav-bottom button {
-    flex: 1;
-    margin: 0 10px;
-    padding: 22px 10px;
-    background: linear-gradient(135deg, #d4af37, #8a6f2e);
-    border: none;
-    border-radius: 14px;
-    font-size: 20px;
-    color: #111;
-    font-weight: bold;
-    box-shadow: 0 0 25px rgba(245,214,123,0.35);
-    transition: 0.3s;
-}
-
-.nav-bottom button:hover {
-    transform: scale(1.08);
-    box-shadow: 0 0 35px rgba(245,214,123,0.6);
+@keyframes bubbleUp {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-110vh) scale(0.9);
+    opacity: 0;
+  }
 }
