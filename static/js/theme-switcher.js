@@ -1,4 +1,4 @@
-// static/js/theme-switcher.js - SISTEMA FINAL SEM CONFLITOS
+// static/js/theme-switcher.js - VERSÃO DEBUG
 
 class ThemeManager {
     constructor() {
@@ -9,7 +9,9 @@ class ThemeManager {
     }
 
     init() {
-        console.log('🎨 Iniciando Sistema de Temas:', this.currentTheme);
+        console.log('🎨 DEBUG: Sistema de Temas Iniciado');
+        console.log('🎨 DEBUG: Tema salvo:', this.currentTheme);
+        
         this.applyTheme(this.currentTheme);
         this.setupThemeButton();
         this.setupThemeModal();
@@ -24,35 +26,26 @@ class ThemeManager {
     }
 
     applyTheme(themeName) {
-        console.log('🔄 Aplicando tema:', themeName);
+        console.log('🔄 DEBUG: Aplicando tema:', themeName);
         
-        // 1. PARA todos os intervals e timeouts anteriores
+        // Limpeza
         this.clearAllIntervals();
-        
-        // 2. REMOVE completamente todos os elementos de temas
         this.removeAllThemeElements();
         
-        // 3. Atualiza classe do body (IMPORTANTE: remove classes antigas)
-        document.body.className = '';
-        document.body.classList.add(`theme-${themeName}`);
+        // Atualiza body
+        document.body.className = `theme-${themeName}`;
         
-        // 4. Remove CSS anterior e carrega novo
+        // CSS
         this.loadThemeCSS(themeName);
         
-        // 5. Salva e atualiza estado
+        // Estado
         this.currentTheme = themeName;
         this.saveTheme(themeName);
         
-        // 6. Cria elementos específicos do tema
+        // Elementos
         this.createThemeElements(themeName);
-        
-        // 7. Inicia sistema dinâmico do tema (se necessário)
         this.startThemeSystem(themeName);
-        
-        // 8. Atualiza UI
         this.updateThemeCards();
-        
-        console.log('✅ Tema aplicado com sucesso:', themeName);
     }
 
     clearAllIntervals() {
@@ -61,27 +54,11 @@ class ThemeManager {
     }
 
     removeAllThemeElements() {
-        // Remove TODOS os elementos possíveis de temas
-        const selectors = [
-            '.ocean-elements', 
-            '.vulcan-elements', 
-            '.theme-elements',
-            '.bubble',
-            '.lava-bubble', 
-            '.eruption',
-            '.ocean-container',
-            '.lava-bottom',
-            '.sand-bottom',
-            '.wave',
-            '.smoke'
-        ];
-        
+        const selectors = ['.ocean-elements', '.vulcan-elements', '.bubble', '.lava-bubble', '.eruption'];
         selectors.forEach(selector => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(el => el.remove());
+            document.querySelectorAll(selector).forEach(el => el.remove());
         });
         
-        // Remove CSS dinâmico
         const oldCSS = document.getElementById('dynamic-theme-css');
         if (oldCSS) oldCSS.remove();
     }
@@ -98,75 +75,45 @@ class ThemeManager {
         const container = document.createElement('div');
         container.className = `${themeName}-elements`;
         
-        switch(themeName) {
-            case 'ocean':
-                container.innerHTML = this.createOceanElements();
-                break;
-            case 'vulcan':
-                container.innerHTML = this.createVulcanElements();
-                break;
+        if (themeName === 'ocean') {
+            container.innerHTML = `
+                <div class="ocean-container">
+                    ${Array.from({length: 24}, (_, i) => `<div class="bubble bubble-${i+1}"></div>`).join('')}
+                </div>
+                <div class="sand-bottom"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+            `;
+        } else if (themeName === 'vulcan') {
+            container.innerHTML = `
+                <div class="lava-bottom"></div>
+                <div class="smoke"></div>
+                <div class="smoke"></div>
+            `;
         }
         
         document.body.appendChild(container);
     }
 
-    createOceanElements() {
-        return `
-            <div class="ocean-container">
-                ${this.generateBubbles()}
-            </div>
-            <div class="sand-bottom"></div>
-            <div class="wave"></div>
-            <div class="wave"></div>
-        `;
-    }
-
-    createVulcanElements() {
-        return `
-            <div class="lava-bottom"></div>
-            <div class="smoke"></div>
-            <div class="smoke"></div>
-        `;
-    }
-
-    generateBubbles() {
-        let bubbles = '';
-        for (let i = 1; i <= 24; i++) {
-            bubbles += `<div class="bubble bubble-${i}"></div>`;
-        }
-        return bubbles;
-    }
-
     startThemeSystem(themeName) {
-        switch(themeName) {
-            case 'ocean':
-                // Ocean usa apenas CSS - nada para fazer aqui
-                break;
-            case 'vulcan':
-                this.startVulcanSystem();
-                break;
+        if (themeName === 'vulcan') {
+            console.log('🌋 DEBUG: Iniciando sistema Vulcão');
+            
+            const lavaInterval = setInterval(() => {
+                this.createLavaBubble();
+            }, 800);
+            
+            const eruptionInterval = setInterval(() => {
+                if (Math.random() < 0.3) this.createEruption();
+            }, 4000);
+            
+            this.activeIntervals.push(lavaInterval, eruptionInterval);
         }
-    }
-
-    startVulcanSystem() {
-        console.log('🌋 Iniciando sistema Vulcão...');
-        
-        // Bolhas de lava
-        const lavaInterval = setInterval(() => {
-            this.createLavaBubble();
-        }, 800);
-        
-        // Erupções
-        const eruptionInterval = setInterval(() => {
-            if (Math.random() < 0.3) this.createEruption();
-        }, 4000);
-        
-        this.activeIntervals.push(lavaInterval, eruptionInterval);
     }
 
     createLavaBubble() {
-        const vulcanElements = document.querySelector('.vulcan-elements');
-        if (!vulcanElements) return;
+        const container = document.querySelector('.vulcan-elements');
+        if (!container) return;
 
         const bubble = document.createElement('div');
         bubble.className = 'lava-bubble';
@@ -182,22 +129,16 @@ class ThemeManager {
             top: -50px;
             animation-duration: ${duration}s;
             background: radial-gradient(circle, rgba(255,69,0,0.8) 0%, rgba(139,0,0,0.4) 70%);
-            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 69, 0, 0.6);
+            box-shadow: inset 0 0 15px rgba(255,255,255,0.3), 0 0 20px rgba(255,69,0,0.6);
         `;
         
-        vulcanElements.appendChild(bubble);
-        
-        // Remove após animação
-        setTimeout(() => {
-            if (bubble.parentNode) {
-                bubble.remove();
-            }
-        }, duration * 1000);
+        container.appendChild(bubble);
+        setTimeout(() => bubble.remove(), duration * 1000);
     }
 
     createEruption() {
-        const vulcanElements = document.querySelector('.vulcan-elements');
-        if (!vulcanElements) return;
+        const container = document.querySelector('.vulcan-elements');
+        if (!container) return;
 
         const eruption = document.createElement('div');
         eruption.className = 'eruption';
@@ -211,50 +152,57 @@ class ThemeManager {
             animation-delay: ${Math.random() * 2}s;
         `;
         
-        vulcanElements.appendChild(eruption);
-        
-        // Remove após animação
-        setTimeout(() => {
-            if (eruption.parentNode) {
-                eruption.remove();
-            }
-        }, 4000);
+        container.appendChild(eruption);
+        setTimeout(() => eruption.remove(), 4000);
     }
 
     setupThemeButton() {
+        console.log('🔘 DEBUG: Configurando botão de tema');
+        
         const header = document.querySelector('header');
-        if (!header) return;
+        if (!header) {
+            console.log('❌ DEBUG: Header não encontrado');
+            return;
+        }
 
-        // Verifica se o botão já existe
-        if (document.querySelector('.btn-change-theme')) return;
+        // Remove botão existente se houver
+        const existingBtn = document.querySelector('.btn-change-theme');
+        if (existingBtn) existingBtn.remove();
 
         const themeBtn = document.createElement('button');
         themeBtn.className = 'btn-change-theme';
+        themeBtn.id = 'theme-button'; // ID para debug
         themeBtn.innerHTML = '🎨 Mudar Tema';
-        themeBtn.onclick = () => this.openModal();
+        themeBtn.onclick = (e) => {
+            console.log('🖱️ DEBUG: Botão clicado', e);
+            this.openModal();
+        };
 
-        // Insere no header
         const headerButtons = header.querySelector('.header-buttons');
         if (headerButtons) {
             headerButtons.insertBefore(themeBtn, headerButtons.firstChild);
+            console.log('✅ DEBUG: Botão adicionado no header-buttons');
         } else {
-            // Cria container se não existir
-            const buttonsContainer = document.createElement('div');
-            buttonsContainer.className = 'header-buttons';
-            buttonsContainer.appendChild(themeBtn);
-            
-            const profile = header.querySelector('.perfil');
-            if (profile) {
-                buttonsContainer.appendChild(profile);
-            }
-            
-            header.appendChild(buttonsContainer);
+            header.appendChild(themeBtn);
+            console.log('✅ DEBUG: Botão adicionado diretamente no header');
         }
     }
 
     setupThemeModal() {
-        if (document.getElementById('theme-modal')) return;
+        console.log('📦 DEBUG: Configurando modal de temas');
+        
+        // Verifica se o modal já existe no HTML
+        const existingModal = document.getElementById('theme-modal');
+        const existingOverlay = document.getElementById('theme-overlay');
+        
+        if (existingModal && existingOverlay) {
+            console.log('✅ DEBUG: Modal já existe no HTML');
+            this.setupModalListeners();
+            return;
+        }
 
+        console.log('❌ DEBUG: Modal não encontrado, criando...');
+        
         const modalHTML = `
             <div class="theme-modal-overlay" id="theme-overlay"></div>
             <div class="theme-modal" id="theme-modal">
@@ -269,6 +217,7 @@ class ThemeManager {
         `;
 
         document.body.insertAdjacentHTML('beforeend', modalHTML);
+        console.log('✅ DEBUG: Modal criado com sucesso');
         this.setupModalListeners();
     }
 
@@ -292,46 +241,93 @@ class ThemeManager {
     }
 
     setupModalListeners() {
+        console.log('🎯 DEBUG: Configurando listeners do modal');
+        
+        const overlay = document.getElementById('theme-overlay');
+        const closeBtn = document.querySelector('.theme-close');
+        const themeGrid = document.getElementById('theme-grid');
+
+        if (!overlay) {
+            console.log('❌ DEBUG: Overlay não encontrado');
+            return;
+        }
+        if (!closeBtn) {
+            console.log('❌ DEBUG: Botão fechar não encontrado');
+            return;
+        }
+        if (!themeGrid) {
+            console.log('❌ DEBUG: Grid de temas não encontrado');
+            return;
+        }
+
         // Overlay
-        document.getElementById('theme-overlay').addEventListener('click', () => {
+        overlay.addEventListener('click', (e) => {
+            console.log('🎯 DEBUG: Overlay clicado', e);
             this.closeModal();
         });
 
         // Botão fechar
-        document.querySelector('.theme-close').addEventListener('click', () => {
+        closeBtn.addEventListener('click', (e) => {
+            console.log('🎯 DEBUG: Botão fechar clicado', e);
             this.closeModal();
         });
 
-        // Tecla ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') this.closeModal();
-        });
-
-        // Clique nos cards de tema
-        document.addEventListener('click', (e) => {
+        // Cards de tema
+        themeGrid.addEventListener('click', (e) => {
             const card = e.target.closest('.theme-card');
             if (card) {
                 const theme = card.dataset.theme;
+                console.log('🎯 DEBUG: Card clicado', theme);
                 this.applyTheme(theme);
                 this.closeModal();
             }
         });
+
+        // Tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                console.log('🎯 DEBUG: Tecla ESC pressionada');
+                this.closeModal();
+            }
+        });
+
+        console.log('✅ DEBUG: Listeners configurados com sucesso');
     }
 
     openModal() {
-        document.getElementById('theme-modal').classList.add('active');
-        document.getElementById('theme-overlay').classList.add('active');
+        console.log('📱 DEBUG: Abrindo modal');
+        
+        const modal = document.getElementById('theme-modal');
+        const overlay = document.getElementById('theme-overlay');
+        
+        if (!modal || !overlay) {
+            console.log('❌ DEBUG: Modal ou overlay não encontrados para abrir');
+            return;
+        }
+
+        modal.classList.add('active');
+        overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
+        
+        console.log('✅ DEBUG: Modal aberto com sucesso');
     }
 
     closeModal() {
-        document.getElementById('theme-modal').classList.remove('active');
-        document.getElementById('theme-overlay').classList.remove('active');
+        console.log('📱 DEBUG: Fechando modal');
+        
+        const modal = document.getElementById('theme-modal');
+        const overlay = document.getElementById('theme-overlay');
+        
+        if (modal) modal.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
         document.body.style.overflow = '';
+        
+        console.log('✅ DEBUG: Modal fechado');
     }
 
     updateThemeCards() {
-        document.querySelectorAll('.theme-card').forEach(card => {
+        const cards = document.querySelectorAll('.theme-card');
+        cards.forEach(card => {
             card.classList.remove('active');
             if (card.dataset.theme === this.currentTheme) {
                 card.classList.add('active');
@@ -340,16 +336,19 @@ class ThemeManager {
     }
 }
 
-// INICIALIZAÇÃO - Executa em todas as páginas
+// INICIALIZAÇÃO
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 DEBUG: DOM Carregado - Iniciando ThemeManager');
     window.themeManager = new ThemeManager();
 });
 
-// Função global para debug
+// Funções de debug para console
 window.debugTheme = function() {
-    console.log('🔍 Debug Temas:');
+    console.log('🔍 DEBUG COMPLETO:');
     console.log('- Tema atual:', window.themeManager?.currentTheme);
-    console.log('- Elementos Ocean:', document.querySelectorAll('.ocean-elements, .bubble').length);
-    console.log('- Elementos Vulcan:', document.querySelectorAll('.vulcan-elements, .lava-bubble').length);
+    console.log('- Botão existe:', !!document.querySelector('.btn-change-theme'));
+    console.log('- Modal existe:', !!document.getElementById('theme-modal'));
+    console.log('- Overlay existe:', !!document.getElementById('theme-overlay'));
+    console.log('- Cards existem:', document.querySelectorAll('.theme-card').length);
     console.log('- Intervals ativos:', window.themeManager?.activeIntervals.length);
 };
