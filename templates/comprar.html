@@ -874,7 +874,7 @@ function blackHoleFastPhase() {
         if (currentPhase === 'black_hole_fast') {
             suckStarWithSpiral();
             // Às vezes sugar duas estrelas de uma vez
-            if (Math.random() > 0.7) {
+            if (Math.random() > 1.4) {
                 setTimeout(() => suckStarWithSpiral(), 300);
             }
         } else {
@@ -968,7 +968,7 @@ function createNewStar() {
     const star = document.createElement('div');
     star.className = 'star';
 
-    const size = Math.random() * 4 + 1;
+    const size = Math.random() * 8 + 2;
     const posX = Math.random() * window.innerWidth;
     const posY = Math.random() * window.innerHeight;
 
@@ -985,14 +985,14 @@ function createNewStar() {
 
 // Criar raio de energia do buraco branco
 function createEnergyBeam() {
-    if (Math.random() > 0.4) return; // 40% de chance
+    if (Math.random() > 1) return; // 40% de chance
 
     const beam = document.createElement('div');
     beam.className = 'energy-beam';
 
     const angle = Math.random() * Math.PI * 2;
-    const length = Math.random() * 600 + 400;
-    const width = Math.random() * 40 + 20;
+    const length = Math.random() * 1200 + 800;
+    const width = Math.random() * 80 + 40;
 
     beam.style.width = length + 'px';
     beam.style.height = width + 'px';
@@ -1089,11 +1089,11 @@ function explodeIntoWhiteHole() {
         // Expelir matéria e criar raios de energia
         const expelInterval = setInterval(() => {
             if (currentPhase === 'white_hole') {
-                createEnergyParticle(3);
+                createEnergyParticle(6);
                 createEnergyBeam();
 
                 // Criar novas estrelas
-                if (Math.random() > 0.7) {
+                if (Math.random() > 1.4) {
                     createNewStar();
                 }
             } else {
@@ -1165,8 +1165,8 @@ function createEnergyParticle(type) {
     // Posição baseada no tipo
     if (type === 1 || type === 2) {
         // Partículas sendo sugadas para o buraco negro
-        const angle = Math.random() * Math.PI * 2;
-        const distance = Math.random() * 500 + 400;
+        const angle = Math.random() * Math.PI * 4;
+        const distance = Math.random() * 1000 + 800;
         const posX = window.innerWidth/2 + Math.cos(angle) * distance;
         const posY = window.innerHeight/2 + Math.sin(angle) * distance;
 
@@ -1187,12 +1187,12 @@ function createEnergyParticle(type) {
         particle.style.top = window.innerHeight/2 + 'px';
 
         const angle = Math.random() * Math.PI * 2;
-        const distance = Math.random() * 600 + 300;
+        const distance = Math.random() * 1200 + 600;
 
         // Animação de ser expelido
         particle.animate([
-            { opacity: 1, transform: 'scale(1) translate(0, 0)' },
-            { opacity: 0, transform: `scale(3) translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)` }
+            { opacity: 1, transform: 'scale(2) translate(0, 0)' },
+            { opacity: 0, transform: `scale(6) translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)` }
         ], {
             duration: 2500,
             easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
@@ -1215,7 +1215,7 @@ function createExplosionParticle() {
     const particle = document.createElement('div');
     particle.className = 'explosion-particle';
 
-    const size = Math.random() * 15 + 8;
+    const size = Math.random() * 30 + 16;
     particle.style.width = size + 'px';
     particle.style.height = size + 'px';
     particle.style.left = window.innerWidth/2 + 'px';
