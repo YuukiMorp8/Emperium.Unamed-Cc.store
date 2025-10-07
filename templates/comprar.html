@@ -4,56 +4,28 @@
 <meta charset="UTF-8">
 <title>Comprar - Emperium</title>
 <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
+    * { box-sizing: border-box; }
     body {
         font-family: "Poppins", Arial, sans-serif;
         background: #0a0a1a;
         color: #eee;
+        margin: 0;
+        padding: 0;
         min-height: 100vh;
-        overflow: hidden;
+        overflow-x: hidden;
+        position: relative;
     }
 
-    .space {
+    /* Elementos do espaço e buraco negro/branco */
+    .space-background {
         position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         z-index: -2;
-        background: radial-gradient(circle at 50% 50%, #1a1a3a, #0a0a1a);
-        transform-origin: center;
-    }
-
-    .black-hole, .white-hole {
-        position: fixed;
-        top: 50%; left: 50%;
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        transition: all 2s ease;
-    }
-
-    .black-hole {
-        background: radial-gradient(circle, #000000, #050510);
-        box-shadow: 0 0 200px rgba(0,0,0,0.9);
-        z-index: -1;
-    }
-
-    .white-hole {
-        background: radial-gradient(circle, #ffffff, #ffffcc, #ffaa00);
-        box-shadow: 0 0 300px rgba(255,255,200,0.9);
-        opacity: 0;
-        z-index: -1;
-    }
-
-    .accretion-disk {
-        position: fixed;
-        top: 50%; left: 50%;
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        background: conic-gradient(from 0deg, #ff4444, #ff8844, #4444ff, #ff4444);
-        opacity: 0.8;
-        mix-blend-mode: screen;
-        transition: all 2s ease;
-        z-index: -1;
+        pointer-events: none;
+        background: linear-gradient(to bottom, #0a0a2a, #1a1a3a, #0a0a1a);
     }
 
     .star {
@@ -61,28 +33,203 @@
         background: #ffffff;
         border-radius: 50%;
         opacity: 0.8;
-        animation: twinkle 3s infinite alternate;
+        animation: twinkle 4s infinite alternate;
+    }
+
+    .black-hole-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .black-hole {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: radial-gradient(circle, #000000 0%, #000000 70%, #050510 85%, transparent 100%);
+        box-shadow: 
+            0 0 200px rgba(0, 0, 0, 0.95),
+            inset 0 0 100px rgba(10, 10, 30, 0.3);
+        transition: all 2s ease;
+    }
+
+    .event-horizon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: radial-gradient(circle, 
+            transparent 0%, 
+            rgba(30, 10, 50, 0.1) 60%, 
+            rgba(80, 20, 80, 0.3) 80%, 
+            rgba(120, 30, 100, 0.5) 90%,
+            rgba(150, 40, 120, 0.7) 95%,
+            rgba(180, 50, 140, 0.9) 100%);
+        transition: all 2s ease;
+    }
+
+    .accretion-disk {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: 
+            radial-gradient(circle, 
+                transparent 40%,
+                rgba(150, 40, 40, 0.1) 45%,
+                rgba(200, 60, 60, 0.3) 50%,
+                rgba(220, 80, 80, 0.5) 60%,
+                rgba(180, 100, 60, 0.4) 70%,
+                rgba(120, 80, 40, 0.3) 80%,
+                rgba(80, 40, 20, 0.2) 90%,
+                transparent 100%
+            );
+        opacity: 0.9;
+        transition: all 2s ease;
+        mix-blend-mode: screen;
+    }
+
+    .accretion-disk-vertical {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(90deg);
+        border-radius: 50%;
+        background: 
+            radial-gradient(circle, 
+                transparent 40%,
+                rgba(100, 40, 100, 0.1) 45%,
+                rgba(140, 60, 140, 0.3) 50%,
+                rgba(160, 80, 160, 0.5) 60%,
+                rgba(120, 80, 120, 0.4) 70%,
+                rgba(80, 60, 80, 0.3) 80%,
+                rgba(60, 40, 60, 0.2) 90%,
+                transparent 100%
+            );
+        opacity: 0.7;
+        transition: all 2s ease;
+        mix-blend-mode: screen;
+    }
+
+    .matter-particle {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffffff, #ffaaaa);
+        opacity: 0;
+        z-index: 1;
+    }
+
+    .energy-particle {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffffff, #ffffaa);
+        opacity: 0;
+        z-index: 1;
+    }
+
+    .sucked-star {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffffff, #ffffcc, #ffaa00);
+        z-index: 1;
+        filter: drop-shadow(0 0 8px rgba(255, 255, 200, 0.8));
+    }
+
+    .white-hole {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: radial-gradient(circle, 
+            #ffffff 0%, 
+            #ffffcc 20%, 
+            #ffff99 40%,
+            #ffaa00 60%,
+            #ff6600 80%,
+            transparent 100%);
+        box-shadow: 
+            0 0 300px rgba(255, 255, 200, 0.9),
+            inset 0 0 150px rgba(255, 255, 255, 0.8);
+        transition: all 2s ease;
+        opacity: 0;
     }
 
     .energy-beam {
-        position: fixed;
-        top: 50%; left: 50%;
-        background: linear-gradient(90deg, transparent, #ffff88, transparent);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform-origin: center;
+        background: linear-gradient(90deg, 
+            transparent 0%,
+            rgba(255, 255, 200, 0.1) 10%,
+            rgba(255, 255, 100, 0.6) 30%,
+            rgba(255, 200, 50, 0.8) 50%,
+            rgba(255, 255, 100, 0.6) 70%,
+            rgba(255, 255, 200, 0.1) 90%,
+            transparent 100%);
         opacity: 0;
-        filter: blur(5px);
-        z-index: 0;
+        z-index: 2;
+        filter: blur(8px);
     }
 
-    /* Interface transparente */
+    .explosion-particle {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffffff, #ffff00);
+        opacity: 0;
+        z-index: 2;
+    }
+
     header {
-        background: rgba(26,26,26,0.7);
+        background: linear-gradient(90deg, rgba(26,26,26,0.9), rgba(43,30,19,0.9), rgba(10,10,10,0.9));
         padding: 15px 30px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+        backdrop-filter: blur(5px);
         position: relative;
         z-index: 1;
+    }
+
+    header img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #d4af37;
+        transition: 0.3s;
+    }
+
+    header img:hover {
+        transform: scale(1.1);
+        border-color: #f5d67b;
+    }
+
+    header button {
+        background: linear-gradient(135deg, #d4af37, #6a4e1a);
+        color: #111;
+        font-weight: bold;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    header button:hover {
+        background: linear-gradient(135deg, #f0c94b, #8c6a2a);
+        transform: scale(1.05);
     }
 
     .main {
@@ -93,6 +240,7 @@
         z-index: 1;
     }
 
+    /* Filtros */
     .filtros {
         display: flex;
         flex-wrap: wrap;
@@ -105,11 +253,18 @@
         padding: 15px;
         border-radius: 10px;
         border: none;
-        background: rgba(31,26,26,0.7);
+        background: rgba(31, 26, 26, 0.8);
         color: #fff;
         font-size: 16px;
         min-width: 180px;
+        box-shadow: inset 0 0 8px rgba(212,175,55,0.3);
         backdrop-filter: blur(5px);
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        background: rgba(38, 32, 32, 0.9);
+        box-shadow: 0 0 10px rgba(212,175,55,0.4);
     }
 
     button {
@@ -117,29 +272,52 @@
         background: linear-gradient(135deg, #d4af37, #8a6f2e);
         border: none;
         border-radius: 10px;
+        cursor: pointer;
         color: #111;
         font-weight: bold;
-        cursor: pointer;
-        transition: transform 0.3s;
+        transition: 0.3s;
     }
 
-    button:hover { transform: scale(1.03); }
+    button:hover {
+        background: linear-gradient(135deg, #f5d67b, #b99232);
+        transform: scale(1.03);
+    }
 
-    .embed, .card, .sub-embed {
-        background: rgba(15,15,15,0.6);
-        backdrop-filter: blur(10px);
-        border-radius: 14px;
-        transition: transform 0.3s;
+    /* Embeds Especiais */
+    .embeds-especiais {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
     }
 
     .embed {
+        background: linear-gradient(145deg, rgba(15,15,15,0.85), rgba(40,30,25,0.85));
         border-left: 6px solid #d4af37;
+        border-radius: 14px;
         padding: 20px;
-        margin-bottom: 30px;
+        box-shadow: 0 0 15px rgba(212,175,55,0.2);
+        transition: 0.3s;
+        backdrop-filter: blur(5px);
     }
 
-    .embed:hover, .card:hover { transform: scale(1.02); }
+    .embed:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 25px rgba(212,175,55,0.3);
+    }
 
+    .embed h3 {
+        margin: 0 0 10px 0;
+        color: #f5d67b;
+        font-size: 22px;
+    }
+
+    .embed p {
+        margin: 6px 0;
+        color: #ccc;
+    }
+
+    /* Cards de material */
     .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -147,27 +325,58 @@
     }
 
     .card {
+        background: linear-gradient(160deg, rgba(18,16,16,0.85), rgba(27,26,26,0.85));
         padding: 18px;
-        border: 1px solid rgba(212,175,55,0.3);
+        border-radius: 14px;
+        border: 1px solid rgba(212,175,55,0.25);
+        box-shadow: 0 0 15px rgba(212,175,55,0.1);
+        transition: 0.3s;
+        backdrop-filter: blur(5px);
     }
 
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 20px rgba(212,175,55,0.25);
+    }
+
+    /* Mini-embeds dentro do card */
     .sub-embed {
+        background: rgba(25,25,25,0.7);
         border-left: 4px solid #d4af37;
+        border-radius: 10px;
         padding: 12px 16px;
         margin-bottom: 10px;
+        box-shadow: inset 0 0 6px rgba(212,175,55,0.15);
+    }
+
+    .sub-embed p {
+        margin: 5px 0;
+        color: #ccc;
+    }
+
+    .sub-embed strong {
+        color: #fff;
     }
 
     .btn-buy {
         width: 100%;
         padding: 14px;
+        border-radius: 10px;
         background: linear-gradient(135deg, #d4af37, #8a6f2e);
+        border: none;
         color: #111;
         font-weight: bold;
-        border: none;
-        border-radius: 10px;
+        font-size: 16px;
         cursor: pointer;
+        transition: 0.3s;
     }
 
+    .btn-buy:hover {
+        background: linear-gradient(135deg, #f5d67b, #b99232);
+        transform: scale(1.03);
+    }
+
+    /* Modal */
     .modal-back {
         position: fixed;
         inset: 0;
@@ -179,44 +388,98 @@
     }
 
     .modal {
-        background: rgba(26,26,26,0.9);
+        background: #1a1a1a;
         border: 2px solid #d4af37;
         padding: 25px;
         border-radius: 14px;
         width: 360px;
         color: #fff;
         text-align: center;
-        backdrop-filter: blur(10px);
     }
+
+    .modal h3 {
+        margin-top: 0;
+        color: #f5d67b;
+    }
+
+    .input-inline {
+        margin: 15px 0;
+        text-align: left;
+    }
+
+    .msg { margin-top: 10px; color: #0f0; }
+    .msg.err { color: #f33; }
 
     @keyframes twinkle {
         0%, 100% { opacity: 0.4; }
         50% { opacity: 1; }
     }
 
-    @keyframes rotateSlow {
-        to { transform: translate(-50%, -50%) rotate(360deg); }
+    @keyframes spiralIn {
+        0% {
+            transform: translate(var(--startX), var(--startY)) scale(1);
+            opacity: 1;
+        }
+        70% {
+            transform: 
+                translate(calc(var(--centerX) + cos(var(--angle)) * var(--radius)), 
+                         calc(var(--centerY) + sin(var(--angle)) * var(--radius))) 
+                scale(0.8);
+            opacity: 0.9;
+        }
+        100% {
+            transform: translate(var(--centerX), var(--centerY)) scale(0.1);
+            opacity: 0;
+        }
     }
 
-    @keyframes rotateFast {
-        to { transform: translate(-50%, -50%) rotate(720deg); }
+    @keyframes energyBeam {
+        0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) rotate(var(--angle)) scaleX(0);
+        }
+        20% {
+            opacity: 0.8;
+            transform: translate(-50%, -50%) rotate(var(--angle)) scaleX(1);
+        }
+        80% {
+            opacity: 0.8;
+            transform: translate(-50%, -50%) rotate(var(--angle)) scaleX(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(-50%, -50%) rotate(var(--angle)) scaleX(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        input, select, button { font-size: 15px; width: 100%; }
     }
 </style>
 </head>
 
 <body>
-<div class="space" id="space"></div>
-<div class="black-hole" id="blackHole"></div>
-<div class="accretion-disk" id="accretionDisk"></div>
-<div class="white-hole" id="whiteHole"></div>
+
+<!-- Elementos do espaço -->
+<div class="space-background" id="spaceBackground"></div>
+
+<!-- Elementos do buraco negro/branco -->
+<div class="black-hole-container">
+    <div class="black-hole" id="blackHole"></div>
+    <div class="event-horizon" id="eventHorizon"></div>
+    <div class="accretion-disk" id="accretionDisk"></div>
+    <div class="accretion-disk-vertical" id="accretionDiskVertical"></div>
+    <div class="white-hole" id="whiteHole"></div>
+</div>
 
 <header>
-    <img src="{{ usuario.get('foto','/static/default.png') }}" alt="perfil" style="width:60px;height:60px;border-radius:50%;border:2px solid #d4af37;cursor:pointer;">
+    <a href="/dashboard"><img src="{{ usuario.get('foto','/static/default.png') }}" alt="perfil"></a>
     <button>⚙️ Materiais Especiais</button>
 </header>
 
 <div class="main">
-    <form class="filtros">
+    <!-- Filtros -->
+    <form method="GET" class="filtros">
         <input type="text" name="pesquisa" placeholder="Pesquisar BIN" value="{{ filtros.pesquisa or '' }}">
         <select name="nivel">
             <option value="">Todos Níveis</option>
@@ -229,256 +492,677 @@
         <button type="submit">Filtrar</button>
     </form>
 
-    <div class="embed">
-        <h3>Por favor escolha o método de troca de material</h3>
-        <p>Lembrando que:</p>
-        <ol>
-            <li>Vídeo testando Live</li>
-            <li>Deve enviar o material para análise</li>
-            <li>Caso garanta saldo, deve fazer o teste em algum site</li>
-        </ol>
-        <p>Caso não tenha algum desses, seu formulário será descartado.</p>
-    </div>
+    <!-- Materiais -->
 
-    <div class="grid">
-        {% for mat in resultados %}
-        <div class="card">
-            <div class="sub-embed">
-                <p><strong>Nível:</strong> {{ mat.nivel }}</p>
-                <p><strong>Valor:</strong> R$ {{ "%.2f"|format(mat.valor) }}</p>
-            </div>
-            <div class="sub-embed">
-                <p><strong>BIN:</strong> {{ mat.material }}</p>
-                <p><strong>Banco:</strong> {{ mat.banco }}</p>
-            </div>
-            <button class="btn-buy" data-id="{{ mat._id }}">Comprar</button>
+<div class="grid">
+    {% for mat in resultados %}
+    <div class="card">
+        <div class="sub-embed">
+            <p>
+                <!-- Ícone Nível -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 5px;">
+                    <path fill="#d4e017" d="M14 4h-4C6.229 4 4.343 4 3.172 5.172c-.844.843-1.08 2.057-1.146 4.078h19.948c-.066-2.021-.302-3.235-1.146-4.078C19.657 4 17.771 4 14 4"/>
+                    <path fill="#d4e017" fill-rule="evenodd" d="M14 20h-4c-3.771 0-5.657 0-6.828-1.172S2 15.771 2 12q0-.662.002-1.25h19.996Q22 11.338 22 12c0 3.771 0 5.657-1.172 6.828S17.771 20 14 20m2.045-7.75c.433 0 .83 0 1.152.043c.356.048.731.16 1.04.47s.422.684.47 1.04c.043.323.043.72.043 1.152v.09c0 .433 0 .83-.043 1.152c-.048.356-.16.731-.47 1.04s-.684.422-1.04.47c-.323.043-.72.043-1.152.043h-.09c-.433 0-.83 0-1.152-.043c-.356-.048-.731-.16-1.04-.47s-.422-.684-.47-1.04c-.043-.323-.043-.72-.043-1.152v-.09"/>
+                </svg>
+                <strong>Nível:</strong> {{ mat.nivel }}
+            </p>
+            <p>
+                <!-- Ícone Valor -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 50 50" style="vertical-align: middle; margin-right: 5px;">
+                    <path fill="#17e03b" d="M34.682 25.801q-2.157-1.701-6.474-2.717L26 22.563v-9.43l.299.122C28.173 14.204 29.18 16 29.318 18h7.516c-.137-4-1.615-6.958-4.434-9.048C30.527 7.563 28.391 6.67 26 6.22V1h-7v5.06c-3.237.4-5.804 1.442-7.689 3.136Q7.609 12.523 7.61 17.55q0 5.51 3.783 8.1c1.412.979 3.957 1.888 7.607 2.73v10.216c-1.331-.367-2.374-.971-3.109-1.844c-.709-.848-1.184-1.752-1.426-3.752H7c0 4 1.411 6.87 4.234 9.096c2.038 1.606 4.632 2.582 7.766 3.005V49h7v-3.833c3.333-.399 6.024-1.463 8.062-3.204q3.965-3.39 3.965-8.519q0-5.002-3.345-7.643"/>
+                </svg>
+                <strong>Valor:</strong> R$ {{ "%.2f"|format(mat.valor) }}
+            </p>
         </div>
-        {% else %}
-        <p>Nenhum resultado encontrado.</p>
-        {% endfor %}
+        <div class="sub-embed">
+            <p>
+                <!-- Ícone BIN -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32" style="vertical-align: middle; margin-right: 5px;">
+                    <path fill="none" stroke="#64c3dd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 20h8M3 13h26m-6 7h2M5 7C4 7 3 8 3 9v14c0 1 1 2 2 2h22c1 0 2-1 2-2V9c0-1-1-2-2-2z"/>
+                </svg>
+                <strong>BIN:</strong> {{ mat.material }}
+            </p>
+            <p>
+                <!-- Ícone Banco -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 128 128" style="vertical-align: middle; margin-right: 5px;">
+                    <path fill="#cddfee" d="M64.64 3.84c-1.67.2-53.72 35.1-54.02 36.16c-.3 1.07-.42 12.19-.42 12.19l6.71 2.13l.03 8.84l3.59 7.35v31.07l-2.68 5.85l-7.35 2.17v5.26l-5.76 1.75s.08 4.51.08 5.26s.25 2.34 3.26 2.34s112.87-.51 113.98-.51s2.26-.22 2.32-2.21s-.06-4.8-.06-4.8l-5.58-2.76l-.02-4.41l-9.08-2.8l-2.19-6.20l.03-29.21l3.48-7.34l1.05-1.99v-7.9l5.85-2.21s.11-11.43-.06-11.76c-.15-.32-51.78-36.43-53.16-36.27"/>
+                </svg>
+                <strong>Banco:</strong> {{ mat.banco }}
+            </p>
+        </div>
+        <button class="btn-buy"
+            data-id="{{ mat._id }}"
+            data-material="{{ mat.material }}"
+            data-nivel="{{ mat.nivel }}"
+            data-valor="{{ mat.valor }}">
+            Comprar
+        </button>
     </div>
+    {% else %}
+    <p>Nenhum resultado encontrado.</p>
+    {% endfor %}
 </div>
 
+<!-- Modal -->
 <div class="modal-back" id="modalBack">
     <div class="modal">
         <h3>Confirmação de Compra</h3>
         <p id="modalText">Tem certeza que deseja comprar?</p>
-        <input type="password" id="senhaConfirm" placeholder="Senha" style="width:100%;padding:10px;margin:10px 0;border-radius:5px;border:1px solid #555;background:rgba(40,40,40,0.8);color:#fff;">
-        <div style="display:flex;gap:8px;margin-top:15px;">
-            <button id="confirmBuyBtn">Confirmar</button>
-            <button id="cancelBtn" style="background:#555;">Cancelar</button>
+        <div class="input-inline">
+            <label>Confirme sua senha:</label>
+            <input type="password" id="senhaConfirm" placeholder="Senha">
         </div>
-        <div id="modalMsg" style="margin-top:10px;"></div>
+        <div style="display:flex; gap:8px;">
+            <button id="confirmBuyBtn">Sim, confirmar</button>
+            <button id="cancelBtn" style="background:#555; color:#fff;">Não</button>
+        </div>
+        <div id="modalMsg" class="msg"></div>
     </div>
 </div>
 
 <script>
-// Sistema de Buraco Negro/Branco
-const space = document.getElementById('space');
+let selectedMaterialId = null;
+let selectedMaterialInfo = null;
+
+document.querySelectorAll(".btn-buy").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+        selectedMaterialId = btn.dataset.id;
+        selectedMaterialInfo = {
+            material: btn.dataset.material,
+            nivel: btn.dataset.nivel,
+            valor: btn.dataset.valor
+        };
+        document.getElementById("modalText").innerText = 
+            `Tem certeza que deseja comprar ${selectedMaterialInfo.material} - ${selectedMaterialInfo.nivel} por R$ ${parseFloat(selectedMaterialInfo.valor).toFixed(2)}?`;
+        document.getElementById("senhaConfirm").value = "";
+        document.getElementById("modalMsg").innerText = "";
+        document.getElementById("modalBack").style.display = "flex";
+    });
+});
+
+document.getElementById("cancelBtn").addEventListener("click", ()=>{
+    document.getElementById("modalBack").style.display = "none";
+});
+
+document.getElementById("confirmBuyBtn").addEventListener("click", async ()=>{
+    const senha = document.getElementById("senhaConfirm").value;
+    if(!senha){ document.getElementById("modalMsg").innerText="Coloque sua senha."; return; }
+
+    const form = new FormData();
+    form.append("material_id", selectedMaterialId);
+    form.append("senha_confirm", senha);
+
+    try{
+        const resp = await fetch("/comprar_finalize",{method:"POST",body:form});
+        const data = await resp.json();
+        if(!data.ok){
+            document.getElementById("modalMsg").innerText=data.msg;
+            document.getElementById("modalMsg").className="msg err";
+            return;
+        }
+        document.getElementById("modalMsg").innerText="Compra concluída!";
+        document.getElementById("modalMsg").className="msg";
+        setTimeout(()=>{location.href="/historico_compras";},900);
+    }catch(err){ document.getElementById("modalMsg").innerText="Erro de rede."; }
+});
+
+// Sistema do Espaço e Buraco Negro/Branco
+const spaceBackground = document.getElementById('spaceBackground');
 const blackHole = document.getElementById('blackHole');
+const eventHorizon = document.getElementById('eventHorizon');
 const accretionDisk = document.getElementById('accretionDisk');
+const accretionDiskVertical = document.getElementById('accretionDiskVertical');
 const whiteHole = document.getElementById('whiteHole');
-let currentPhase = 'black_hole_1';
+const container = document.querySelector('.black-hole-container');
+
+let currentPhase = 'black_hole_slow';
+let phaseStartTime = Date.now();
+let particles = [];
+let energyParticles = [];
+let explosionParticles = [];
 let stars = [];
+let suckedStars = [];
 let energyBeams = [];
 
-// Configuração inicial
-function init() {
-    createStars(100);
-    setupBlackHolePhase1();
-    startCycle();
-}
-
-// Criar estrelas
-function createStars(count) {
-    for (let i = 0; i < count; i++) {
+// Criar estrelas no fundo
+function createStars() {
+    for (let i = 0; i < 150; i++) {
         const star = document.createElement('div');
         star.className = 'star';
-        const size = Math.random() * 4 + 2;
-        star.style.width = star.style.height = size + 'px';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
-        space.appendChild(star);
+        
+        // Tamanho aleatório (estrelas grandes)
+        const size = Math.random() * 8 + 3;
+        
+        // Posição aleatória
+        const posX = Math.random() * window.innerWidth;
+        const posY = Math.random() * window.innerHeight;
+        
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = posX + 'px';
+        star.style.top = posY + 'px';
+        star.style.opacity = Math.random() * 0.8 + 0.2;
+        star.style.animationDelay = Math.random() * 4 + 's';
+        
+        spaceBackground.appendChild(star);
         stars.push(star);
     }
 }
 
-// Fase 1 do Buraco Negro
-function setupBlackHolePhase1() {
-    blackHole.style.width = blackHole.style.height = '200px';
-    accretionDisk.style.width = accretionDisk.style.height = '400px';
+// Configuração inicial
+function initializeBlackHole() {
+    // Tamanho inicial do buraco negro (maior e mais escuro)
+    blackHole.style.width = '350px';
+    blackHole.style.height = '350px';
+    
+    // Horizonte de eventos
+    eventHorizon.style.width = '360px';
+    eventHorizon.style.height = '360px';
+    
+    // Discos de acreção próximos ao buraco negro
+    accretionDisk.style.width = '450px';
+    accretionDisk.style.height = '450px';
+    
+    accretionDiskVertical.style.width = '450px';
+    accretionDiskVertical.style.height = '450px';
+    
+    // Buraco branco inicialmente invisível
+    whiteHole.style.opacity = '0';
+    whiteHole.style.width = '0px';
+    whiteHole.style.height = '0px';
+}
+
+// Fase 1: Buraco Negro Girando Lentamente (20 segundos)
+function blackHoleSlowPhase() {
+    currentPhase = 'black_hole_slow';
+    phaseStartTime = Date.now();
+    
+    // Girar lentamente
+    blackHole.style.animation = 'rotateSlow 30s linear infinite';
+    eventHorizon.style.animation = 'rotateSlow 25s linear infinite';
     accretionDisk.style.animation = 'rotateSlow 20s linear infinite';
-    space.style.animation = 'rotateSlow 40s linear infinite';
+    accretionDiskVertical.style.animation = 'rotateSlowReverse 35s linear infinite';
     
-    // Sugar estrelas pequenas
-    setInterval(() => {
-        if (currentPhase.includes('black_hole')) suckStar(1);
-    }, 2000);
-}
-
-// Fase 2 do Buraco Negro
-function setupBlackHolePhase2() {
-    blackHole.style.width = blackHole.style.height = '400px';
-    accretionDisk.style.width = accretionDisk.style.height = '800px';
-    accretionDisk.style.animation = 'rotateFast 10s linear infinite';
-    space.style.animation = 'rotateFast 20s linear infinite';
-    
-    // Sugar estrelas grandes
-    setInterval(() => {
-        if (currentPhase.includes('black_hole')) suckStar(3);
-    }, 1000);
-}
-
-// Sugar estrela com efeito orbital
-function suckStar(sizeMultiplier) {
-    if (stars.length === 0) return;
-    
-    const star = stars.shift();
-    const startX = parseFloat(star.style.left);
-    const startY = parseFloat(star.style.top);
-    const centerX = 50; // 50% do centro
-    const centerY = 50;
-    
-    // Aumentar tamanho na fase 2
-    if (sizeMultiplier > 1) {
-        const size = parseFloat(star.style.width) * sizeMultiplier;
-        star.style.width = star.style.height = size + 'px';
-    }
-    
-    // Animação orbital
-    const distance = Math.sqrt(Math.pow(startX - centerX, 2) + Math.pow(startY - centerY, 2));
-    const duration = 3000 + distance * 20;
-    
-    star.animate([
-        { transform: `translate(0, 0)`, opacity: 1 },
-        { transform: `translate(${(centerX - startX)*0.3}vw, ${(centerY - startY)*0.3}vh)`, opacity: 0.8 },
-        { transform: `translate(${(centerX - startX)*0.6}vw, ${(centerY - startY)*0.6}vh)`, opacity: 0.6 },
-        { transform: `translate(${(centerX - startX)*0.9}vw, ${(centerY - startY)*0.9}vh) scale(0.1)`, opacity: 0 }
-    ], {
-        duration: duration,
-        easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-    }).onfinish = () => star.remove();
-}
-
-// Fase 1 do Buraco Branco
-function setupWhiteHolePhase1() {
-    whiteHole.style.opacity = '1';
-    whiteHole.style.width = whiteHole.style.height = '400px';
-    whiteHole.style.animation = 'rotateSlow 15s linear infinite';
-    
-    // Expelir energia
-    setInterval(() => {
-        if (currentPhase.includes('white_hole')) createEnergyBeam(1);
-    }, 3000);
-}
-
-// Fase 2 do Buraco Branco
-function setupWhiteHolePhase2() {
-    whiteHole.style.animation = 'rotateFast 7s linear infinite';
-    
-    // Expelir energia mais rápido
-    setInterval(() => {
-        if (currentPhase.includes('white_hole')) createEnergyBeam(2);
+    // Sugar estrelas constantemente
+    const starSuckInterval = setInterval(() => {
+        if (currentPhase === 'black_hole_slow') {
+            suckStarWithSpiral();
+        } else {
+            clearInterval(starSuckInterval);
+        }
     }, 1500);
-}
-
-// Criar raio de energia
-function createEnergyBeam(speed) {
-    const beam = document.createElement('div');
-    beam.className = 'energy-beam';
-    const angle = Math.random() * 360;
-    const length = 500 + Math.random() * 300;
-    const width = 20 + Math.random() * 20;
     
-    beam.style.width = length + 'px';
-    beam.style.height = width + 'px';
-    beam.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
-    
-    document.body.appendChild(beam);
-    energyBeams.push(beam);
-    
-    beam.animate([
-        { opacity: 0, transform: `translate(-50%, -50%) rotate(${angle}deg) scaleX(0)` },
-        { opacity: 0.8, transform: `translate(-50%, -50%) rotate(${angle}deg) scaleX(1)` },
-        { opacity: 0, transform: `translate(-50%, -50%) rotate(${angle}deg) scaleX(0)` }
-    ], {
-        duration: speed === 1 ? 2000 : 1000,
-        easing: 'ease-in-out'
-    }).onfinish = () => {
-        beam.remove();
-        energyBeams = energyBeams.filter(b => b !== beam);
-    };
-}
-
-// Ciclo principal
-function startCycle() {
-    // Fase 1 Buraco Negro (20s)
-    currentPhase = 'black_hole_1';
+    // Transição para próxima fase após 20 segundos
     setTimeout(() => {
-        // Fase 2 Buraco Negro (30s)
-        currentPhase = 'black_hole_2';
-        setupBlackHolePhase2();
-        
-        setTimeout(() => {
-            // Transição para Buraco Branco
-            blackHole.style.opacity = '0';
-            accretionDisk.style.opacity = '0';
-            currentPhase = 'white_hole_1';
-            setupWhiteHolePhase1();
-            
-            setTimeout(() => {
-                // Fase 2 Buraco Branco
-                currentPhase = 'white_hole_2';
-                setupWhiteHolePhase2();
-                
-                setTimeout(() => {
-                    // Colapsar e formar novo buraco negro
-                    whiteHole.animate([
-                        { width: '400px', height: '400px', opacity: 1 },
-                        { width: '100px', height: '100px', opacity: 0.5 },
-                        { width: '0px', height: '0px', opacity: 0 }
-                    ], {
-                        duration: 2000,
-                        easing: 'ease-in'
-                    }).onfinish = () => {
-                        // Materia volta formando novo buraco negro
-                        blackHole.style.opacity = '1';
-                        accretionDisk.style.opacity = '0.8';
-                        currentPhase = 'black_hole_1';
-                        setupBlackHolePhase1();
-                        
-                        // Reiniciar ciclo
-                        setTimeout(startCycle, 1000);
-                    };
-                }, 30000);
-            }, 30000);
-        }, 30000);
+        blackHoleFastPhase();
     }, 20000);
 }
 
-// Interface
-document.querySelectorAll('.btn-buy').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.getElementById('modalBack').style.display = 'flex';
-    });
-});
-
-document.getElementById('cancelBtn').addEventListener('click', () => {
-    document.getElementById('modalBack').style.display = 'none';
-});
-
-document.getElementById('confirmBuyBtn').addEventListener('click', async () => {
-    const msg = document.getElementById('modalMsg');
-    msg.textContent = 'Compra concluída!';
-    msg.style.color = '#0f0';
+// Fase 2: Buraco Negro Girando Rápido e Sugando Matéria (30 segundos)
+function blackHoleFastPhase() {
+    currentPhase = 'black_hole_fast';
+    phaseStartTime = Date.now();
+    
+    // Aumentar velocidade de rotação
+    blackHole.style.animation = 'rotateFast 12s linear infinite';
+    eventHorizon.style.animation = 'rotateFast 10s linear infinite';
+    accretionDisk.style.animation = 'rotateFast 8s linear infinite';
+    accretionDiskVertical.style.animation = 'rotateFastReverse 15s linear infinite';
+    
+    // Aumentar tamanho do buraco negro
+    blackHole.style.width = '450px';
+    blackHole.style.height = '450px';
+    eventHorizon.style.width = '460px';
+    eventHorizon.style.height = '460px';
+    
+    // Expandir discos de acreção
+    accretionDisk.style.width = '600px';
+    accretionDisk.style.height = '600px';
+    accretionDiskVertical.style.width = '600px';
+    accretionDiskVertical.style.height = '600px';
+    
+    // Intensificar cores dos discos
+    accretionDisk.style.opacity = '0.95';
+    accretionDiskVertical.style.opacity = '0.85';
+    
+    // Sugar estrelas mais intensamente
+    const starSuckInterval = setInterval(() => {
+        if (currentPhase === 'black_hole_fast') {
+            suckStarWithSpiral();
+            // Às vezes sugar duas estrelas de uma vez
+            if (Math.random() > 0.7) {
+                setTimeout(() => suckStarWithSpiral(), 300);
+            }
+        } else {
+            clearInterval(starSuckInterval);
+        }
+    }, 800);
+    
+    // Transição para explosão após 30 segundos
     setTimeout(() => {
-        document.getElementById('modalBack').style.display = 'none';
-        msg.textContent = '';
-    }, 1000);
-});
+        compressionAndExplosion();
+    }, 30000);
+}
 
-// Iniciar
-init();
+// Sugar uma estrela com efeito de espiral
+function suckStarWithSpiral() {
+    if (stars.length === 0) return;
+    
+    // Escolher uma estrela aleatória
+    const randomIndex = Math.floor(Math.random() * stars.length);
+    const star = stars[randomIndex];
+    
+    if (!star.parentNode) return;
+    
+    // Criar uma cópia maior para o efeito de ser sugado
+    const suckedStar = document.createElement('div');
+    suckedStar.className = 'sucked-star';
+    
+    const originalSize = parseFloat(star.style.width);
+    const largerSize = originalSize * 3;
+    
+    suckedStar.style.width = largerSize + 'px';
+    suckedStar.style.height = largerSize + 'px';
+    suckedStar.style.left = star.style.left;
+    suckedStar.style.top = star.style.top;
+    
+    container.appendChild(suckedStar);
+    suckedStars.push(suckedStar);
+    
+    // Coordenadas para a animação em espiral
+    const startX = parseFloat(star.style.left);
+    const startY = parseFloat(star.style.top);
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    
+    // Parâmetros da espiral
+    const startRadius = Math.sqrt(Math.pow(startX - centerX, 2) + Math.pow(startY - centerY, 2));
+    const spiralTurns = 3 + Math.random() * 2; // 3-5 voltas
+    const totalDuration = 4000 + Math.random() * 2000; // 4-6 segundos
+    
+    // Definir variáveis CSS para a animação
+    suckedStar.style.setProperty('--startX', startX + 'px');
+    suckedStar.style.setProperty('--startY', startY + 'px');
+    suckedStar.style.setProperty('--centerX', centerX + 'px');
+    suckedStar.style.setProperty('--centerY', centerY + 'px');
+    
+    // Animação complexa em espiral
+    const keyframes = [];
+    const keyframeCount = 60;
+    
+    for (let i = 0; i <= keyframeCount; i++) {
+        const progress = i / keyframeCount;
+        const angle = progress * Math.PI * 2 * spiralTurns;
+        const radius = startRadius * (1 - progress);
+        
+        const x = centerX + Math.cos(angle) * radius;
+        const y = centerY + Math.sin(angle) * radius;
+        const scale = 1 - progress * 0.9; // Reduz gradualmente o tamanho
+        
+        keyframes.push({
+            transform: `translate(${x}px, ${y}px) scale(${scale})`,
+            opacity: 1 - progress * 0.8
+        });
+    }
+    
+    const animation = suckedStar.animate(keyframes, {
+        duration: totalDuration,
+        easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+    });
+    
+    animation.onfinish = () => {
+        if (suckedStar.parentNode) {
+            suckedStar.parentNode.removeChild(suckedStar);
+            suckedStars = suckedStars.filter(s => s !== suckedStar);
+        }
+        
+        // Remover a estrela original e criar uma nova
+        if (star.parentNode) {
+            star.parentNode.removeChild(star);
+            stars = stars.filter(s => s !== star);
+            createNewStar();
+        }
+    };
+}
+
+// Criar uma nova estrela
+function createNewStar() {
+    const star = document.createElement('div');
+    star.className = 'star';
+    
+    const size = Math.random() * 8 + 3;
+    const posX = Math.random() * window.innerWidth;
+    const posY = Math.random() * window.innerHeight;
+    
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.left = posX + 'px';
+    star.style.top = posY + 'px';
+    star.style.opacity = Math.random() * 0.8 + 0.2;
+    star.style.animationDelay = Math.random() * 4 + 's';
+    
+    spaceBackground.appendChild(star);
+    stars.push(star);
+}
+
+// Criar raio de energia do buraco branco
+function createEnergyBeam() {
+    if (Math.random() > 0.4) return; // 40% de chance
+    
+    const beam = document.createElement('div');
+    beam.className = 'energy-beam';
+    
+    const angle = Math.random() * Math.PI * 2;
+    const length = Math.random() * 600 + 400;
+    const width = Math.random() * 40 + 20;
+    
+    beam.style.width = length + 'px';
+    beam.style.height = width + 'px';
+    beam.style.setProperty('--angle', angle + 'rad');
+    
+    container.appendChild(beam);
+    energyBeams.push(beam);
+    
+    // Animação do raio
+    const animation = beam.animate([
+        { opacity: 0, transform: `translate(-50%, -50%) rotate(${angle}rad) scaleX(0)` },
+        { opacity: 0.8, transform: `translate(-50%, -50%) rotate(${angle}rad) scaleX(1)` },
+        { opacity: 0.8, transform: `translate(-50%, -50%) rotate(${angle}rad) scaleX(1)` },
+        { opacity: 0, transform: `translate(-50%, -50%) rotate(${angle}rad) scaleX(0)` }
+    ], {
+        duration: 3000,
+        easing: 'ease-in-out'
+    });
+    
+    animation.onfinish = () => {
+        if (beam.parentNode) {
+            beam.parentNode.removeChild(beam);
+            energyBeams = energyBeams.filter(b => b !== beam);
+        }
+    };
+}
+
+// Fase 3: Compressão e Explosão em Buraco Branco
+function compressionAndExplosion() {
+    currentPhase = 'compression';
+    phaseStartTime = Date.now();
+    
+    // Parar rotações
+    blackHole.style.animation = 'none';
+    eventHorizon.style.animation = 'none';
+    accretionDisk.style.animation = 'none';
+    accretionDiskVertical.style.animation = 'none';
+    
+    // Comprimir buraco negro
+    const compressInterval = setInterval(() => {
+        const currentWidth = parseInt(blackHole.style.width);
+        const currentHeight = parseInt(blackHole.style.height);
+        
+        if (currentWidth > 100) {
+            blackHole.style.width = (currentWidth - 20) + 'px';
+            blackHole.style.height = (currentHeight - 20) + 'px';
+            eventHorizon.style.width = (currentWidth - 15) + 'px';
+            eventHorizon.style.height = (currentHeight - 15) + 'px';
+            accretionDisk.style.width = (currentWidth + 50) + 'px';
+            accretionDisk.style.height = (currentHeight + 50) + 'px';
+            accretionDiskVertical.style.width = (currentWidth + 50) + 'px';
+            accretionDiskVertical.style.height = (currentHeight + 50) + 'px';
+        } else {
+            clearInterval(compressInterval);
+            explodeIntoWhiteHole();
+        }
+    }, 100);
+}
+
+// Explosão em Buraco Branco
+function explodeIntoWhiteHole() {
+    currentPhase = 'white_hole';
+    phaseStartTime = Date.now();
+    
+    // Esconder buraco negro e discos
+    blackHole.style.opacity = '0';
+    eventHorizon.style.opacity = '0';
+    accretionDisk.style.opacity = '0';
+    accretionDiskVertical.style.opacity = '0';
+    
+    // Mostrar buraco branco
+    whiteHole.style.opacity = '1';
+    whiteHole.style.width = '200px';
+    whiteHole.style.height = '200px';
+    
+    // Criar partículas de explosão
+    for (let i = 0; i < 100; i++) {
+        createExplosionParticle();
+    }
+    
+    // Expandir buraco branco
+    setTimeout(() => {
+        whiteHole.style.width = '400px';
+        whiteHole.style.height = '400px';
+        whiteHole.style.animation = 'rotateReverse 15s linear infinite';
+        
+        // Expelir matéria e criar raios de energia
+        const expelInterval = setInterval(() => {
+            if (currentPhase === 'white_hole') {
+                createEnergyParticle(3);
+                createEnergyBeam();
+                
+                // Criar novas estrelas
+                if (Math.random() > 0.7) {
+                    createNewStar();
+                }
+            } else {
+                clearInterval(expelInterval);
+            }
+        }, 1200);
+    }, 500);
+    
+    // Transição de volta para buraco negro após 60 segundos
+    setTimeout(() => {
+        whiteHoleToBlackHole();
+    }, 60000);
+}
+
+// Transição de Buraco Branco para Buraco Negro
+function whiteHoleToBlackHole() {
+    currentPhase = 'white_compression';
+    
+    // Comprimir buraco branco
+    const compressInterval = setInterval(() => {
+        const currentWidth = parseInt(whiteHole.style.width);
+        const currentHeight = parseInt(whiteHole.style.height);
+        
+        if (currentWidth > 30) {
+            whiteHole.style.width = (currentWidth - 25) + 'px';
+            whiteHole.style.height = (currentHeight - 25) + 'px';
+        } else {
+            clearInterval(compressInterval);
+            explodeIntoBlackHole();
+        }
+    }, 100);
+}
+
+// Explosão de volta para Buraco Negro
+function explodeIntoBlackHole() {
+    // Criar partículas de explosão
+    for (let i = 0; i < 80; i++) {
+        createExplosionParticle();
+    }
+    
+    // Esconder buraco branco
+    whiteHole.style.opacity = '0';
+    whiteHole.style.animation = 'none';
+    
+    // Mostrar buraco negro
+    blackHole.style.opacity = '1';
+    eventHorizon.style.opacity = '1';
+    accretionDisk.style.opacity = '0.9';
+    accretionDiskVertical.style.opacity = '0.7';
+    
+    // Reiniciar ciclo
+    initializeBlackHole();
+    blackHoleSlowPhase();
+}
+
+// Criar partículas de energia
+function createEnergyParticle(type) {
+    const particle = document.createElement('div');
+    particle.className = 'energy-particle';
+    
+    // Tamanho baseado no tipo
+    const size = type === 1 ? Math.random() * 6 + 3 : 
+                 type === 2 ? Math.random() * 8 + 4 : 
+                 Math.random() * 10 + 5;
+    
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    
+    // Posição baseada no tipo
+    if (type === 1 || type === 2) {
+        // Partículas sendo sugadas para o buraco negro
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 500 + 400;
+        const posX = window.innerWidth/2 + Math.cos(angle) * distance;
+        const posY = window.innerHeight/2 + Math.sin(angle) * distance;
+        
+        particle.style.left = posX + 'px';
+        particle.style.top = posY + 'px';
+        
+        // Animação de ser sugado
+        particle.animate([
+            { opacity: 1, transform: 'scale(1)' },
+            { opacity: 0, transform: 'scale(0.1)' }
+        ], {
+            duration: 2000,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+        });
+    } else {
+        // Partículas sendo expelidas do buraco branco
+        particle.style.left = window.innerWidth/2 + 'px';
+        particle.style.top = window.innerHeight/2 + 'px';
+        
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 600 + 300;
+        
+        // Animação de ser expelido
+        particle.animate([
+            { opacity: 1, transform: 'scale(1) translate(0, 0)' },
+            { opacity: 0, transform: `scale(3) translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)` }
+        ], {
+            duration: 2500,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+        });
+    }
+    
+    container.appendChild(particle);
+    energyParticles.push(particle);
+    
+    setTimeout(() => {
+        if (particle.parentNode) {
+            particle.parentNode.removeChild(particle);
+            energyParticles = energyParticles.filter(p => p !== particle);
+        }
+    }, 2500);
+}
+
+// Criar partículas de explosão
+function createExplosionParticle() {
+    const particle = document.createElement('div');
+    particle.className = 'explosion-particle';
+    
+    const size = Math.random() * 15 + 8;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = window.innerWidth/2 + 'px';
+    particle.style.top = window.innerHeight/2 + 'px';
+    
+    container.appendChild(particle);
+    explosionParticles.push(particle);
+    
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 500 + 200;
+    
+    particle.animate([
+        { opacity: 1, transform: 'scale(1) translate(0, 0)' },
+        { opacity: 0, transform: `scale(0.1) translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)` }
+    ], {
+        duration: 1500,
+        easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+    });
+    
+    setTimeout(() => {
+        if (particle.parentNode) {
+            particle.parentNode.removeChild(particle);
+            explosionParticles = explosionParticles.filter(p => p !== particle);
+        }
+    }, 1500);
+}
+
+// Animações CSS
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes rotateSlow {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    @keyframes rotateSlowReverse {
+        from { transform: translate(-50%, -50%) rotate(0deg) rotate(90deg); }
+        to { transform: translate(-50%, -50%) rotate(-360deg) rotate(90deg); }
+    }
+    
+    @keyframes rotateFast {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    @keyframes rotateFastReverse {
+        from { transform: translate(-50%, -50%) rotate(0deg) rotate(90deg); }
+        to { transform: translate(-50%, -50%) rotate(-360deg) rotate(90deg); }
+    }
+    
+    @keyframes rotateReverse {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+`;
+document.head.appendChild(style);
+
+// Iniciar o ciclo
+createStars();
+initializeBlackHole();
+blackHoleSlowPhase();
+
+// Limpar elementos quando a janela for redimensionada
+window.addEventListener('resize', () => {
+    particles.forEach(p => {
+        if (p.parentNode) p.parentNode.removeChild(p);
+    });
+    particles = [];
+    
+    energyParticles.forEach(p => {
+        if (p.parentNode) p.parentNode.removeChild(p);
+    });
+    energyParticles = [];
+    
+    suckedStars.forEach(s => {
+        if (s.parentNode) s.parentNode.removeChild(s);
+    });
+    suckedStars = [];
+    
+    energyBeams.forEach(b => {
+        if (b.parentNode) b.parentNode.removeChild(b);
+    });
+    energyBeams = [];
+    
+    // Recriar estrelas
+    stars.forEach(s => {
+        if (s.parentNode) s.parentNode.removeChild(s);
+    });
+    stars = [];
+    createStars();
+});
 </script>
+
 </body>
 </html>
