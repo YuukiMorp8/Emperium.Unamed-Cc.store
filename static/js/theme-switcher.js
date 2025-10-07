@@ -110,31 +110,31 @@ class LavaSystem {
         }, 6000);
     }
 
-    createEruption() {
-        const eruption = document.createElement('div');
-        eruption.classList.add('eruption');
+createEruption() {
+    const eruption = document.createElement('div');
+    eruption.classList.add('eruption');
 
-        const left = Math.random() * 80 + 10; // 10% a 90%
-        eruption.style.left = `${left}%`;
+    const left = Math.random() * 80 + 10; // 10% a 90%
+    eruption.style.left = `${left}%`;
 
-        // Aleatorizar tamanho da erupção
-        const width = Math.random() * 80 + 40;
-        const height = Math.random() * 100 + 100;
-        eruption.style.width = `${width}px`;
-        eruption.style.height = `${height}px`;
+    // Aleatorizar tamanho da erupção
+    const width = Math.random() * 80 + 40;
+    const height = Math.random() * 100 + 100;
+    eruption.style.width = `${width}px`;
+    eruption.style.height = `${height}px`;
 
-        // Aleatorizar delay da animação
-        eruption.style.animationDelay = `${Math.random() * 2}s`;
+    // Aleatorizar delay da animação
+    eruption.style.animationDelay = `${Math.random() * 2}s`;
 
-        this.lavaContainer.appendChild(eruption);
+    this.lavaContainer.appendChild(eruption); // ← CORRIGIDO: eruption (sem acento)
 
-        // Remover após animação
-        setTimeout(() => {
-            if (eruption.parentNode) {
-                eruption.parentNode.removeChild(eruption);
-            }
-        }, 4000);
-    }
+    // Remover após animação
+    setTimeout(() => {
+        if (eruption.parentNode) {
+            eruption.parentNode.removeChild(eruption);
+        }
+    }, 4000);
+}
 
     destroy() {
         if (this.lavaContainer && this.lavaContainer.parentNode) {
