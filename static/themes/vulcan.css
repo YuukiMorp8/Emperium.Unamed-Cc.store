@@ -1,165 +1,137 @@
-/* static/themes/vulcan.css */
+/* ================== VARIÁVEIS ================== */
 :root {
     --bg-primary: linear-gradient(to bottom, #000000, #2d0000, #5c0000);
     --bg-secondary: rgba(40, 0, 0, 0.6);
-    --accent-color: #ff6b35;
-    --accent-secondary: #ff4500;
-    --lava-color: linear-gradient(to bottom, transparent, #ff4500 20%, #ff0000 60%, #8b0000);
+    --accent-color: #ff4500;
+    --accent-secondary: #ff8c00;
     --text-primary: #ffffff;
-    --text-secondary: #ffcccc;
-    --border-color: rgba(255, 107, 53, 0.3);
-    --shadow-color: rgba(255, 69, 0, 0.4);
+    --text-secondary: #dddddd;
+    --border-color: rgba(255,69,0,0.15);
+    --shadow-color: rgba(255,69,0,0.3);
 }
 
-.vulcan-elements {
-    display: block;
-}
-
-.ocean-elements {
-    display: none;
-}
-
-/* ========== BASE DO TEMA VULCÃO ========== */
+/* ================== BODY ================== */
 body.theme-vulcan {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: "Poppins", Arial, sans-serif;
     margin: 0;
     padding: 0;
+    font-family: "Poppins", Arial, sans-serif;
     min-height: 100vh;
+    color: var(--text-primary);
+    background: var(--bg-primary);
     overflow-x: hidden;
     position: relative;
 }
 
-/* ========== ELEMENTOS VULCÃO ========== */
-.lava-bottom {
+/* ================== ELEMENTOS VULCÃO ================== */
+.vulcan-elements {
     position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -2;
+}
+
+/* ================== LAVA BOTTOM ================== */
+.lava-bottom {
+    position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 120px;
-    background: linear-gradient(to bottom, transparent, #ff4500 10%, #ff0000 40%, #8b0000 80%, #400000);
+    height: 80px;
+    background: linear-gradient(to top, #8b0000, #ff4500, #ff8c00);
+    border-top-left-radius: 50% 20px;
+    border-top-right-radius: 50% 20px;
+    box-shadow: 0 -5px 20px rgba(255,69,0,0.4);
     z-index: -1;
-    border-top-left-radius: 50% 30px;
-    border-top-right-radius: 50% 30px;
-    box-shadow: 
-        0 -10px 30px rgba(255, 69, 0, 0.6),
-        inset 0 10px 20px rgba(255, 100, 0, 0.4);
-    animation: lavaGlow 3s ease-in-out infinite alternate;
 }
 
+/* ================== LAVA BOLHAS ================== */
+.lava-bubble {
+    position: absolute;
+    bottom: 50px;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation-name: riseLava;
+    animation-timing-function: linear;
+}
+
+@keyframes riseLava {
+    0% { transform: translateY(0) scale(1); opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+}
+
+/* Diferentes bolhas de lava */
+.lava-bubble:nth-child(1)  { width: 15px; height: 15px; left: 5%;  animation-duration: 6s; animation-delay: 0s; background: rgba(255,69,0,0.8); }
+.lava-bubble:nth-child(2)  { width: 20px; height: 20px; left: 15%; animation-duration: 7s; animation-delay: 1s; background: rgba(255,100,0,0.7); }
+.lava-bubble:nth-child(3)  { width: 25px; height: 25px; left: 25%; animation-duration: 8s; animation-delay: 2s; background: rgba(255,140,0,0.6); }
+.lava-bubble:nth-child(4)  { width: 18px; height: 18px; left: 35%; animation-duration: 6.5s; animation-delay: 0.5s; background: rgba(255,165,0,0.5); }
+.lava-bubble:nth-child(5)  { width: 22px; height: 22px; left: 45%; animation-duration: 7.5s; animation-delay: 1.2s; background: rgba(255,100,0,0.7); }
+
+/* ================== FUMAÇA ================== */
 .smoke {
     position: absolute;
-    bottom: 120px;
-    left: 0;
-    width: 100%;
-    height: 200px;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23200" fill-opacity="0.4" d="M0,128L48,112C96,96,192,64,288,74.7C384,85,480,139,576,138.7C672,139,768,85,864,69.3C960,53,1056,75,1152,96C1248,117,1344,139,1392,149.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
-    background-size: cover;
-    animation: smokeWave 8s linear infinite;
-    z-index: -1;
+    bottom: 80px;
+    width: 40px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(200,200,200,0.6) 0%, transparent 80%);
+    border-radius: 50%;
+    animation: riseSmoke 6s linear infinite;
 }
 
 .smoke:nth-child(2) {
-    bottom: 100px;
-    opacity: 0.3;
-    animation: smokeWave 12s linear infinite reverse;
+    left: 30%;
+    animation-delay: 1s;
 }
 
-@keyframes lavaGlow {
-    0% {
-        box-shadow: 
-            0 -10px 20px rgba(255, 69, 0, 0.4),
-            inset 0 10px 15px rgba(255, 100, 0, 0.3);
-    }
-    100% {
-        box-shadow: 
-            0 -15px 40px rgba(255, 69, 0, 0.8),
-            inset 0 15px 25px rgba(255, 100, 0, 0.6);
-    }
+.smoke:nth-child(3) {
+    left: 60%;
+    animation-delay: 2s;
 }
 
-@keyframes smokeWave {
-    0% {
-        background-position-x: 0;
-    }
-    100% {
-        background-position-x: 1440px;
-    }
+@keyframes riseSmoke {
+    0% { transform: translateY(0) scale(0.5); opacity: 0.5; }
+    50% { opacity: 0.7; }
+    100% { transform: translateY(-200px) scale(1.2); opacity: 0; }
 }
 
-/* ========== BOLHAS DE LAVA ========== */
-.lava-bubble {
-    position: absolute;
-    border-radius: 50%;
-    animation: lavaFall linear infinite;
-    z-index: -1;
-    top: -50px;
-}
-
-@keyframes lavaFall {
-    to {
-        transform: translateY(calc(100vh + 100px));
-    }
-}
-
-/* ========== ERUPÇÕES ========== */
+/* ================== ERUPÇÃO ================== */
 .eruption {
     position: absolute;
-    bottom: 120px;
-    width: 100px;
-    height: 150px;
-    background: radial-gradient(ellipse at center, rgba(255, 69, 0, 0.8) 0%, rgba(255, 69, 0, 0) 70%);
-    border-radius: 50% 50% 0 0;
-    opacity: 0;
-    animation: erupt 4s ease-out infinite;
-    z-index: -1;
+    bottom: 50px;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: eruptionRise 3s ease-out forwards;
+    background: radial-gradient(circle, rgba(255,69,0,0.8) 0%, rgba(255,140,0,0.5) 70%);
 }
 
-@keyframes erupt {
-    0% {
-        transform: scale(0) translateY(0);
-        opacity: 0;
-    }
-    20% {
-        opacity: 0.8;
-    }
-    50% {
-        transform: scale(1) translateY(-100px);
-        opacity: 0.6;
-    }
-    100% {
-        transform: scale(1.2) translateY(-200px);
-        opacity: 0;
-    }
+@keyframes eruptionRise {
+    0% { transform: translateY(0) scale(1); opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-150px) scale(2); opacity: 0; }
 }
 
-/* ========== CABEÇALHO ========== */
-body.theme-vulcan header {
-    background: rgba(139, 0, 0, 0.7);
+/* ================== HEADER, BOTÕES, CARDS ================== */
+header {
+    background: rgba(40,0,0,0.7);
     backdrop-filter: blur(10px);
     padding: 20px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 25px rgba(139, 0, 0, 0.8);
     border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 10;
 }
 
-body.theme-vulcan .header-buttons {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* Botão Admin */
-body.theme-vulcan .btn-admin {
+.btn-admin {
     padding: 14px 22px;
-    background: linear-gradient(135deg, #ff6b35, #ff4500);
-    color: #fff;
+    background: linear-gradient(135deg, #ff4500, #ff8c00);
+    color: #111;
     font-weight: bold;
     border-radius: 12px;
     cursor: pointer;
@@ -169,193 +141,58 @@ body.theme-vulcan .btn-admin {
     transition: 0.3s;
 }
 
-body.theme-vulcan .btn-admin:hover {
-    background: linear-gradient(135deg, #ff8c00, #ff4500);
+.btn-admin:hover {
+    background: linear-gradient(135deg, #ff6347, #ffa500);
     transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255, 69, 0, 0.8);
+    box-shadow: 0 0 25px rgba(255,69,0,0.6);
 }
 
-/* Perfil */
-body.theme-vulcan .perfil {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 107, 53, 0.8);
-    box-shadow: 0 0 15px rgba(255, 69, 0, 0.6);
-    cursor: pointer;
-}
-
-/* ========== CONTEÚDO PRINCIPAL ========== */
-body.theme-vulcan main {
-    padding: 50px 25px 180px;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-/* ========== EMBEDS ========== */
-body.theme-vulcan .embed {
-    background: var(--bg-secondary);
-    backdrop-filter: blur(5px);
-    border: 2px solid var(--border-color);
-    border-radius: 20px;
-    padding: 35px 40px;
-    box-shadow: 0 0 20px rgba(139, 0, 0, 0.3);
-    position: relative;
-    transition: 0.3s;
-    overflow: hidden;
-}
-
-body.theme-vulcan .embed:hover {
-    transform: scale(1.01);
-    background: rgba(60, 0, 0, 0.7);
-    border-color: rgba(255, 107, 53, 0.5);
-    box-shadow: 0 0 25px rgba(255, 69, 0, 0.4);
-}
-
-body.theme-vulcan .embed::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(255, 107, 53, 0.5), transparent);
-}
-
-body.theme-vulcan .embed-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--accent-color);
-    text-shadow: 0 0 12px rgba(255, 69, 0, 0.6);
-    border-bottom: 1px solid rgba(255, 107, 53, 0.3);
-    padding-bottom: 10px;
-    margin-bottom: 25px;
-}
-
-/* ========== CONTEÚDO DOS EMBEDS ========== */
-body.theme-vulcan .embed-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
-}
-
-/* ========== CARDS ========== */
-body.theme-vulcan .card {
-    background: rgba(30, 0, 0, 0.6);
+.card {
+    background: rgba(40, 0, 0, 0.6);
     backdrop-filter: blur(5px);
     padding: 28px;
     border-radius: 14px;
-    border-left: 5px solid rgba(255, 107, 53, 0.7);
+    border-left: 5px solid rgba(255,69,0,0.7);
     text-align: center;
-    font-size: 20px;
     color: var(--text-primary);
     transition: 0.3s;
-    position: relative;
-    overflow: hidden;
 }
 
-body.theme-vulcan .card:hover {
+.card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
-    background: rgba(40, 0, 0, 0.7);
+    box-shadow: 0 0 15px rgba(255,69,0,0.3);
 }
 
-body.theme-vulcan .card-title {
-    font-size: 20px;
-    color: var(--accent-color);
-    margin-bottom: 12px;
-    text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
-}
-
-/* ======== ANÚNCIOS ======== */
-body.theme-vulcan .anuncio-card {
-    background: rgba(40, 0, 0, 0.6);
-    border: 2px solid var(--border-color);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-    backdrop-filter: blur(5px);
-    transition: 0.3s;
-}
-
-body.theme-vulcan .anuncio-card:hover {
-    background: rgba(50, 0, 0, 0.7);
-    border-color: rgba(255, 107, 53, 0.5);
-}
-
-body.theme-vulcan .anuncio-titulo {
-    font-size: 22px;
-    color: #ff8c00;
-    margin-bottom: 8px;
-}
-
-body.theme-vulcan .anuncio-assunto {
-    font-size: 17px;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
-}
-
-body.theme-vulcan .anuncio-info {
-    font-size: 14px;
-    color: #ff9999;
-}
-
-/* ========== BARRA INFERIOR ========== */
-body.theme-vulcan .nav-bottom {
+/* ================== NAV INFERIOR ================== */
+.nav-bottom {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(30, 0, 0, 0.9);
+    background: rgba(40,0,0,0.85);
     backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255, 107, 53, 0.3);
+    border-top: 1px solid rgba(255,69,0,0.25);
     display: flex;
     justify-content: space-around;
     padding: 16px 15px;
-    box-shadow: 0 -5px 20px rgba(139, 0, 0, 0.6);
     z-index: 99;
 }
 
-body.theme-vulcan .nav-bottom button {
+.nav-bottom button {
     flex: 1;
     margin: 0 10px;
     padding: 22px 10px;
-    background: linear-gradient(135deg, #ff6b35, #ff4500);
+    background: linear-gradient(135deg, #ff4500, #ff8c00);
     border: none;
     border-radius: 14px;
     font-size: 20px;
-    color: #fff;
+    color: #111;
     font-weight: bold;
-    box-shadow: 0 0 25px rgba(255, 69, 0, 0.5);
+    box-shadow: 0 0 25px rgba(255,69,0,0.35);
     transition: 0.3s;
 }
 
-body.theme-vulcan .nav-bottom button:hover {
+.nav-bottom button:hover {
     transform: scale(1.08);
-    box-shadow: 0 0 35px rgba(255, 69, 0, 0.8);
-}
-
-/* ========== BOTÃO MUDAR TEMA ========== */
-body.theme-vulcan .btn-change-theme {
-    padding: 12px 20px;
-    background: rgba(255, 107, 53, 0.2);
-    border: 1px solid rgba(255, 107, 53, 0.4);
-    border-radius: 10px;
-    color: var(--accent-color);
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-right: 15px;
-}
-
-body.theme-vulcan .btn-change-theme:hover {
-    background: rgba(255, 107, 53, 0.3);
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
+    box-shadow: 0 0 35px rgba(255,69,0,0.6);
 }
