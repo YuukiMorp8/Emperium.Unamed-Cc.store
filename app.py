@@ -675,6 +675,37 @@ def deletar_historico():
         "msg": f"🧹 {total} compras limpas — total R$ {soma:.2f}"
     })
 
+import requests
+# Rota para exibir a página de troca
+@app.route("/troca", methods=["GET", "POST"])
+def troca():
+    if request.method == "POST":
+        nome = request.form.get("nome")
+        material = request.form.get("material")
+        metodo = request.form.get("metodo", "discord")  # opcional, se quiser enviar pelo site futuramente
+
+        if not nome or not material:
+            flash("Por favor preencha todos os campos.", "error")
+            return redirect(url_for("troca"))
+
+        # Enviar para Discord via webhook (opcional)
+        if metodo == "discord":
+            webhook_url = "https://discord.com/api/webhooks/1359158562856632430/B1SoDiTPlK_oAT3RaebtLgGC-oRXZff0tWH2oI9yIPwMOVugo7RJcuVrx-Y4KmKXis8p"
+            content = f"Nova solicitação de troca:\nNome: {nome}\nMaterial: {material}"
+            try:
+                requests.post(webhook_url, json={"content": content})
+                flash("Formulário enviado com sucesso! Verifique nosso Discord.", "success")
+            except Exception as e:
+                flash(f"Erro ao enviar para Discord: {e}", "error")
+
+        else:
+            flash("Opção em construção. Utilize nosso Discord.", "warning")
+
+        return redirect(url_for("troca"))
+
+    # GET request: apenas renderiza a página
+    return render_template("troca.html")
+
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
