@@ -26,7 +26,6 @@
         z-index: -2;
         pointer-events: none;
         background: linear-gradient(to bottom, #0a0a2a, #1a1a3a, #0a0a1a);
-        animation: rotateBackground 120s linear infinite;
     }
 
     .star {
@@ -1162,27 +1161,61 @@ function createExplosionParticle() {
     }, 1500);
 }
 
-// Animações CSS
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes rotateSlow {
-        from { transform: translate(-50%, -50%) rotate(0deg); }
-        to { transform: translate(-50%, -50%) rotate(360deg); }
+/* Animações para o buraco negro e componentes */
+@keyframes rotateSlow {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes rotateSlowReverse {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+@keyframes rotateFast {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes rotateFastReverse {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+@keyframes rotateReverse {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+/* Animação para as estrelas girarem em torno do buraco negro */
+@keyframes orbitStar {
+    0% {
+        transform: 
+            translate(-50%, -50%) 
+            rotate(0deg) 
+            translateX(400px) 
+            rotate(0deg);
     }
-    
-    @keyframes rotateSlowReverse {
-        from { transform: translate(-50%, -50%) rotate(0deg) rotate(90deg); }
-        to { transform: translate(-50%, -50%) rotate(-360deg) rotate(90deg); }
+    100% {
+        transform: 
+            translate(-50%, -50%) 
+            rotate(360deg) 
+            translateX(400px) 
+            rotate(-360deg);
     }
-    
-    @keyframes rotateFast {
-        from { transform: translate(-50%, -50%) rotate(0deg); }
-        to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    
-    @keyframes rotateFastReverse {
-        from { transform: translate(-50%, -50%) rotate(0deg) rotate(90deg); }
-        to { transform: translate(-50%, -50%) rotate(-360deg) rotate(90deg); }
+}
+
+/* Container para estrelas orbitantes */
+.orbiting-stars {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+    height: 1000px;
+    z-index: -1;
+    pointer-events: none;
+}
     }
     
     @keyframes rotateReverse {
