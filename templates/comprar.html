@@ -2,27 +2,40 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<!-- Adicionando viewport meta tag para controle de responsividade -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Comprar - Emperium</title>
 <style>
-    * { box-sizing: border-box; }
+    * { 
+        box-sizing: border-box; 
+        margin: 0;
+        padding: 0;
+    }
+    
+    html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: fixed; /* Previne scroll indesejado */
+    }
+    
     body {
         font-family: "Poppins", Arial, sans-serif;
         background: #0a0a1a;
         color: #eee;
-        margin: 0;
-        padding: 0;
         min-height: 100vh;
-        overflow-x: hidden;
         position: relative;
+        overflow-x: hidden;
+        overflow-y: auto; /* Permite scroll apenas no conteúdo principal */
     }
 
-    /* Elementos do espaço e buraco negro/branco */
+    /* Elementos do espaço e buraco negro/branco - Ajustados para preencher toda a tela */
     .space-background {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
         z-index: -2;
         pointer-events: none;
         background: linear-gradient(to bottom, #0a0a2a, #1a1a3a, #0a0a1a);
@@ -41,8 +54,8 @@
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
         z-index: -1;
         pointer-events: none;
         overflow: hidden;
@@ -492,8 +505,27 @@
         }
     }
 
+    /* Media queries para diferentes orientações */
     @media (max-width: 768px) {
         input, select, button { font-size: 15px; width: 100%; }
+    }
+    
+    @media (orientation: landscape) and (max-height: 500px) {
+        .main {
+            padding: 15px 20px;
+        }
+        
+        header {
+            padding: 10px 20px;
+        }
+        
+        .filtros {
+            margin-bottom: 15px;
+        }
+        
+        .grid {
+            gap: 15px;
+        }
     }
 </style>
 </head>
@@ -666,9 +698,68 @@ let stars = [];
 let suckedStars = [];
 let energyBeams = [];
 
+// Função para ajustar elementos ao redimensionar a tela
+function adjustElementsForScreenSize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    
+    // Ajustar elementos de fundo para preencher toda a tela
+    spaceBackground.style.width = width + 'px';
+    spaceBackground.style.height = height + 'px';
+    
+    container.style.width = width + 'px';
+    container.style.height = height + 'px';
+    
+    // Ajustar tamanhos baseados na orientação
+    const isLandscape = width > height;
+    
+    if (isLandscape) {
+        // Ajustes para modo paisagem
+        blackHole.style.width = Math.min(width, height) * 0.3 + 'px';
+        blackHole.style.height = Math.min(width, height) * 0.3 + 'px';
+        
+        eventHorizon.style.width = Math.min(width, height) * 0.31 + 'px';
+        eventHorizon.style.height = Math.min(width, height) * 0.31 + 'px';
+        
+        accretionDisk.style.width = Math.min(width, height) * 0.4 + 'px';
+        accretionDisk.style.height = Math.min(width, height) * 0.4 + 'px';
+        
+        accretionDiskVertical.style.width = Math.min(width, height) * 0.4 + 'px';
+        accretionDiskVertical.style.height = Math.min(width, height) * 0.4 + 'px';
+        
+        spatialDistortion.style.width = Math.min(width, height) * 0.6 + 'px';
+        spatialDistortion.style.height = Math.min(width, height) * 0.6 + 'px';
+    } else {
+        // Ajustes para modo retrato
+        blackHole.style.width = Math.min(width, height) * 0.4 + 'px';
+        blackHole.style.height = Math.min(width, height) * 0.4 + 'px';
+        
+        eventHorizon.style.width = Math.min(width, height) * 0.41 + 'px';
+        eventHorizon.style.height = Math.min(width, height) * 0.41 + 'px';
+        
+        accretionDisk.style.width = Math.min(width, height) * 0.5 + 'px';
+        accretionDisk.style.height = Math.min(width, height) * 0.5 + 'px';
+        
+        accretionDiskVertical.style.width = Math.min(width, height) * 0.5 + 'px';
+        accretionDiskVertical.style.height = Math.min(width, height) * 0.5 + 'px';
+        
+        spatialDistortion.style.width = Math.min(width, height) * 0.7 + 'px';
+        spatialDistortion.style.height = Math.min(width, height) * 0.7 + 'px';
+    }
+}
+
 // Criar estrelas no fundo
 function createStars() {
-    for (let i = 0; i < 150; i++) {
+    // Limpar estrelas existentes
+    stars.forEach(star => {
+        if (star.parentNode) star.parentNode.removeChild(star);
+    });
+    stars = [];
+    
+    // Calcular número de estrelas baseado no tamanho da tela
+    const starCount = Math.floor((window.innerWidth * window.innerHeight) / 4000);
+    
+    for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
         star.className = 'star';
 
@@ -693,29 +784,14 @@ function createStars() {
 
 // Configuração inicial
 function initializeBlackHole() {
-    // Tamanho inicial do buraco negro (maior e mais escuro)
-    blackHole.style.width = '350px';
-    blackHole.style.height = '350px';
-
-    // Horizonte de eventos
-    eventHorizon.style.width = '360px';
-    eventHorizon.style.height = '360px';
-
-    // Discos de acreção próximos ao buraco negro
-    accretionDisk.style.width = '450px';
-    accretionDisk.style.height = '450px';
-
-    accretionDiskVertical.style.width = '450px';
-    accretionDiskVertical.style.height = '450px';
-
+    adjustElementsForScreenSize();
+    
     // Buraco branco inicialmente invisível
     whiteHole.style.opacity = '0';
     whiteHole.style.width = '0px';
     whiteHole.style.height = '0px';
 
     // Efeito de distorção espacial
-    spatialDistortion.style.width = '600px';
-    spatialDistortion.style.height = '600px';
     spatialDistortion.style.opacity = '0.3';
     spatialDistortion.style.animation = 'spatialDistortion 15s linear infinite';
 }
@@ -761,24 +837,27 @@ function blackHoleFastPhase() {
     accretionDiskVertical.style.animation = 'rotateFastReverse 15s linear infinite';
 
     // Aumentar tamanho do buraco negro
-    blackHole.style.width = '450px';
-    blackHole.style.height = '450px';
-    eventHorizon.style.width = '460px';
-    eventHorizon.style.height = '460px';
+    const width = parseInt(blackHole.style.width);
+    const height = parseInt(blackHole.style.height);
+    
+    blackHole.style.width = (width * 1.3) + 'px';
+    blackHole.style.height = (height * 1.3) + 'px';
+    eventHorizon.style.width = (width * 1.3) + 'px';
+    eventHorizon.style.height = (height * 1.3) + 'px';
 
     // Expandir discos de acreção
-    accretionDisk.style.width = '600px';
-    accretionDisk.style.height = '600px';
-    accretionDiskVertical.style.width = '600px';
-    accretionDiskVertical.style.height = '600px';
+    accretionDisk.style.width = (width * 1.7) + 'px';
+    accretionDisk.style.height = (height * 1.7) + 'px';
+    accretionDiskVertical.style.width = (width * 1.7) + 'px';
+    accretionDiskVertical.style.height = (height * 1.7) + 'px';
 
     // Intensificar cores dos discos
     accretionDisk.style.opacity = '0.95';
     accretionDiskVertical.style.opacity = '0.85';
 
     // Aumentar efeito de distorção
-    spatialDistortion.style.width = '800px';
-    spatialDistortion.style.height = '800px';
+    spatialDistortion.style.width = (width * 2) + 'px';
+    spatialDistortion.style.height = (height * 2) + 'px';
     spatialDistortion.style.opacity = '0.5';
     spatialDistortion.style.animation = 'spatialDistortion 8s linear infinite';
 
@@ -1219,12 +1298,23 @@ window.addEventListener('resize', () => {
     });
     energyBeams = [];
 
-    // Recriar estrelas
+    // Recriar estrelas e ajustar elementos
     stars.forEach(s => {
         if (s.parentNode) s.parentNode.removeChild(s);
     });
     stars = [];
+    
     createStars();
+    adjustElementsForScreenSize();
+});
+
+// Detectar mudanças de orientação
+window.addEventListener('orientationchange', () => {
+    // Aguardar um pouco para que a orientação seja aplicada
+    setTimeout(() => {
+        adjustElementsForScreenSize();
+        createStars();
+    }, 100);
 });
 </script>
 
