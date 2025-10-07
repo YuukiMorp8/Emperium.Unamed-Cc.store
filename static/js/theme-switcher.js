@@ -153,3 +153,146 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+// Sistema de lava para o tema vulcão
+class LavaSystem {
+    constructor() {
+        this.lavaContainer = null;
+        this.init();
+    }
+
+    init() {
+        this.createLavaContainer();
+        this.startLavaGenerator();
+        this.startEruptions();
+    }
+
+    createLavaContainer() {
+        this.lavaContainer = document.createElement('div');
+        this.lavaContainer.className = 'vulcan-elements';
+        this.lavaContainer.innerHTML = `
+            <div class="lava-bottom"></div>
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+        `;
+        document.body.appendChild(this.lavaContainer);
+    }
+
+    createLavaBubble(isEruption = false) {
+        const bubble = document.createElement('div');
+        bubble.classList.add('lava-bubble');
+        
+        // Tamanho e posição
+        const size = isEruption ? 
+            Math.random() * 25 + 15 : // Bolhas maiores nas erupções
+            Math.random() * 20 + 8;   // Bolhas normais
+        
+        const left = Math.random() * 100;
+        
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${left}%`;
+        bubble.style.top = '-50px';
+        
+        // Velocidade - mais rápidas que as bolhas de água
+        const duration = isEruption ? 
+            Math.random() * 2 + 1 : // Mais rápidas nas erupções
+            Math.random() * 3 + 2;  // Velocidade normal
+        
+        bubble.style.animationDuration = `${duration}s`;
+        
+        // Cores da lava
+        const lavaColors = [
+            'rgba(255, 69, 0, 0.8)',
+            'rgba(255, 100, 0, 0.7)',
+            'rgba(255, 140, 0, 0.6)',
+            'rgba(255, 165, 0, 0.5)'
+        ];
+        
+        bubble.style.background = `radial-gradient(circle at 30% 30%, 
+            ${lavaColors[Math.floor(Math.random() * lavaColors.length)]}, 
+            rgba(139, 0, 0, 0.4) 70%)`;
+        
+        bubble.style.boxShadow = `
+            inset 0 0 15px rgba(255, 255, 255, 0.3),
+            0 0 20px rgba(255, 69, 0, 0.6)
+        `;
+        
+        this.lavaContainer.appendChild(bubble);
+        
+        // Remover após animação
+        setTimeout(() => {
+            if (bubble.parentNode) {
+                bubble.parentNode.removeChild(bubble);
+            }
+        }, duration * 1000);
+    }
+
+    startLavaGenerator() {
+        // Bolhas de lava contínuas
+        setInterval(() => {
+            // Criar 3-8 bolhas por ciclo
+            const bubbleCount = Math.floor(Math.random() * 6) + 3;
+            
+            for(let i = 0; i < bubbleCount; i++) {
+                setTimeout(() => {
+                    this.createLavaBubble();
+                }, Math.random() * 500);
+            }
+        }, 1000);
+        
+        // Explosões intensas de lava
+        setInterval(() => {
+            if (Math.random() < 0.4) { // 40% de chance
+                const burstCount = Math.floor(Math.random() * 20) + 15;
+                
+                for(let i = 0; i < burstCount; i++) {
+                    setTimeout(() => {
+                        this.createLavaBubble(true);
+                    }, Math.random() * 300);
+                }
+            }
+        }, 8000);
+    }
+
+    startEruptions() {
+        // Erupções aleatórias
+        setInterval(() => {
+            if (Math.random() < 0.3) { // 30% de chance
+                this.createEruption();
+            }
+        }, 6000);
+    }
+
+    createEruption() {
+        const eruption = document.createElement('div');
+        eruption.classList.add('eruption');
+        
+        const left = Math.random() * 80 + 10; // 10% a 90%
+        eruption.style.left = `${left}%`;
+        
+        // Aleatorizar tamanho da erupção
+        const width = Math.random() * 80 + 40;
+        const height = Math.random() * 100 + 100;
+        eruption.style.width = `${width}px`;
+        eruption.style.height = `${height}px`;
+        
+        // Aleatorizar delay da animação
+        eruption.style.animationDelay = `${Math.random() * 2}s`;
+        
+        this.lavaContainer.appendChild(erupção);
+        
+        // Remover após animação
+        setTimeout(() => {
+            if (eruption.parentNode) {
+                eruption.parentNode.removeChild(eruption);
+            }
+        }, 4000);
+    }
+
+    destroy() {
+        if (this.lavaContainer && this.lavaContainer.parentNode) {
+            this.lavaContainer.parentNode.removeChild(this.lavaContainer);
+        }
+    }
+}
