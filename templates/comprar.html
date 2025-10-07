@@ -26,6 +26,7 @@
         z-index: -2;
         pointer-events: none;
         background: linear-gradient(to bottom, #0a0a2a, #1a1a3a, #0a0a1a);
+        /* REMOVIDO: animation: rotateBackground 120s linear infinite; */
     }
 
     .star {
@@ -206,6 +207,28 @@
         mix-blend-mode: overlay;
         pointer-events: none;
         z-index: 0;
+    }
+
+    /* Container para estrelas orbitantes */
+    .orbiting-stars {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 1200px;
+        height: 1200px;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    .orbiting-star {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background: #ffffff;
+        border-radius: 50%;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
     }
 
     /* Conteúdo principal com transparência */
@@ -429,14 +452,53 @@
     .msg { margin-top: 10px; color: #0f0; }
     .msg.err { color: #f33; }
 
+    /* Animações para o buraco negro e componentes */
+    @keyframes rotateSlow {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    @keyframes rotateSlowReverse {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+    
+    @keyframes rotateFast {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    @keyframes rotateFastReverse {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+    
+    @keyframes rotateReverse {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+
+    /* Animação para as estrelas orbitantes */
+    @keyframes orbitStar {
+        0% {
+            transform: 
+                translate(-50%, -50%) 
+                rotate(0deg) 
+                translateX(var(--orbit-radius, 300px)) 
+                rotate(0deg);
+        }
+        100% {
+            transform: 
+                translate(-50%, -50%) 
+                rotate(360deg) 
+                translateX(var(--orbit-radius, 300px)) 
+                rotate(-360deg);
+        }
+    }
+
     @keyframes twinkle {
         0%, 100% { opacity: 0.4; }
         50% { opacity: 1; }
-    }
-
-    @keyframes rotateBackground {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
     }
 
     @keyframes spiralIn {
@@ -501,6 +563,9 @@
 
 <!-- Elementos do espaço -->
 <div class="space-background" id="spaceBackground"></div>
+
+<!-- Estrelas que orbitam o buraco negro -->
+<div class="orbiting-stars" id="orbitingStars"></div>
 
 <!-- Elementos do buraco negro/branco -->
 <div class="black-hole-container">
@@ -665,16 +730,13 @@ let stars = [];
 let suckedStars = [];
 let energyBeams = [];
 
-// Criar estrelas no fundo
+// Criar estrelas no fundo (estáticas)
 function createStars() {
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 100; i++) {
         const star = document.createElement('div');
         star.className = 'star';
 
-        // Tamanho aleatório (estrelas grandes)
-        const size = Math.random() * 8 + 3;
-
-        // Posição aleatória
+        const size = Math.random() * 4 + 1;
         const posX = Math.random() * window.innerWidth;
         const posY = Math.random() * window.innerHeight;
 
@@ -682,11 +744,34 @@ function createStars() {
         star.style.height = size + 'px';
         star.style.left = posX + 'px';
         star.style.top = posY + 'px';
-        star.style.opacity = Math.random() * 0.8 + 0.2;
+        star.style.opacity = Math.random() * 0.6 + 0.2;
         star.style.animationDelay = Math.random() * 4 + 's';
 
         spaceBackground.appendChild(star);
         stars.push(star);
+    }
+}
+
+// Criar estrelas orbitantes
+function createOrbitingStars() {
+    const orbitingContainer = document.getElementById('orbitingStars');
+    
+    for (let i = 0; i < 25; i++) {
+        const star = document.createElement('div');
+        star.className = 'star orbiting-star';
+        
+        const size = Math.random() * 5 + 2;
+        const orbitRadius = Math.random() * 400 + 200; // Raio da órbita entre 200px e 600px
+        const orbitDuration = Math.random() * 80 + 40; // Duração da órbita entre 40s e 120s
+        
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.opacity = Math.random() * 0.8 + 0.3;
+        star.style.animation = `orbitStar ${orbitDuration}s linear infinite`;
+        star.style.animationDelay = Math.random() * orbitDuration + 's';
+        star.style.setProperty('--orbit-radius', orbitRadius + 'px');
+        
+        orbitingContainer.appendChild(star);
     }
 }
 
@@ -724,14 +809,15 @@ function blackHoleSlowPhase() {
     currentPhase = 'black_hole_slow';
     phaseStartTime = Date.now();
 
-    // Girar lentamente
-    blackHole.style.animation = 'rotateSlow 30s linear infinite';
-    eventHorizon.style.animation = 'rotateSlow 25s linear infinite';
-    accretionDisk.style.animation = 'rotateSlow 20s linear infinite';
-    accretionDiskVertical.style.animation = 'rotateSlowReverse 35s linear infinite';
+    // Girar apenas os elementos do buraco negro lentamente
+    blackHole.style.animation = 'rotateSlow 40s linear infinite';
+    eventHorizon.style.animation = 'rotateSlow 35s linear infinite';
+    accretionDisk.style.animation = 'rotateSlow 25s linear infinite';
+    accretionDiskVertical.style.animation = 'rotateSlowReverse 45s linear infinite';
 
     // Ativar efeito de distorção
     spatialDistortion.style.display = 'block';
+    spatialDistortion.style.animation = 'spatialDistortion 20s linear infinite';
 
     // Sugar estrelas constantemente
     const starSuckInterval = setInterval(() => {
@@ -748,16 +834,19 @@ function blackHoleSlowPhase() {
     }, 20000);
 }
 
-// Fase 2: Buraco Negro Girando Rápido e Sugando Matéria (30 segundos)
+// Fase 2: Buraco Negro Girando Rápido (30 segundos)
 function blackHoleFastPhase() {
     currentPhase = 'black_hole_fast';
     phaseStartTime = Date.now();
 
-    // Aumentar velocidade de rotação
-    blackHole.style.animation = 'rotateFast 12s linear infinite';
-    eventHorizon.style.animation = 'rotateFast 10s linear infinite';
-    accretionDisk.style.animation = 'rotateFast 8s linear infinite';
-    accretionDiskVertical.style.animation = 'rotateFastReverse 15s linear infinite';
+    // Aumentar velocidade de rotação apenas dos elementos do buraco negro
+    blackHole.style.animation = 'rotateFast 15s linear infinite';
+    eventHorizon.style.animation = 'rotateFast 12s linear infinite';
+    accretionDisk.style.animation = 'rotateFast 10s linear infinite';
+    accretionDiskVertical.style.animation = 'rotateFastReverse 18s linear infinite';
+
+    // Aumentar efeito de distorção
+    spatialDistortion.style.animation = 'spatialDistortion 10s linear infinite';
 
     // Aumentar tamanho do buraco negro
     blackHole.style.width = '450px';
@@ -779,7 +868,6 @@ function blackHoleFastPhase() {
     spatialDistortion.style.width = '800px';
     spatialDistortion.style.height = '800px';
     spatialDistortion.style.opacity = '0.5';
-    spatialDistortion.style.animation = 'spatialDistortion 8s linear infinite';
 
     // Sugar estrelas mais intensamente
     const starSuckInterval = setInterval(() => {
@@ -836,12 +924,6 @@ function suckStarWithSpiral() {
     const spiralTurns = 3 + Math.random() * 2; // 3-5 voltas
     const totalDuration = 4000 + Math.random() * 2000; // 4-6 segundos
 
-    // Definir variáveis CSS para a animação
-    suckedStar.style.setProperty('--startX', startX + 'px');
-    suckedStar.style.setProperty('--startY', startY + 'px');
-    suckedStar.style.setProperty('--centerX', centerX + 'px');
-    suckedStar.style.setProperty('--centerY', centerY + 'px');
-
     // Animação complexa em espiral
     const keyframes = [];
     const keyframeCount = 60;
@@ -886,7 +968,7 @@ function createNewStar() {
     const star = document.createElement('div');
     star.className = 'star';
 
-    const size = Math.random() * 8 + 3;
+    const size = Math.random() * 4 + 1;
     const posX = Math.random() * window.innerWidth;
     const posY = Math.random() * window.innerHeight;
 
@@ -894,7 +976,7 @@ function createNewStar() {
     star.style.height = size + 'px';
     star.style.left = posX + 'px';
     star.style.top = posY + 'px';
-    star.style.opacity = Math.random() * 0.8 + 0.2;
+    star.style.opacity = Math.random() * 0.6 + 0.2;
     star.style.animationDelay = Math.random() * 4 + 's';
 
     spaceBackground.appendChild(star);
@@ -1161,72 +1243,9 @@ function createExplosionParticle() {
     }, 1500);
 }
 
-/* Animações para o buraco negro e componentes */
-@keyframes rotateSlow {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-@keyframes rotateSlowReverse {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(-360deg); }
-}
-
-@keyframes rotateFast {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-@keyframes rotateFastReverse {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(-360deg); }
-}
-
-@keyframes rotateReverse {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(-360deg); }
-}
-
-/* Animação para as estrelas girarem em torno do buraco negro */
-@keyframes orbitStar {
-    0% {
-        transform: 
-            translate(-50%, -50%) 
-            rotate(0deg) 
-            translateX(400px) 
-            rotate(0deg);
-    }
-    100% {
-        transform: 
-            translate(-50%, -50%) 
-            rotate(360deg) 
-            translateX(400px) 
-            rotate(-360deg);
-    }
-}
-
-/* Container para estrelas orbitantes */
-.orbiting-stars {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 1000px;
-    height: 1000px;
-    z-index: -1;
-    pointer-events: none;
-}
-    }
-    
-    @keyframes rotateReverse {
-        from { transform: translate(-50%, -50%) rotate(0deg); }
-        to { transform: translate(-50%, -50%) rotate(-360deg); }
-    }
-`;
-document.head.appendChild(style);
-
 // Iniciar o ciclo
 createStars();
+createOrbitingStars();
 initializeBlackHole();
 blackHoleSlowPhase();
 
@@ -1258,6 +1277,11 @@ window.addEventListener('resize', () => {
     });
     stars = [];
     createStars();
+    
+    // Recriar estrelas orbitantes
+    const orbitingContainer = document.getElementById('orbitingStars');
+    orbitingContainer.innerHTML = '';
+    createOrbitingStars();
 });
 </script>
 
