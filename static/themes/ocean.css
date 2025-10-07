@@ -1,4 +1,4 @@
-/* static/themes/ocean.css */
+/* ================== VARIÁVEIS ================== */
 :root {
     --bg-primary: linear-gradient(to bottom, #1a5f96, #0b2b45, #051524);
     --bg-secondary: rgba(25, 25, 25, 0.4);
@@ -11,32 +11,31 @@
     --shadow-color: rgba(245,214,123,0.3);
 }
 
-/* ========== ELEMENTOS DO TEMA OCEAN ========== */
+/* ================== BODY ================== */
+body.theme-ocean {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", Arial, sans-serif;
+    min-height: 100vh;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ================== ELEMENTOS OCEAN ================== */
 .ocean-elements {
-    display: block;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -2;
     pointer-events: none;
     overflow: hidden;
+    z-index: -2;
 }
 
-/* ========== BASE DO TEMA OCEAN ========== */
-body.theme-ocean {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: "Poppins", Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-}
-
-/* ========== AREIA NO FUNDO ========== */
+/* ================== AREIA ================== */
 .sand-bottom {
     position: fixed;
     bottom: 0;
@@ -44,13 +43,13 @@ body.theme-ocean {
     width: 100%;
     height: 80px;
     background: var(--sand-color);
-    z-index: -1;
     border-top-left-radius: 50% 20px;
     border-top-right-radius: 50% 20px;
-    box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 -5px 15px rgba(212,175,55,0.3);
+    z-index: -1;
 }
 
-/* ========== ONDULAÇÕES ========== */
+/* ================== ONDULAÇÕES ================== */
 .wave {
     position: absolute;
     bottom: 80px;
@@ -70,37 +69,54 @@ body.theme-ocean {
 }
 
 @keyframes wave {
-    0% {
-        background-position-x: 0;
-    }
-    100% {
-        background-position-x: 1440px;
-    }
+    0% { background-position-x: 0; }
+    100% { background-position-x: 1440px; }
 }
 
-/* ========== CABEÇALHO ========== */
-body.theme-ocean header {
+/* ================== BOLHAS ================== */
+.bubble {
+    position: absolute;
+    bottom: 0;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation-name: floatBubble;
+    animation-timing-function: linear;
+    pointer-events: none;
+}
+
+@keyframes floatBubble {
+    0% { transform: translateY(0) scale(1); opacity: 0.5; }
+    50% { opacity: 0.8; }
+    100% { transform: translateY(-120vh) scale(1.3); opacity: 0; }
+}
+
+/* Criando bolhas de diferentes tamanhos e posições */
+.bubble:nth-child(1)  { width: 15px; height: 15px; left: 5%;  animation-duration: 8s; animation-delay: 0s; background: rgba(255,255,255,0.25); }
+.bubble:nth-child(2)  { width: 20px; height: 20px; left: 15%; animation-duration: 10s; animation-delay: 2s; background: rgba(255,255,255,0.2); }
+.bubble:nth-child(3)  { width: 25px; height: 25px; left: 25%; animation-duration: 12s; animation-delay: 1s; background: rgba(255,255,255,0.3); }
+.bubble:nth-child(4)  { width: 18px; height: 18px; left: 35%; animation-duration: 9s; animation-delay: 3s; background: rgba(255,255,255,0.22); }
+.bubble:nth-child(5)  { width: 22px; height: 22px; left: 45%; animation-duration: 11s; animation-delay: 0.5s; background: rgba(255,255,255,0.28); }
+.bubble:nth-child(6)  { width: 16px; height: 16px; left: 55%; animation-duration: 7s; animation-delay: 2.5s; background: rgba(255,255,255,0.24); }
+.bubble:nth-child(7)  { width: 28px; height: 28px; left: 65%; animation-duration: 13s; animation-delay: 1.2s; background: rgba(255,255,255,0.3); }
+.bubble:nth-child(8)  { width: 20px; height: 20px; left: 75%; animation-duration: 10s; animation-delay: 2.8s; background: rgba(255,255,255,0.26); }
+.bubble:nth-child(9)  { width: 18px; height: 18px; left: 85%; animation-duration: 9s; animation-delay: 1.6s; background: rgba(255,255,255,0.2); }
+.bubble:nth-child(10) { width: 25px; height: 25px; left: 95%; animation-duration: 12s; animation-delay: 0.9s; background: rgba(255,255,255,0.3); }
+
+/* ================== HEADER, BOTÕES, CARDS ================== */
+header {
     background: rgba(26, 95, 150, 0.7);
     backdrop-filter: blur(10px);
     padding: 20px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 25px rgba(0,0,0,0.8);
     border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 10;
 }
 
-body.theme-ocean .header-buttons {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* Botão Admin */
-body.theme-ocean .btn-admin {
+.btn-admin {
     padding: 14px 22px;
     background: linear-gradient(135deg, #d4af37, #8a6f2e);
     color: #111;
@@ -113,142 +129,30 @@ body.theme-ocean .btn-admin {
     transition: 0.3s;
 }
 
-body.theme-ocean .btn-admin:hover {
+.btn-admin:hover {
     background: linear-gradient(135deg, #f5d67b, #b99232);
     transform: scale(1.05);
     box-shadow: 0 0 25px rgba(245,214,123,0.6);
 }
 
-/* Perfil */
-body.theme-ocean .perfil {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    border: 2px solid rgba(245,214,123,0.8);
-    box-shadow: 0 0 15px rgba(245,214,123,0.4);
-    cursor: pointer;
-}
-
-/* ========== CONTEÚDO PRINCIPAL ========== */
-body.theme-ocean main {
-    padding: 50px 25px 180px;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-/* ========== EMBEDS ========== */
-body.theme-ocean .embed {
-    background: var(--bg-secondary);
-    backdrop-filter: blur(5px);
-    border: 2px solid var(--border-color);
-    border-radius: 20px;
-    padding: 35px 40px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    position: relative;
-    transition: 0.3s;
-    overflow: hidden;
-}
-
-body.theme-ocean .embed:hover {
-    transform: scale(1.01);
-    background: rgba(35, 35, 35, 0.5);
-    border-color: rgba(245,214,123,0.25);
-    box-shadow: 0 0 25px rgba(245,214,123,0.15);
-}
-
-body.theme-ocean .embed::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(245,214,123,0.3), transparent);
-}
-
-body.theme-ocean .embed-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--accent-color);
-    text-shadow: 0 0 12px rgba(245,214,123,0.4);
-    border-bottom: 1px solid rgba(245,214,123,0.2);
-    padding-bottom: 10px;
-    margin-bottom: 25px;
-}
-
-/* ========== CONTEÚDO DOS EMBEDS ========== */
-body.theme-ocean .embed-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
-}
-
-/* ========== CARDS ========== */
-body.theme-ocean .card {
+.card {
     background: rgba(20, 20, 20, 0.4);
     backdrop-filter: blur(5px);
     padding: 28px;
     border-radius: 14px;
     border-left: 5px solid rgba(212, 175, 55, 0.7);
     text-align: center;
-    font-size: 20px;
     color: var(--text-primary);
     transition: 0.3s;
-    position: relative;
-    overflow: hidden;
 }
 
-body.theme-ocean .card:hover {
+.card:hover {
     transform: translateY(-3px);
     box-shadow: 0 0 15px rgba(212,175,55,0.3);
-    background: rgba(30, 30, 30, 0.5);
 }
 
-body.theme-ocean .card-title {
-    font-size: 20px;
-    color: var(--accent-color);
-    margin-bottom: 12px;
-    text-shadow: 0 0 10px rgba(245,214,123,0.3);
-}
-
-/* ======== ANÚNCIOS ======== */
-body.theme-ocean .anuncio-card {
-    background: rgba(25, 25, 25, 0.4);
-    border: 2px solid var(--border-color);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-    backdrop-filter: blur(5px);
-    transition: 0.3s;
-}
-
-body.theme-ocean .anuncio-card:hover {
-    background: rgba(35, 35, 35, 0.5);
-    border-color: rgba(245,214,123,0.3);
-}
-
-body.theme-ocean .anuncio-titulo {
-    font-size: 22px;
-    color: #ffcc4d;
-    margin-bottom: 8px;
-}
-
-body.theme-ocean .anuncio-assunto {
-    font-size: 17px;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
-}
-
-body.theme-ocean .anuncio-info {
-    font-size: 14px;
-    color: #aaa;
-}
-
-/* ========== BARRA INFERIOR ========== */
-body.theme-ocean .nav-bottom {
+/* ================== NAV INFERIOR ================== */
+.nav-bottom {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -259,11 +163,10 @@ body.theme-ocean .nav-bottom {
     display: flex;
     justify-content: space-around;
     padding: 16px 15px;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
     z-index: 99;
 }
 
-body.theme-ocean .nav-bottom button {
+.nav-bottom button {
     flex: 1;
     margin: 0 10px;
     padding: 22px 10px;
@@ -277,265 +180,7 @@ body.theme-ocean .nav-bottom button {
     transition: 0.3s;
 }
 
-body.theme-ocean .nav-bottom button:hover {
+.nav-bottom button:hover {
     transform: scale(1.08);
     box-shadow: 0 0 35px rgba(245,214,123,0.6);
-}
-
-/* Botão de mudar tema */
-body.theme-ocean .btn-change-theme {
-    padding: 12px 20px;
-    background: rgba(245, 214, 123, 0.1);
-    border: 1px solid rgba(245, 214, 123, 0.3);
-    border-radius: 10px;
-    color: #f5d67b;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-body.theme-ocean .btn-change-theme:hover {
-    background: rgba(245, 214, 123, 0.2);
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(245, 214, 123, 0.3);
-}
-
-<script>
-// Sistema de bolhas MAIORES no estilo simplificado
-function createBubbles() {
-    const colors = [
-        'rgba(255,255,255,0.25)', 
-        'rgba(255,255,255,0.20)', 
-        'rgba(255,255,255,0.30)',
-        'rgba(255,255,255,0.18)',
-        'rgba(255,255,255,0.22)'
-    ];
-
-    // Criar bolhas iniciais
-    for(let i = 0; i < 25; i++){
-        const bubble = document.createElement('div');
-        bubble.classList.add('bubble');
-        bubble.style.left = Math.random() * 100 + 'vw';
-
-        // BOLHAS MAIORES: 15-40px (era 5-20px)
-        const size = Math.random() * 25 + 15;
-        bubble.style.width = size + 'px';
-        bubble.style.height = size + 'px';
-
-        // Velocidade variada
-        bubble.style.animationDuration = (4 + Math.random() * 6) + 's';
-
-        // Cor aleatória
-        bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
-
-        // Atraso inicial para distribuição
-        bubble.style.animationDelay = (Math.random() * 5) + 's';
-
-        document.body.appendChild(bubble);
-    }
-}
-
-// Função para criar bolhas continuamente
-function startBubbleGenerator() {
-    createBubbles(); // Bolhas iniciais
-
-    // Criar mais bolhas a cada 2 segundos
-    setInterval(() => {
-        const colors = [
-            'rgba(255,255,255,0.25)', 
-            'rgba(255,255,255,0.20)', 
-            'rgba(255,255,255,0.30)'
-        ];
-
-        // Criar 8-15 bolhas por ciclo
-        const bubbleCount = Math.floor(Math.random() * 8) + 8;
-
-        for(let i = 0; i < bubbleCount; i++){
-            const bubble = document.createElement('div');
-            bubble.classList.add('bubble');
-            bubble.style.left = Math.random() * 100 + 'vw';
-
-            // BOLHAS MAIORES
-            const size = Math.random() * 25 + 15;
-            bubble.style.width = size + 'px';
-            bubble.style.height = size + 'px';
-
-            bubble.style.animationDuration = (4 + Math.random() * 6) + 's';
-            bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
-
-            document.body.appendChild(bubble);
-
-            // Remover após animação
-            setTimeout(() => {
-                if (bubble.parentNode) {
-                    bubble.parentNode.removeChild(bubble);
-                }
-            }, (4 + Math.random() * 6) * 1000);
-        }
-    }, 2000);
-
-    // Rajadas intensas a cada 15 segundos
-    setInterval(() => {
-        if (Math.random() < 0.6) { // 60% de chance
-            const colors = [
-                'rgba(255,255,255,0.30)', 
-                'rgba(255,255,255,0.25)', 
-                'rgba(255,255,255,0.35)'
-            ];
-
-            // Rajada de 40-60 bolhas grandes
-            const burstCount = Math.floor(Math.random() * 21) + 40;
-
-            for(let i = 0; i < burstCount; i++){
-                setTimeout(() => {
-                    const bubble = document.createElement('div');
-                    bubble.classList.add('bubble');
-                    bubble.style.left = Math.random() * 100 + 'vw';
-
-                    // Bolhas ainda maiores na rajada
-                    const size = Math.random() * 30 + 20;
-                    bubble.style.width = size + 'px';
-                    bubble.style.height = size + 'px';
-
-                    // Mais rápidas na rajada
-                    bubble.style.animationDuration = (2 + Math.random() * 4) + 's';
-                    bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
-
-                    document.body.appendChild(bubble);
-
-                    // Remover após animação
-                    setTimeout(() => {
-                        if (bubble.parentNode) {
-                            bubble.parentNode.removeChild(bubble);
-                        }
-                    }, (2 + Math.random() * 4) * 1000);
-
-                }, Math.random() * 800);
-            }
-        }
-    }, 15000);
-}
-
-// Iniciar quando a página carregar
-window.addEventListener('load', startBubbleGenerator);
-
-// Limpeza periódica de bolhas antigas
-setInterval(() => {
-    const bubbles = document.querySelectorAll('.bubble');
-    if (bubbles.length > 150) {
-        for (let i = 0; i < 50; i++) {
-            if (bubbles[i]) {
-                bubbles[i].remove();
-            }
-        }
-    }
-}, 10000);
-</script>
-
-/* =========================
-   TEMA OCEAN — VISUAL BASE
-========================= */
-
-:root {
-  --bg-primary: linear-gradient(to bottom, #1a5f96, #0b2b45, #051524);
-  --bg-secondary: rgba(25, 25, 25, 0.4);
-  --accent-color: #f5d67b;
-  --accent-secondary: #64c3dd;
-  --sand-color: linear-gradient(to bottom, transparent, #d4af37 20%, #b8941f 60%, #8a6f2e);
-  --text-primary: #ffffff;
-  --text-secondary: #dddddd;
-  --border-color: rgba(245,214,123,0.15);
-  --shadow-color: rgba(245,214,123,0.3);
-}
-
-body.theme-ocean {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: "Poppins", Arial, sans-serif;
-  overflow-x: hidden;
-  position: relative;
-}
-
-/* =========================
-   ELEMENTOS DO OCEAN
-========================= */
-.ocean-elements {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: -2;
-  pointer-events: none;
-}
-
-/* =========================
-   AREIA E ONDAS
-========================= */
-.sand-bottom {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 80px;
-  background: var(--sand-color);
-  z-index: -1;
-  border-top-left-radius: 50% 20px;
-  border-top-right-radius: 50% 20px;
-  box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.3);
-}
-
-.wave {
-  position: absolute;
-  bottom: 80px;
-  width: 100%;
-  height: 15px;
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'><path fill='%230b2b45' fill-opacity='0.3' d='M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'/></svg>");
-  background-size: cover;
-  animation: wave 15s linear infinite;
-  z-index: -1;
-}
-
-.wave:nth-child(2) {
-  bottom: 70px;
-  opacity: 0.5;
-  animation: wave 12s linear infinite reverse;
-}
-
-@keyframes wave {
-  0% {
-    background-position-x: 0;
-  }
-  100% {
-    background-position-x: 1440px;
-  }
-}
-
-/* =========================
-   BOLHAS ANIMADAS
-========================= */
-.bubble {
-  position: absolute;
-  bottom: -50px;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: bubbleUp linear forwards;
-}
-
-@keyframes bubbleUp {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 0.9;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-110vh) scale(0.9);
-    opacity: 0;
-  }
 }
