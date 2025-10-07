@@ -126,40 +126,6 @@
     background: linear-gradient(135deg, #1a5f96, #0b2b45, #051524);
 }
 
-.theme-preview.dark {
-    background: linear-gradient(135deg, #0b0b0b, #1a1a1a, #0b0b0b);
-}
-
-.theme-preview.light {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-}
-
-.theme-preview.cyber {
-    background: linear-gradient(135deg, #0f0c29, #302b63);
-}
-
-/* Botão de mudar tema no dashboard */
-.btn-change-theme {
-    padding: 12px 20px;
-    background: rgba(245, 214, 123, 0.1);
-    border: 1px solid rgba(245, 214, 123, 0.3);
-    border-radius: 10px;
-    color: #f5d67b;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn-change-theme:hover {
-    background: rgba(245, 214, 123, 0.2);
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(245, 214, 123, 0.3);
-}
-
-/* No theme-modal.css, adicione: */
 .theme-preview.vulcan {
     background: linear-gradient(135deg, #000000, #2d0000, #5c0000);
     position: relative;
@@ -188,7 +154,40 @@
     animation: previewGlow 2s ease-in-out infinite alternate;
 }
 
+.theme-preview.dark {
+    background: linear-gradient(135deg, #0b0b0b, #1a1a1a, #0b0b0b);
+}
+
+.theme-preview.light {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.theme-preview.cyber {
+    background: linear-gradient(135deg, #0f0c29, #302b63);
+}
+
 @keyframes previewGlow {
     0% { background: rgba(255, 69, 0, 0.3); }
     100% { background: rgba(255, 100, 0, 0.6); }
+}
+
+/* Botão de mudar tema no dashboard */
+.btn-change-theme {
+    padding: 12px 20px;
+    background: rgba(245, 214, 123, 0.1);
+    border: 1px solid rgba(245, 214, 123, 0.3);
+    border-radius: 10px;
+    color: #f5d67b;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-change-theme:hover {
+    background: rgba(245, 214, 123, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(245, 214, 123, 0.3);
 }
