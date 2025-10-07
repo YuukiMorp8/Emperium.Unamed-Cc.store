@@ -7,11 +7,88 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
         body {
-            background: #101218;
-            color: #eee;
+            background: linear-gradient(to bottom, #6aa0d6 0%, #87CEEB 30%, #E0F7FF 70%, #F5F5DC 100%);
+            color: #333;
             font-family: 'Poppins', Arial, sans-serif;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            transition: background 2s ease;
+        }
+
+        /* Elementos do céu */
+        .sky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+
+        .cloud:before, .cloud:after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .wing {
+            position: absolute;
+            width: 60px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            z-index: 1;
+            animation: fall linear infinite;
+        }
+
+        .lightning {
+            position: absolute;
+            width: 4px;
+            height: 0;
+            background: yellow;
+            opacity: 0;
+            z-index: 2;
+        }
+
+        .rain {
+            position: absolute;
+            width: 2px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        @keyframes lightning {
+            0%, 100% { height: 0; opacity: 0; }
+            10% { height: 100px; opacity: 1; }
+            20% { height: 0; opacity: 0; }
+            30% { height: 150px; opacity: 1; }
+            40% { height: 0; opacity: 0; }
+        }
+
+        @keyframes rain {
+            to {
+                transform: translateY(100vh);
+            }
         }
 
         header {
@@ -19,27 +96,31 @@
             padding: 30px 0;
             font-size: 28px;
             font-weight: 600;
-            color: #6aa0d6;
+            color: #1a3c6e;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.5);
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .embed {
-            background: #2b3b5a; /* azul escuro */
-            border-left: 5px solid #cb2929; /* vermelho acinzentado */
+            background: rgba(255, 255, 255, 0.85);
+            border-left: 5px solid #cb2929;
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            color: #333;
         }
 
         .embed h3 {
             margin-top: 0;
-            color: #fff;
+            color: #1a3c6e;
         }
 
         .embed p {
@@ -67,18 +148,19 @@
         }
 
         .btn-secondary {
-            background: #444;
-        }
-
-        .btn-secondary:hover {
             background: #666;
         }
 
+        .btn-secondary:hover {
+            background: #888;
+        }
+
         form {
-            background: #1a1f2b;
+            background: rgba(255, 255, 255, 0.85);
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            color: #333;
         }
 
         input, textarea, select {
@@ -86,9 +168,9 @@
             padding: 12px;
             margin: 8px 0 15px 0;
             border-radius: 8px;
-            border: none;
-            background: #222a3c;
-            color: #eee;
+            border: 1px solid #ccc;
+            background: #fff;
+            color: #333;
             font-size: 15px;
         }
 
@@ -98,6 +180,8 @@
     </style>
 </head>
 <body>
+    <div class="sky" id="sky"></div>
+    
     <header>🔄 Troca de Material</header>
     <div class="container">
 
@@ -135,6 +219,142 @@
             window.open("https://discord.gg/3TfZpxSEWM", "_blank");
             alert("Você será redirecionado para o nosso Discord para enviar o formulário.");
         }
+
+        // Elementos do céu
+        const sky = document.getElementById('sky');
+        
+        // Criar nuvens
+        function createClouds() {
+            for (let i = 0; i < 8; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud';
+                
+                const size = Math.random() * 120 + 60;
+                cloud.style.width = size + 'px';
+                cloud.style.height = size / 2 + 'px';
+                cloud.style.top = Math.random() * 40 + 10 + '%';
+                cloud.style.left = Math.random() * 100 + '%';
+                cloud.style.opacity = Math.random() * 0.5 + 0.3;
+                
+                cloud.style.boxShadow = `
+                    ${size/3}px ${size/6}px 0 -${size/6}px white,
+                    -${size/3}px ${size/6}px 0 -${size/6}px white,
+                    0 -${size/6}px 0 -${size/8}px white
+                `;
+                
+                sky.appendChild(cloud);
+                
+                // Animação das nuvens
+                animateCloud(cloud);
+            }
+        }
+        
+        function animateCloud(cloud) {
+            let xPos = parseFloat(cloud.style.left);
+            let direction = Math.random() > 0.5 ? 1 : -1;
+            let speed = Math.random() * 0.2 + 0.05;
+            
+            function move() {
+                xPos += direction * speed;
+                
+                if (xPos > 110) xPos = -10;
+                if (xPos < -10) xPos = 110;
+                
+                cloud.style.left = xPos + '%';
+                requestAnimationFrame(move);
+            }
+            
+            move();
+        }
+        
+        // Criar asas caindo
+        function createWings() {
+            setInterval(() => {
+                const wing = document.createElement('div');
+                wing.className = 'wing';
+                
+                const size = Math.random() * 20 + 40;
+                wing.style.width = size + 'px';
+                wing.style.height = size / 2 + 'px';
+                wing.style.left = Math.random() * 100 + '%';
+                wing.style.top = '-50px';
+                wing.style.opacity = Math.random() * 0.5 + 0.3;
+                wing.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                
+                sky.appendChild(wing);
+                
+                // Remover asa após cair
+                setTimeout(() => {
+                    if (wing.parentNode) {
+                        wing.parentNode.removeChild(wing);
+                    }
+                }, 15000);
+            }, 2000);
+        }
+        
+        // Transição do céu para tempestade
+        function startStorm() {
+            // Mudar o fundo para escuro
+            document.body.style.background = 'linear-gradient(to bottom, #0a0a2a 0%, #1a1a4a 30%, #2a2a5a 70%, #3a3a3a 100%)';
+            
+            // Criar chuva
+            for (let i = 0; i < 100; i++) {
+                const rain = document.createElement('div');
+                rain.className = 'rain';
+                
+                rain.style.left = Math.random() * 100 + '%';
+                rain.style.top = Math.random() * 100 + '%';
+                rain.style.opacity = Math.random() * 0.5 + 0.3;
+                rain.style.animation = `rain ${Math.random() * 1 + 0.5}s linear infinite`;
+                rain.style.animationDelay = Math.random() * 2 + 's';
+                
+                sky.appendChild(rain);
+            }
+            
+            // Criar raios
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    createLightning();
+                }, i * 800);
+            }
+            
+            // Voltar ao céu normal após 5 segundos
+            setTimeout(() => {
+                document.body.style.background = 'linear-gradient(to bottom, #6aa0d6 0%, #87CEEB 30%, #E0F7FF 70%, #F5F5DC 100%)';
+                
+                // Remover chuva
+                const rainDrops = document.querySelectorAll('.rain');
+                rainDrops.forEach(drop => {
+                    if (drop.parentNode) {
+                        drop.parentNode.removeChild(drop);
+                    }
+                });
+            }, 5000);
+        }
+        
+        function createLightning() {
+            const lightning = document.createElement('div');
+            lightning.className = 'lightning';
+            
+            lightning.style.left = Math.random() * 100 + '%';
+            lightning.style.top = '10%';
+            lightning.style.animation = 'lightning 0.5s';
+            
+            sky.appendChild(lightning);
+            
+            setTimeout(() => {
+                if (lightning.parentNode) {
+                    lightning.parentNode.removeChild(lightning);
+                }
+            }, 1000);
+        }
+        
+        // Inicializar elementos do céu
+        createClouds();
+        createWings();
+        
+        // Iniciar tempestade a cada 20 segundos
+        setInterval(startStorm, 20000);
     </script>
 </body>
 </html>
