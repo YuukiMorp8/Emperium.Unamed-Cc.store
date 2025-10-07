@@ -1,6 +1,8 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <meta charset="UTF-8">
 <title>Dashboard - Emperium</title>
 
@@ -13,296 +15,592 @@
 <meta property="og:image" content="https://emperium-unamed-cc-store.onrender.com/static/default.png">
 <meta property="og:url" content="https://emperium-unamed-cc-store.onrender.com/dashboard">
 
+<!-- CSS do Modal de Temas -->
 <style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+/* ========== MODAL DE TEMAS ========== */
+.theme-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 380px;
+    height: 100vh;
+    background: rgba(25, 25, 25, 0.95);
+    backdrop-filter: blur(20px);
+    border-left: 2px solid rgba(245, 214, 123, 0.3);
+    box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+}
 
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #16213e 100%);
-        color: #ffffff;
-        min-height: 100vh;
-        padding: 20px;
-    }
+.theme-modal.active {
+    right: 0;
+    display: block;
+}
 
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
+.theme-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 999;
+}
 
-    /* Estilo para os embeds */
-    .embed {
-        background: rgba(25, 25, 35, 0.8);
-        border-radius: 12px;
-        margin-bottom: 20px;
-        border-left: 5px solid;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(10px);
-        overflow: hidden;
-    }
+.theme-modal-overlay.active {
+    display: block;
+}
 
-    .embed-title {
-        padding: 15px 20px;
-        font-size: 1.4rem;
-        font-weight: 600;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        align-items: center;
-    }
+.theme-header {
+    padding: 25px;
+    border-bottom: 1px solid rgba(245, 214, 123, 0.2);
+    background: rgba(20, 20, 20, 0.8);
+}
 
-    .embed-content {
-        padding: 20px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
+.theme-header h3 {
+    color: #f5d67b;
+    margin: 0;
+    font-size: 24px;
+    text-shadow: 0 0 10px rgba(245, 214, 123, 0.3);
+}
 
-    /* Dashboard Embed */
-    .embed-dashboard {
-        border-left-color: #4a90e2;
-    }
+.theme-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: #f5d67b;
+    font-size: 24px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
 
-    /* Preview Embed */
-    .embed-preview {
-        border-left-color: #50c878;
-    }
+.theme-close:hover {
+    background: rgba(245, 214, 123, 0.1);
+    transform: scale(1.1);
+}
 
-    /* Unamed Hall Embed */
-    .embed-hall {
-        border-left-color: #ff6b6b;
-    }
+.theme-grid {
+    padding: 20px;
+    display: grid;
+    gap: 15px;
+}
 
-    /* Cards dentro dos embeds */
-    .card {
-        background: rgba(40, 40, 50, 0.7);
-        border-radius: 10px;
-        padding: 18px;
-        flex: 1;
-        min-width: 200px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+.theme-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(245, 214, 123, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    }
+.theme-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(245, 214, 123, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 5px 20px rgba(245, 214, 123, 0.2);
+}
 
-    .card-title {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-        font-size: 1.1rem;
-        font-weight: 500;
-        color: #e0e0e0;
-    }
+.theme-card.active {
+    border-color: #f5d67b;
+    background: rgba(245, 214, 123, 0.1);
+    box-shadow: 0 0 25px rgba(245, 214, 123, 0.3);
+}
 
-    .card-value {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #ffffff;
-    }
+.theme-preview {
+    width: 100%;
+    height: 80px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-    /* Anúncios */
-    .anuncio-card {
-        background: rgba(40, 40, 50, 0.7);
-        border-radius: 10px;
-        padding: 18px;
-        margin-bottom: 15px;
-        border-left: 4px solid #ff6b6b;
-        transition: transform 0.3s ease;
-    }
+.theme-name {
+    color: #f5d67b;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
 
-    .anuncio-card:hover {
-        transform: translateX(5px);
-    }
+.theme-desc {
+    color: #aaa;
+    font-size: 12px;
+}
 
-    .anuncio-titulo {
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: #ff6b6b;
-    }
+/* Preview colors para cada tema */
+.theme-preview.ocean {
+    background: linear-gradient(135deg, #1a5f96, #0b2b45, #051524);
+}
 
-    .anuncio-assunto {
-        font-size: 1rem;
-        margin-bottom: 10px;
-        color: #e0e0e0;
-    }
+.theme-preview.dark {
+    background: linear-gradient(135deg, #0b0b0b, #1a1a1a, #0b0b0b);
+}
 
-    .anuncio-info {
-        font-size: 0.9rem;
-        color: #a0a0a0;
-        display: flex;
-        gap: 15px;
-    }
+.theme-preview.light {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
 
-    /* Barra de navegação inferior */
-    .nav-bottom {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(25, 25, 35, 0.95);
-        display: flex;
-        justify-content: space-around;
-        padding: 12px 0;
-        backdrop-filter: blur(10px);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        z-index: 1000;
-    }
+.theme-preview.cyber {
+    background: linear-gradient(135deg, #0f0c29, #302b63);
+}
 
-    .nav-bottom button {
-        background: rgba(60, 60, 80, 0.8);
-        border: none;
-        border-radius: 10px;
-        color: white;
-        padding: 12px 20px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex: 1;
-        margin: 0 5px;
-        max-width: 180px;
-    }
+/* Botão de mudar tema no dashboard */
+.btn-change-theme {
+    padding: 12px 20px;
+    background: rgba(245, 214, 123, 0.1);
+    border: 1px solid rgba(245, 214, 123, 0.3);
+    border-radius: 10px;
+    color: #f5d67b;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 15px;
+}
 
-    .nav-bottom button:hover {
-        background: rgba(80, 80, 100, 0.9);
-        transform: translateY(-3px);
-    }
+.btn-change-theme:hover {
+    background: rgba(245, 214, 123, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(245, 214, 123, 0.3);
+}
+</style>
 
-    /* Responsividade */
-    @media (max-width: 768px) {
-        .embed-content {
-            flex-direction: column;
-        }
-        
-        .card {
-            min-width: 100%;
-        }
-        
-        .nav-bottom {
-            flex-wrap: wrap;
-        }
-        
-        .nav-bottom button {
-            margin-bottom: 5px;
-            max-width: 45%;
-        }
+<style>
+/* ========== BASE ========== */
+html, body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", Arial, sans-serif;
+    background: linear-gradient(to bottom, #1a5f96, #0b2b45, #051524);
+    color: #f5f5f5;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ========== EFEITO ÁGUA ========== */
+.ocean-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+}
+
+/* ========== AREIA NO FUNDO ========== */
+.sand-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, #d4af37 20%, #b8941f 60%, #8a6f2e);
+    z-index: -1;
+    border-top-left-radius: 50% 20px;
+    border-top-right-radius: 50% 20px;
+    box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* ========== CABEÇALHO ========== */
+header {
+    background: rgba(26, 95, 150, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.8);
+    border-bottom: 1px solid rgba(245,214,123,0.25);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Botão Admin */
+.btn-admin {
+    padding: 14px 22px;
+    background: linear-gradient(135deg, #d4af37, #8a6f2e);
+    color: #111;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    border: none;
+    font-size: 18px;
+    box-shadow: 0 0 20px rgba(245,214,123,0.3);
+    transition: 0.3s;
+}
+.btn-admin:hover {
+    background: linear-gradient(135deg, #f5d67b, #b99232);
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(245,214,123,0.6);
+}
+
+/* Perfil */
+.perfil {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid rgba(245,214,123,0.8);
+    box-shadow: 0 0 15px rgba(245,214,123,0.4);
+    cursor: pointer;
+}
+
+/* ========== CONTEÚDO PRINCIPAL ========== */
+main {
+    padding: 50px 25px 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ========== EMBEDS ========== */
+
+.embed {
+    background: rgba(25, 25, 25, 0.4);
+    backdrop-filter: blur(5px);
+    border: 2px solid rgba(245,214,123,0.15);
+    border-radius: 20px;
+    padding: 35px 40px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transition: 0.3s;
+    overflow: hidden;
+}
+.embed:hover {
+    transform: scale(1.01);
+    background: rgba(35, 35, 35, 0.5);
+    border-color: rgba(245,214,123,0.25);
+    box-shadow: 0 0 25px rgba(245,214,123,0.15);
+}
+
+.embed::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(245,214,123,0.3), transparent);
+}
+
+.embed-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #f5d67b;
+    text-shadow: 0 0 12px rgba(245,214,123,0.4);
+    border-bottom: 1px solid rgba(245,214,123,0.2);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+}
+
+/* ========== CONTEÚDO DOS EMBEDS ========== */
+.embed-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+/* ========== CARDS ========== */
+.card {
+    background: rgba(20, 20, 20, 0.4);
+    backdrop-filter: blur(5px);
+    padding: 28px;
+    border-radius: 14px;
+    border-left: 5px solid rgba(212, 175, 55, 0.7);
+    text-align: center;
+    font-size: 20px;
+    color: #fff;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px rgba(212,175,55,0.3);
+    background: rgba(30, 30, 30, 0.5);
+}
+.card-title {
+    font-size: 20px;
+    color: #f5d67b;
+    margin-bottom: 12px;
+    text-shadow: 0 0 10px rgba(245,214,123,0.3);
+}
+
+/* ======== ANÚNCIOS ======== */
+.anuncio-card {
+    background: rgba(25, 25, 25, 0.4);
+    border: 2px solid rgba(245,214,123,0.15);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+}
+.anuncio-card:hover {
+    background: rgba(35, 35, 35, 0.5);
+    border-color: rgba(245,214,123,0.3);
+}
+.anuncio-titulo {
+    font-size: 22px;
+    color: #ffcc4d;
+    margin-bottom: 8px;
+}
+.anuncio-assunto {
+    font-size: 17px;
+    color: #eee;
+    margin-bottom: 6px;
+}
+.anuncio-info {
+    font-size: 14px;
+    color: #aaa;
+}
+
+/* ========== BARRA INFERIOR ========== */
+.nav-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(20,20,20,0.85);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(245,214,123,0.25);
+    display: flex;
+    justify-content: space-around;
+    padding: 16px 15px;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
+    z-index: 99;
+}
+.nav-bottom button {
+    flex: 1;
+    margin: 0 10px;
+    padding: 22px 10px;
+    background: linear-gradient(135deg, #d4af37, #8a6f2e);
+    border: none;
+    border-radius: 14px;
+    font-size: 20px;
+    color: #111;
+    font-weight: bold;
+    box-shadow: 0 0 25px rgba(245,214,123,0.35);
+    transition: 0.3s;
+}
+.nav-bottom button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 35px rgba(245,214,123,0.6);
+}
+
+/* ========== BOLHAS ========== */
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    animation: float linear infinite;
+    z-index: -1;
+    bottom: -50px;
+}
+
+@keyframes float {
+    to {
+        transform: translateY(calc(-100vh - 100px));
     }
+}
+
+/* ========== ONDULAÇÕES ========== */
+.wave {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230b2b45" fill-opacity="0.3" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+    background-size: cover;
+    animation: wave 15s linear infinite;
+    z-index: -1;
+}
+
+.wave:nth-child(2) {
+    bottom: 70px;
+    opacity: 0.5;
+    animation: wave 12s linear infinite reverse;
+}
+
+@keyframes wave {
+    0% {
+        background-position-x: 0;
+    }
+    100% {
+        background-position-x: 1440px;
+    }
+}
 </style>
 </head>
-
 <body>
-<div class="container">
-    <!-- Dashboard Embed -->
-    <div class="embed embed-dashboard">
-        <div class="embed-title">📊 Dashboard</div>
-        <div class="embed-content">
-            <div class="card">
-                <div class="card-title">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:5px;">
-                        <path fill="#21be13" fill-rule="evenodd" d="M18.413 3.31C17.428 3 16.528 3 14.728 3H9.272c-1.8 0-2.7 0-3.684.31a3.83 3.83 0 0 0-2.279 2.278C3 6.56 3 7.466 3 9.272v5.453c0 1.803 0 2.703.31 3.688a3.82 3.82 0 0 0 2.278 2.278C6.56 21 7.466 21 9.272 21h5.456c1.8 0 2.7 0 3.685-.315a3.82 3.82 0 0 0 2.278-2.278c.309-.973.309-1.879.309-3.684V9.275c0-1.803 0-2.703-.31-3.687a3.82 3.82 0 0 0-2.277-2.279M15.45 9.693a.356.356 0 0 1-.506 0l.006.005a3.77 3.77 0 0 0-2.447-.925c-.742 0-1.482.27-1.482.95c0 .649.678.897 1.505 1.2l.205.075c1.603.554 2.925 1.235 2.925 2.849c0 1.752-1.328 2.953-3.507 3.1l-.197.953a.37.37 0 0 1-.365.298l-1.364-.011a.373.373 0 0 1-.358-.453l.209-1.004a4.96 4.96 0 0 1-2.192-1.238a.38.38 0 0 1 0-.54l.76-.76a.366.366 0 0 1 .517 0c.731.735 1.676 1.036 2.576 1.036c.99 0 1.66-.41 1.66-1.111c0-.615-.55-.822-1.592-1.213l-.35-.131c-1.34-.481-2.609-1.182-2.609-2.813c0-1.884 1.536-2.804 3.347-2.897l.197-.95a.37.37 0 0 1 .36-.299h1.36c.234 0 .409.22.36.453l-.221 1.069a5.6 5.6 0 0 1 1.89 1.08c.157.152.166.405.017.546z"/>
-                    </svg>
-                    Saldo Atual
-                </div>
-                <div class="card-value">{{ dados.saldo }}</div>
-            </div>
 
-            <div class="card">
-                <div class="card-title">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 16 16" style="vertical-align:middle;margin-right:5px;">
-                        <path fill="#35b73b" fill-rule="evenodd" d="M15.963 7.23A8 8 0 0 1 .044 8.841a.75.75 0 0 1 1.492-.158a6.5 6.5 0 1 0 9.964-6.16V4.25a.75.75 0 0 1-1.5 0V0h4.25a.75.75 0 0 1 0 1.5h-1.586a8 8 0 0 1 3.299 5.73M7 2a1 1 0 1 0 0-2a1 1 0 0 0 0 2m-2.25.25a1 1 0 1 1-2 0a1 1 0 0 1 2 0M1.5 6a1 1 0 1 0 0-2a1 1 0 0 0 0 2" clip-rule="evenodd"/>
-                    </svg>
-                    Total Gasto
-                </div>
-                <div class="card-value">{{ dados.gasto }}</div>
-            </div>
+<!-- Efeito de água com bolhas -->
+<div class="ocean-container" id="ocean"></div>
+<div class="sand-bottom"></div>
+<div class="wave"></div>
+<div class="wave"></div>
 
-            <div class="card">
-                <div class="card-title">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 32 32" style="vertical-align:middle;margin-right:5px;">
-                        <path fill="currentColor" d="M4 7a1 1 0 0 0 0 2h2.22l2.624 10.5c.223.89 1.02 1.5 1.937 1.5h12.47c.903 0 1.67-.6 1.907-1.47L27.75 10h-2.094l-2.406 9H10.78L8.157 8.5A1.984 1.984 0 0 0 6.22 7zm18 14c-1.645 0-3 1.355-3 3s1.355 3 3 3s3-1.355 3-3s-1.355-3-3-3m-9 0c-1.645 0-3 1.355-3 3s1.355 3 3 3s3-1.355 3-3s-1.355-3-3-3m3-14v5h-3l4 4l4-4h-3V7z"/>
-                    </svg>
-                    Compras Totais
-                </div>
-                <div class="card-value">{{ dados.compras }}</div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 32 32" style="vertical-align:middle;margin-right:5px;">
-                        <path fill="none" stroke="#64c3dd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 20h8M3 13h26m-6 7h2M5 7C4 7 3 8 3 9v14c0 1 1 2 2 2h22c1 0 2-1 2-2V9c0-1-1-2-2-2z"/>
-                    </svg>
-                    Nível
-                </div>
-                <div class="card-value">{{ dados.nivel }}</div>
-            </div>
-        </div>
+<!-- Modal de Seleção de Temas -->
+<div class="theme-modal-overlay" id="theme-overlay"></div>
+<div class="theme-modal" id="theme-modal">
+    <div class="theme-header">
+        <h3>🎨 Escolher Tema</h3>
+        <button class="theme-close">&times;</button>
     </div>
-
-    <!-- Preview Embed -->
-    <div class="embed embed-preview">
-        <div class="embed-title">🔍 Preview</div>
-        <div class="embed-content">
-            <div class="card">
-                <div class="card-title">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 32 32" style="vertical-align:middle;margin-right:8px;">
-                        <path fill="none" stroke="#64c3dd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 20h8M3 13h26m-6 7h2M5 7C4 7 3 8 3 9v14c0 1 1 2 2 2h22c1 0 2-1 2-2V9c0-1-1-2-2-2z"/>
-                    </svg>
-                    Cards Disponíveis
-                </div>
-                <div class="card-value">{{ dados.materiais }}</div>
-            </div>
-            <div class="card">
-                <div class="card-title">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 32 32" style="vertical-align:middle;margin-right:8px;">
-                        <path fill="none" stroke="#64c3dd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 20h8M3 13h26m-6 7h2M5 7C4 7 3 8 3 9v14c0 1 1 2 2 2h22c1 0 2-1 2-2V9c0-1-1-2-2-2z"/>
-                    </svg>
-                    Níveis Disponíveis
-                </div>
-                <div class="card-value">
-                    {% for nivel in niveis %}
-                    <div>{{ nivel }}</div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Unamed Hall Embed -->
-    <div class="embed embed-hall">
-        <div class="embed-title">📣 Unamed Hall</div>
-        <div class="embed-content">
-            {% if anuncios %}
-                {% for a in anuncios %}
-                <div class="anuncio-card">
-                    <div class="anuncio-titulo">{{ a.titulo }}</div>
-                    <div class="anuncio-assunto">{{ a.assunto }}</div>
-                    <div class="anuncio-info">📅 {{ a.data }} | 👤 {{ a.criador }}</div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <p style="text-align:center; color:#aaa; width: 100%;">Nenhum anúncio disponível no momento.</p>
-            {% endif %}
+    <div class="theme-grid" id="theme-grid">
+        <div class="theme-card active" data-theme="ocean">
+            <div class="theme-preview ocean"></div>
+            <div class="theme-name">🌊 Oceano</div>
+            <div class="theme-desc">Tema aquático com bolhas animadas</div>
         </div>
     </div>
 </div>
 
+<header>
+    <button class="btn-admin" style="margin-right:auto;"
+            onclick="location.href='/admin_login'">Painel de Admin</button>
+
+    <div class="header-buttons">
+        <button class="btn-change-theme" id="btn-change-theme">
+            🎨 Mudar Tema
+        </button>
+        <a href="/perfil"><img src="{{ dados.foto }}" class="perfil"></a>
+    </div>
+</header>
+
+<main>
+    <!-- Dashboard -->
+
+<div class="embed">
+  <div class="embed-title">📊 Dashboard</div>
+  <div class="embed-content">
+
+    <div class="card">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:5px;">
+          <path fill="#21be13" fill-rule="evenodd" d="M18.413 3.31C17.428 3 16.528 3 14.728 3H9.272c-1.8 0-2.7 0-3.684.31a3.83 3.83 0 0 0-2.279 2.278C3 6.56 3 7.466 3 9.272v5.453c0 1.803 0 2.703.31 3.688a3.82 3.82 0 0 0 2.278 2.278C6.56 21 7.466 21 9.272 21h5.456c1.8 0 2.7 0 3.685-.315a3.82 3.82 0 0 0 2.278-2.278c.309-.973.309-1.879.309-3.684V9.275c0-1.803 0-2.703-.31-3.687a3.82 3.82 0 0 0-2.277-2.279M15.45 9.693a.356.356 0 0 1-.506 0l.006.005a3.77 3.77 0 0 0-2.447-.925c-.742 0-1.482.27-1.482.95c0 .649.678.897 1.505 1.2l.205.075c1.603.554 2.925 1.235 2.925 2.849c0 1.752-1.328 2.953-3.507 3.1l-.197.953a.37.37 0 0 1-.365.298l-1.364-.011a.373.373 0 0 1-.358-.453l.209-1.004a4.96 4.96 0 0 1-2.192-1.238a.38.38 0 0 1 0-.54l.76-.76a.366.366 0 0 1 .517 0c.731.735 1.676 1.036 2.576 1.036c.99 0 1.66-.41 1.66-1.111c0-.615-.55-.822-1.592-1.213l-.35-.131c-1.34-.481-2.609-1.182-2.609-2.813c0-1.884 1.536-2.804 3.347-2.897l.197-.95a.37.37 0 0 1 .36-.299h1.36c.234 0 .409.22.36.453l-.221 1.069a5.6 5.6 0 0 1 1.89 1.08c.157.152.166.405.017.546z"/>
+        </svg>
+        Saldo Atual
+      </div>
+      {{ dados.saldo }}
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 16 16" style="vertical-align:middle;margin-right:5px;">
+          <path fill="#35b73b" fill-rule="evenodd" d="M15.963 7.23A8 8 0 0 1 .044 8.841a.75.75 0 0 1 1.492-.158a6.5 6.5 0 1 0 9.964-6.16V4.25a.75.75 0 0 1-1.5 0V0h4.25a.75.75 0 0 1 0 1.5h-1.586a8 8 0 0 1 3.299 5.73M7 2a1 1 0 1 0 0-2a1 1 0 0 0 0 2m-2.25.25a1 1 0 1 1-2 0a1 1 0 0 1 2 0M1.5 6a1 1 0 1 0 0-2a1 1 0 0 0 0 2" clip-rule="evenodd"/>
+        </svg>
+        Total Gasto
+      </div>
+      {{ dados.gasto }}
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 32 32" style="vertical-align:middle;margin-right:5px;">
+          <path fill="currentColor" d="M4 7a1 1 0 0 0 0 2h2.22l2.624 10.5c.223.89 1.02 1.5 1.937 1.5h12.47c.903 0 1.67-.6 1.907-1.47L27.75 10h-2.094l-2.406 9H10.78L8.157 8.5A1.984 1.984 0 0 0 6.22 7zm18 14c-1.645 0-3 1.355-3 3s1.355 3 3 3s3-1.355 3-3s-1.355-3-3-3m-9 0c-1.645 0-3 1.355-3 3s1.355 3 3 3s3-1.355 3-3s-1.355-3-3-3m3-14v5h-3l4 4l4-4h-3V7z"/>
+        </svg>
+        Compras Totais
+      </div>
+      {{ dados.compras }}
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 32 32" style="vertical-align:middle;margin-right:5px;">
+          <path fill="none" stroke="#64c3dd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 20h8M3 13h26m-6 7h2M5 7C4 7 3 8 3 9v14c0 1 1 2 2 2h22c1 0 2-1 2-2V9c0-1-1-2-2-2z"/>
+        </svg>
+        Nível
+      </div>
+      {{ dados.nivel }}
+    </div>
+
+  </div>
+</div>
+
+    <!-- Unamed Emperium -->
+
+<div class="embed">
+    <div class="embed-title">🏢 Unamed Emperium</div>
+    <div class="embed-content">
+        <div class="card">
+            <div class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 32 32" style="vertical-align:middle;margin-right:8px;">
+                    <path fill="none" stroke="#64c3dd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 20h8M3 13h26m-6 7h2M5 7C4 7 3 8 3 9v14c0 1 1 2 2 2h22c1 0 2-1 2-2V9c0-1-1-2-2-2z"/>
+                </svg>
+                Cards Disponíveis
+            </div>
+            {{ dados.materiais }}
+        </div>
+        <div class="card">
+            <div class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 32 32" style="vertical-align:middle;margin-right:8px;">
+                    <path fill="none" stroke="#64c3dd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 20h8M3 13h26m-6 7h2M5 7C4 7 3 8 3 9v14c0 1 1 2 2 2h22c1 0 2-1 2-2V9c0-1-1-2-2-2z"/>
+                </svg>
+                Níveis Disponíveis
+            </div>
+            {% for nivel in niveis %}
+            <div>{{ nivel }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+    <!-- 📣 Unamed Hall (Anúncios) -->
+    <div class="embed">
+        <div class="embed-title">📣 Unamed Hall</div>
+
+        {% if anuncios %}
+            {% for a in anuncios %}
+            <div class="anuncio-card">
+                <div class="anuncio-titulo">{{ a.titulo }}</div>
+                <div class="anuncio-assunto">{{ a.assunto }}</div>
+                <div class="anuncio-info">📅 {{ a.data }} | 👤 {{ a.criador }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align:center; color:#aaa;">Nenhum anúncio disponível no momento.</p>
+        {% endif %}
+    </div>
+</main>
+
 <!-- Barra inferior fixa -->
+
 <div class="nav-bottom">
     <button onclick="location.href='/adicionar_saldo'">
         <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:8px;">
             <path fill="#2f9786" d="m15.45 16.52l-3.01-3.01c-.11-.11-.24-.13-.31-.13s-.2.02-.31.13L8.8 16.53c-.34.34-.87.89-2.64.89l3.71 3.7a3 3 0 0 0 4.24 0l3.72-3.71c-.91 0-1.67-.18-2.38-.89M8.8 7.47l3.02 3.02c.08.08.2.13.31.13s.23-.05.31-.13l2.99-2.99c.71-.74 1.52-.91 2.43-.91l-3.72-3.71a3 3 0 0 0-4.24 0l-3.71 3.7c1.76 0 2.3.58 2.61.89"/>
             <path fill="#2f9786" d="m21.11 9.85l-2.25-2.26H17.6c-.54 0-1.08.22-1.45.61l-3 3c-.28.28-.65.42-1.02.42a1.5 1.5 0 0 1-1.02-.42L8.09 8.17c-.38-.38-.9-.6-1.45-.6H5.17l-2.29 2.3a3 3 0 0 0 0 4.24l2.29 2.3h1.48c.54 0 1.06-.22 1.45-.6l3.02-3.02c.28-.28.65-.42 1.02-.42s.74.14 1.02.42l3.01 3.01c.38.38.9.6 1.45.6h1.26l2.25-2.26a3.04 3.04 0 0 0-.02-4.29"/>
         </svg>
-        Adicionar Saldo
+      Adicionar Saldo
     </button>
 
     <button onclick="location.href='/comprar'">
@@ -326,6 +624,285 @@
         Trocar
     </button>
 </div>
+
+<script>
+// ========== SISTEMA DE TEMAS ==========
+class ThemeManager {
+    constructor() {
+        this.themes = ['ocean'];
+        this.currentTheme = this.getSavedTheme() || 'ocean';
+        this.init();
+    }
+
+    init() {
+        this.addEventListeners();
+    }
+
+    getSavedTheme() {
+        return localStorage.getItem('selectedTheme');
+    }
+
+    saveTheme(theme) {
+        localStorage.setItem('selectedTheme', theme);
+    }
+
+    loadTheme(themeName) {
+        // Por enquanto só temos o tema oceano
+        // Futuramente carregará CSS dinamicamente
+        this.currentTheme = themeName;
+        this.saveTheme(themeName);
+        this.updateActiveThemeCard();
+
+        // Mostrar mensagem de sucesso
+        this.showThemeChangeMessage(themeName);
+    }
+
+    addEventListeners() {
+        // Botão de abrir modal
+        document.getElementById('btn-change-theme')?.addEventListener('click', () => {
+            this.openModal();
+        });
+
+        // Fechar modal
+        document.getElementById('theme-overlay')?.addEventListener('click', () => {
+            this.closeModal();
+        });
+
+        document.querySelector('.theme-close')?.addEventListener('click', () => {
+            this.closeModal();
+        });
+
+        // Tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.closeModal();
+        });
+
+        // Clique nos cards de tema
+        document.addEventListener('click', (e) => {
+            const themeCard = e.target.closest('.theme-card');
+            if (themeCard) {
+                const theme = themeCard.dataset.theme;
+                this.loadTheme(theme);
+                this.closeModal();
+            }
+        });
+    }
+
+    openModal() {
+        document.getElementById('theme-modal').classList.add('active');
+        document.getElementById('theme-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    closeModal() {
+        document.getElementById('theme-modal').classList.remove('active');
+        document.getElementById('theme-overlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    updateActiveThemeCard() {
+        document.querySelectorAll('.theme-card').forEach(card => {
+            card.classList.remove('active');
+            if (card.dataset.theme === this.currentTheme) {
+                card.classList.add('active');
+            }
+        });
+    }
+
+    showThemeChangeMessage(themeName) {
+        // Criar notificação temporária
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(25, 25, 25, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(245, 214, 123, 0.3);
+            border-radius: 10px;
+            padding: 15px 20px;
+            color: #f5d67b;
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+        `;
+
+        const themeNames = {
+            'ocean': '🌊 Oceano'
+        };
+
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 20px;">🎨</span>
+                <div>
+                    <div style="font-weight: bold;">Tema alterado!</div>
+                    <div style="font-size: 12px; color: #aaa;">${themeNames[themeName] || themeName} ativado</div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Remover após 3 segundos
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+}
+
+// ========== SISTEMA DE BOLHAS ==========
+function createBubbles() {
+    const colors = [
+        'rgba(255,255,255,0.25)', 
+        'rgba(255,255,255,0.20)', 
+        'rgba(255,255,255,0.30)',
+        'rgba(255,255,255,0.18)',
+        'rgba(255,255,255,0.22)'
+    ];
+
+    // Criar bolhas iniciais
+    for(let i = 0; i < 30; i++){
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        bubble.style.left = Math.random() * 100 + 'vw';
+
+        // BOLHAS MAIORES: 15-40px
+        const size = Math.random() * 25 + 15;
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+
+        // Velocidade variada
+        bubble.style.animationDuration = (4 + Math.random() * 6) + 's';
+
+        // Cor aleatória
+        bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+        // Atraso inicial para distribuição
+        bubble.style.animationDelay = (Math.random() * 3) + 's';
+
+        document.getElementById('ocean').appendChild(bubble);
+    }
+}
+
+function startBubbleGenerator() {
+    createBubbles(); // Bolhas iniciais
+
+    // Criar mais bolhas a cada 1.5 segundos
+    setInterval(() => {
+        const colors = [
+            'rgba(255,255,255,0.25)', 
+            'rgba(255,255,255,0.20)', 
+            'rgba(255,255,255,0.30)'
+        ];
+
+        // Criar 10-18 bolhas por ciclo
+        const bubbleCount = Math.floor(Math.random() * 9) + 10;
+
+        for(let i = 0; i < bubbleCount; i++){
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.style.left = Math.random() * 100 + 'vw';
+
+            // BOLHAS MAIORES
+            const size = Math.random() * 25 + 15;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+
+            bubble.style.animationDuration = (4 + Math.random() * 6) + 's';
+            bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            document.getElementById('ocean').appendChild(bubble);
+
+            // Remover após animação
+            setTimeout(() => {
+                if (bubble.parentNode) {
+                    bubble.parentNode.removeChild(bubble);
+                }
+            }, (4 + Math.random() * 6) * 1000);
+        }
+    }, 1500);
+
+    // RAJADAS INTENSAS a cada 12 segundos
+    setInterval(() => {
+        if (Math.random() < 0.6) { // 60% de chance
+            const colors = [
+                'rgba(255,255,255,0.30)', 
+                'rgba(255,255,255,0.25)', 
+                'rgba(255,255,255,0.35)'
+            ];
+
+            // Rajada de 50-80 bolhas grandes
+            const burstCount = Math.floor(Math.random() * 31) + 50;
+
+            for(let i = 0; i < burstCount; i++){
+                setTimeout(() => {
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('bubble');
+                    bubble.style.left = Math.random() * 100 + 'vw';
+
+                    // Bolhas ainda maiores na rajada
+                    const size = Math.random() * 30 + 20;
+                    bubble.style.width = size + 'px';
+                    bubble.style.height = size + 'px';
+
+                    // Mais rápidas na rajada
+                    bubble.style.animationDuration = (2 + Math.random() * 4) + 's';
+                    bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+                    document.getElementById('ocean').appendChild(bubble);
+
+                    // Remover após animação
+                    setTimeout(() => {
+                        if (bubble.parentNode) {
+                            bubble.parentNode.removeChild(bubble);
+                        }
+                    }, (2 + Math.random() * 4) * 1000);
+
+                }, Math.random() * 600);
+            }
+        }
+    }, 12000);
+}
+
+// ========== INICIALIZAÇÃO ==========
+document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar sistema de temas
+    window.themeManager = new ThemeManager();
+
+    // Inicializar sistema de bolhas
+    startBubbleGenerator();
+});
+
+// Limpeza periódica de bolhas antigas
+setInterval(() => {
+    const bubbles = document.querySelectorAll('.bubble');
+    if (bubbles.length > 200) {
+        for (let i = 0; i < 80; i++) {
+            if (bubbles[i]) {
+                bubbles[i].remove();
+            }
+        }
+    }
+}, 15000);
+
+// Adicionar animações CSS para notificações
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
+</script>
 
 </body>
 </html>
