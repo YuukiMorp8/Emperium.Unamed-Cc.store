@@ -485,8 +485,14 @@ main {
 </div>
 
 <header>
-    <button class="btn-admin" style="margin-right:auto;"
-            onclick="location.href='/admin_login'">Painel de Admin</button>
+    <div style="display: flex; align-items: center; gap: 15px; margin-right:auto;">
+        <button class="btn-admin" onclick="location.href='/admin_login'">
+            Painel de Admin
+        </button>
+        <button class="btn-admin" style="background: linear-gradient(135deg, #3da9f5, #1e6fc2);" onclick="location.href='/saiba_mais'">
+            Saiba Mais
+        </button>
+    </div>
 
     <div class="header-buttons">
         <button class="btn-change-theme" id="btn-change-theme">
