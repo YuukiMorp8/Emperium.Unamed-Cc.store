@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saiba Mais - Sobre Nós</title>
+    <link rel="stylesheet" href="/static/themes/vulcan.css">
+    <style>
+        body {
+            background: var(--bg-primary);
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: var(--bg-secondary);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .title {
+            text-align: center;
+            margin: 40px 0 20px 0;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        .embed {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin: 20px auto;
+            max-width: 900px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .embed:hover {
+            transform: scale(1.01);
+        }
+
+        .embed h2 {
+            color: #3da9f5;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .embed p {
+            line-height: 1.6;
+            color: #eaeaea;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .separator {
+            border-top: 1px solid rgba(255,255,255,0.15);
+            margin: 15px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="btn-admin" onclick="location.href='/'">🏠 Início</button>
+        <h1>Saiba Mais</h1>
+        <div style="width: 60px;"></div>
+    </header>
+
+    <h2 class="title">Saiba mais sobre nós</h2>
+
+    <!-- Embed 1 -->
+    <div class="embed">
+        <h2>O que você precisa saber sobre o nosso site</h2>
+        <p>Nosso site é totalmente automatizado, embora em alguns casos específicos possa ser necessária a intervenção de um moderador.</p>
+        <p>Nossos moderadores <b>nunca enviarão mensagens diretas</b> solicitando dados pessoais, pagamentos ou qualquer tipo de informação sensível. Caso receba algo suspeito, denuncie imediatamente — o responsável será banido.</p>
+        <p>Mesmo sendo uma plataforma confiável, sabemos que nenhuma pessoa é 100% confiável. Se desconfiar de alguém, denuncie — seja ele um usuário, administrador ou subdono.</p>
+    </div>
+
+    <!-- Embed 2 -->
+    <div class="embed">
+        <h2>Sobre o Site</h2>
+        <p>Nosso sistema trabalha de forma automatizada para garantir agilidade e praticidade em todas as etapas.</p>
+        <p>Os pagamentos são processados de maneira segura, com índice de sucesso de até <b>99%</b>.</p>
+        <p>Aplicamos apenas uma taxa simbólica de <b>10%</b> por operação, mantendo os custos baixos e uma ótima experiência para o usuário.</p>
+    </div>
+
+    <!-- Embed 3 -->
+    <div class="embed">
+        <h2>Sobre as Compras</h2>
+        <p>Todas as compras são <b>totalmente automatizadas</b>, com materiais previamente testados e aprovados pela equipe.</p>
+        <p>Oferecemos uma <b>garantia de troca de até 10 minutos</b> após a compra. Após esse período, não será possível solicitar reembolso ou substituição.</p>
+    </div>
+
+    <!-- Embed 4 -->
+    <div class="embed">
+        <h2>Fornecedores</h2>
+        <p>Se você tem dúvidas sobre os nomes exibidos após o “-” em cada produto, aqui está a explicação:</p>
+        <p>Esses nomes servem para identificar nossos fornecedores, mantendo transparência e qualidade.</p>
+        <p>Cada fornecedor possui valores, prazos e níveis de qualidade diferentes — por isso é importante distingui-los.</p>
+    </div>
+
+    <!-- Embed 5 (menor) -->
+    <div class="embed">
+        <p><b>DT</b> – Fornecedor com preços acessíveis e grande disponibilidade de produtos. A qualidade é razoável, mas pode variar conforme o item.</p>
+
+        <div class="separator"></div>
+
+        <p><b>LGC</b> – Fornecedor com preços um pouco mais altos, mas com qualidade superior. Raramente apresenta falhas em seus materiais.</p>
+
+        <div class="separator"></div>
+
+        <p><b>TM</b> – Fornecedor premium. Possui os maiores preços, mas também a melhor qualidade do site. Oferece garantia de troca, materiais verificados e um suporte excepcional. Mesmo custando mais, vale cada centavo.</p>
+    </div>
+
+    <footer>
+        © {{ ano_atual }} - Nosso Site | Todos os direitos reservados.
+    </footer>
+
+</body>
+</html>
