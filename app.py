@@ -302,22 +302,22 @@ def deletar_anuncio(index):
 
 @app.route('/add_nivel', methods=['POST'])
 def add_nivel():
-    from flask import request, redirect, url_for
-    from pymongo import MongoClient
+    if "admin" not in session:
+        return redirect(url_for("admin_login"))
 
     nome = request.form.get('nivel_nome')
     valor = request.form.get('nivel_valor')
 
     if not nome or not valor:
-        return "Erro: preencha todos os campos", 400
+        return "❌ Preencha todos os campos!", 400
 
     novo_nivel = {
         "nome": nome.strip(),
         "valor": float(valor)
     }
 
-    colecao_niveis.insert_one(novo_nivel)
-    print(f"Nível adicionado: {novo_nivel}")
+    niveis_col.insert_one(novo_nivel)
+    print(f"✅ Nível adicionado: {novo_nivel}")
 
     return redirect(url_for('admin_panel'))
 
