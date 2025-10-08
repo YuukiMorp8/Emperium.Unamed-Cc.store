@@ -7,11 +7,15 @@
     <link rel="stylesheet" href="/static/themes/vulcan.css">
     <style>
         body {
-            background: var(--bg-primary);
-            color: #fff;
-            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
+            font-family: 'Poppins', sans-serif;
+            color: #222;
+            /* Fundo: céu + campo florido */
+            background: linear-gradient(to bottom, #87ceeb 0%, #b3e5fc 35%, #a8e6cf 70%, #7fd37f 85%, #5bb75b 100%);
+            min-height: 100vh;
+            background-attachment: fixed;
+            overflow-x: hidden;
         }
 
         header {
@@ -19,56 +23,86 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 25px;
-            background: var(--bg-secondary);
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            border-radius: 0 0 16px 16px;
         }
 
         .title {
             text-align: center;
-            margin: 40px 0 20px 0;
-            font-size: 2rem;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            margin: 50px 0 30px 0;
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: #2e6b2e;
+            text-shadow: 0 0 15px rgba(255,255,255,0.5);
         }
 
         .embed {
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 16px;
-            padding: 20px 25px;
-            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 18px;
+            padding: 25px 30px;
+            margin: 25px auto;
             max-width: 900px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.3);
-            transition: transform 0.2s ease;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .embed:hover {
-            transform: scale(1.01);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
         .embed h2 {
-            color: #3da9f5;
-            font-size: 1.4rem;
-            margin-bottom: 10px;
+            color: #3c8d0d;
+            font-size: 1.5rem;
+            margin-bottom: 12px;
         }
 
         .embed p {
             line-height: 1.6;
-            color: #eaeaea;
-            font-size: 1rem;
+            color: #333;
+            font-size: 1.05rem;
             margin-bottom: 8px;
         }
 
         .separator {
-            border-top: 1px solid rgba(255,255,255,0.15);
+            border-top: 1px solid rgba(0,0,0,0.1);
             margin: 15px 0;
         }
 
         footer {
             text-align: center;
-            padding: 20px;
-            color: #aaa;
-            font-size: 0.9rem;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.6);
+            border-top: 2px solid rgba(255,255,255,0.3);
+            color: #2e6b2e;
+            font-weight: 500;
+            margin-top: 50px;
+        }
+
+        /* Pequeno efeito de flores no campo */
+        .flowers {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: radial-gradient(circle at 20% 80%, #ffb6c1 5%, transparent 20%),
+                        radial-gradient(circle at 50% 85%, #ffeb3b 5%, transparent 20%),
+                        radial-gradient(circle at 80% 75%, #ff69b4 5%, transparent 20%),
+                        radial-gradient(circle at 10% 90%, #ffa500 6%, transparent 20%);
+            background-repeat: repeat-x;
+            background-size: 300px 200px;
+            animation: flowersMove 40s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes flowersMove {
+            from { background-position-x: 0; }
+            to { background-position-x: 1000px; }
         }
     </style>
 </head>
@@ -82,49 +116,42 @@
 
     <h2 class="title">Saiba mais sobre nós</h2>
 
-    <!-- Embed 1 -->
     <div class="embed">
         <h2>O que você precisa saber sobre o nosso site</h2>
-        <p>Nosso site é totalmente automatizado, embora em alguns casos específicos possa ser necessária a intervenção de um moderador.</p>
-        <p>Nossos moderadores <b>nunca enviarão mensagens diretas</b> solicitando dados pessoais, pagamentos ou qualquer tipo de informação sensível. Caso receba algo suspeito, denuncie imediatamente — o responsável será banido.</p>
-        <p>Mesmo sendo uma plataforma confiável, sabemos que nenhuma pessoa é 100% confiável. Se desconfiar de alguém, denuncie — seja ele um usuário, administrador ou subdono.</p>
+        <p>Nosso site é totalmente automatizado, embora em alguns casos específicos possa ser necessária a ajuda de um moderador.</p>
+        <p>Nossos moderadores <b>nunca enviarão mensagens diretas</b> pedindo informações pessoais, pagamentos ou dados sensíveis. Caso receba algo suspeito, denuncie — o responsável será banido.</p>
+        <p>Mesmo sendo uma plataforma confiável, lembramos que nenhuma pessoa é 100% confiável. Se desconfiar de alguém, denuncie — seja um usuário, administrador ou subdono.</p>
     </div>
 
-    <!-- Embed 2 -->
     <div class="embed">
         <h2>Sobre o Site</h2>
-        <p>Nosso sistema trabalha de forma automatizada para garantir agilidade e praticidade em todas as etapas.</p>
+        <p>Nosso sistema trabalha de forma automatizada, garantindo agilidade e praticidade em todas as etapas.</p>
         <p>Os pagamentos são processados de maneira segura, com índice de sucesso de até <b>99%</b>.</p>
         <p>Aplicamos apenas uma taxa simbólica de <b>10%</b> por operação, mantendo os custos baixos e uma ótima experiência para o usuário.</p>
     </div>
 
-    <!-- Embed 3 -->
     <div class="embed">
         <h2>Sobre as Compras</h2>
-        <p>Todas as compras são <b>totalmente automatizadas</b>, com materiais previamente testados e aprovados pela equipe.</p>
-        <p>Oferecemos uma <b>garantia de troca de até 10 minutos</b> após a compra. Após esse período, não será possível solicitar reembolso ou substituição.</p>
+        <p>Todas as compras são <b>totalmente automatizadas</b>, com materiais testados e aprovados pela nossa equipe.</p>
+        <p>Oferecemos uma <b>garantia de troca de até 10 minutos</b> após a compra. Após esse período, não será possível realizar trocas ou reembolsos.</p>
     </div>
 
-    <!-- Embed 4 -->
     <div class="embed">
         <h2>Fornecedores</h2>
-        <p>Se você tem dúvidas sobre os nomes exibidos após o “-” em cada produto, aqui está a explicação:</p>
-        <p>Esses nomes servem para identificar nossos fornecedores, mantendo transparência e qualidade.</p>
-        <p>Cada fornecedor possui valores, prazos e níveis de qualidade diferentes — por isso é importante distingui-los.</p>
+        <p>Se você ficou em dúvida sobre os nomes exibidos após o “-” nos produtos, aqui está a explicação:</p>
+        <p>Esses nomes identificam nossos fornecedores, permitindo manter a transparência e o padrão de qualidade do site.</p>
+        <p>Cada fornecedor possui preços, prazos e níveis de qualidade diferentes — por isso essa distinção é importante.</p>
     </div>
 
-    <!-- Embed 5 (menor) -->
     <div class="embed">
-        <p><b>DT</b> – Fornecedor com preços acessíveis e grande disponibilidade de produtos. A qualidade é razoável, mas pode variar conforme o item.</p>
-
+        <p><b>DT</b> – Fornecedor com preços acessíveis e boa disponibilidade. A qualidade é simples, mas adequada para o valor.</p>
         <div class="separator"></div>
-
-        <p><b>LGC</b> – Fornecedor com preços um pouco mais altos, mas com qualidade superior. Raramente apresenta falhas em seus materiais.</p>
-
+        <p><b>LGC</b> – Fornecedor com preços intermediários e qualidade superior. Raramente apresenta falhas nos materiais.</p>
         <div class="separator"></div>
-
-        <p><b>TM</b> – Fornecedor premium. Possui os maiores preços, mas também a melhor qualidade do site. Oferece garantia de troca, materiais verificados e um suporte excepcional. Mesmo custando mais, vale cada centavo.</p>
+        <p><b>TM</b> – Fornecedor premium, com os melhores produtos e suporte do site. Oferece garantia, verificação e segurança em cada compra.</p>
     </div>
+
+    <div class="flowers"></div>
 
     <footer>
         © {{ ano_atual }} - Nosso Site | Todos os direitos reservados.
