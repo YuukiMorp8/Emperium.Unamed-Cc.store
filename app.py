@@ -130,9 +130,9 @@ def logout():
     session.pop("usuario", None)
     return redirect(url_for("login"))
 
-#-----------------
+#-----------------------------
 # USUÁRIO / PERFIL / DASHBOARD
-#-----------------
+#-----------------------------
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
 def allowed_file(filename):
@@ -237,8 +237,13 @@ anuncios=anuncios_ativos
 )
 
 #-----------------
-# ADMIN
+# ADMIN / faq
 #-----------------
+@app.route('/saiba_mais')
+def saiba_mais():
+    ano_atual = datetime.now().year
+    return render_template('saiba_mais.html', ano_atual=ano_atual)
+
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
@@ -323,9 +328,9 @@ def add_material():
     })
 
     return redirect(url_for("admin_panel"))
-#-----------------
-# PAGAMENTO PIX
-#-----------------
+#------------------------
+# PAGAMENTO PIX / Compras
+#------------------------
 @app.route("/adicionar_saldo", methods=["GET", "POST"])
 def adicionar_saldo_user():
     if "usuario" not in session:
@@ -675,8 +680,9 @@ def deletar_historico():
         "msg": f"🧹 {total} compras limpas — total R$ {soma:.2f}"
     })
 
-import requests
-# Rota para exibir a página de troca
+# ------
+# Trocar
+# ------
 @app.route("/troca", methods=["GET", "POST"])
 def troca():
     if request.method == "POST":
