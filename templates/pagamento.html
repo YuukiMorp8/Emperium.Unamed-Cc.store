@@ -16,7 +16,7 @@ html, body {
     overflow: hidden;
 }
 
-/* Fundo e ondas */
+/* Fundo */
 .ocean-container, .sand-bottom, .wave {
     position: fixed;
     left: 0;
@@ -25,127 +25,117 @@ html, body {
 }
 .sand-bottom {
     bottom: 0;
-    height: 70px;
-    background: linear-gradient(to bottom, transparent, #d4af37 25%, #8a6f2e);
-    border-top-left-radius: 50% 15px;
-    border-top-right-radius: 50% 15px;
-    box-shadow: 0 -4px 12px rgba(212,175,55,0.25);
-    z-index: -1;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, #d4af37 30%, #8a6f2e);
+    box-shadow: 0 -3px 10px rgba(212,175,55,0.25);
 }
 .wave {
-    bottom: 70px;
-    height: 14px;
+    bottom: 60px;
+    height: 12px;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230b2b45" fill-opacity="0.3" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
     background-size: cover;
-    animation: wave 15s linear infinite;
+    animation: wave 14s linear infinite;
 }
-.wave:nth-child(2) { bottom: 60px; opacity: 0.4; animation: wave 12s linear infinite reverse; }
+.wave:nth-child(2) { bottom: 50px; opacity: 0.4; animation: wave 11s linear infinite reverse; }
 @keyframes wave { 0% {background-position-x: 0;} 100% {background-position-x: 1440px;} }
 
-/* Container principal */
+/* Container */
 body { display: flex; justify-content: center; align-items: center; }
 .container {
     width: 95%;
-    max-width: 850px;
+    max-width: 780px;
     background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(8px);
-    padding: 35px 30px;
-    border-radius: 18px;
-    border: 2px solid rgba(245,214,123,0.15);
-    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+    backdrop-filter: blur(6px);
+    padding: 25px 22px;
+    border-radius: 15px;
+    border: 1.5px solid rgba(245,214,123,0.15);
+    box-shadow: 0 0 20px rgba(0,0,0,0.35);
     text-align: center;
     overflow-y: auto;
-    position: relative;
     z-index: 1;
 }
 h2 {
-    font-size: 36px;
+    font-size: 30px;
     color: #f5d67b;
-    text-shadow: 0 0 12px rgba(245,214,123,0.4);
-    margin-bottom: 25px;
+    text-shadow: 0 0 10px rgba(245,214,123,0.4);
+    margin-bottom: 18px;
 }
 
-/* Embeds menores */
+/* Embeds compactos */
 .embed {
-    background: rgba(25,25,25,0.4);
-    backdrop-filter: blur(4px);
-    border-left: 5px solid rgba(212,175,55,0.7);
-    border-radius: 14px;
-    padding: 22px 20px;
+    background: rgba(25,25,25,0.35);
+    border-left: 4px solid rgba(212,175,55,0.7);
+    border-radius: 12px;
+    padding: 16px 16px;
     text-align: left;
-    margin: 15px 0;
+    margin: 10px 0;
     transition: 0.3s;
 }
-.embed:hover {
-    transform: scale(1.01);
-    background: rgba(35,35,35,0.5);
-}
+.embed:hover { background: rgba(35,35,35,0.45); }
 .embed h3 {
     color: #f5d67b;
-    font-size: 22px;
-    margin-bottom: 10px;
+    font-size: 19px;
+    margin-bottom: 6px;
 }
 .embed p {
     color: #ddd;
-    font-size: 17px;
-    line-height: 1.5;
-    margin: 8px 0;
+    font-size: 15px;
+    line-height: 1.4;
+    margin: 6px 0;
 }
 
-/* QR Code menor */
+/* QR Code reduzido */
 img {
-    margin: 18px auto;
+    margin: 12px auto;
     display: block;
-    width: 280px;
-    height: 280px;
+    width: 220px;
+    height: 220px;
     border: 2px solid rgba(245,214,123,0.2);
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(245,214,123,0.1);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(245,214,123,0.1);
     background: white;
-    padding: 8px;
-    transition: 0.3s;
+    padding: 6px;
 }
-img:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(245,214,123,0.25); }
+img:hover { transform: scale(1.02); }
 
 /* Código PIX */
 .copia-cola {
-    background: rgba(20,20,20,0.6);
-    padding: 14px;
-    border-radius: 10px;
-    margin-top: 12px;
-    font-size: 16px;
+    background: rgba(20,20,20,0.55);
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 14px;
     color: #f8f8f8;
-    border: 1px solid rgba(245,214,123,0.25);
+    border: 1px solid rgba(245,214,123,0.2);
 }
 
-/* Botões */
+/* Botões compactos */
 button {
     width: 100%;
-    max-width: 450px;
-    margin: 18px auto;
+    max-width: 400px;
+    margin: 14px auto;
     display: block;
-    padding: 18px;
-    border-radius: 12px;
+    padding: 14px;
+    border-radius: 10px;
     border: none;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
     color: #111;
     background: linear-gradient(135deg, #d4af37, #8a6f2e);
-    box-shadow: 0 0 25px rgba(245,214,123,0.35);
+    box-shadow: 0 0 18px rgba(245,214,123,0.3);
+    transition: 0.25s;
 }
 button:hover {
     background: linear-gradient(135deg, #f5d67b, #b99232);
-    transform: scale(1.04);
+    transform: scale(1.03);
 }
 .confirm-btn {
     background: linear-gradient(135deg, #a9f58a, #6ccf5a);
-    box-shadow: 0 0 25px rgba(160,255,120,0.25);
+    box-shadow: 0 0 20px rgba(160,255,120,0.25);
 }
 .confirm-btn:hover {
     background: linear-gradient(135deg, #c7ff9e, #84e870);
-    box-shadow: 0 0 40px rgba(160,255,120,0.4);
 }
 
 /* Bolhas */
@@ -154,13 +144,13 @@ button:hover {
 
 /* Responsivo */
 @media (max-width: 768px) {
-    .container { padding: 25px 20px; }
-    h2 { font-size: 30px; }
-    .embed { padding: 18px; }
-    .embed h3 { font-size: 20px; }
-    .embed p, .copia-cola { font-size: 15px; }
-    img { width: 85%; height: auto; }
-    button { font-size: 18px; padding: 16px; }
+    .container { padding: 20px 15px; }
+    h2 { font-size: 26px; }
+    .embed { padding: 14px; }
+    .embed h3 { font-size: 17px; }
+    .embed p, .copia-cola { font-size: 14px; }
+    img { width: 80%; height: auto; }
+    button { font-size: 16px; padding: 13px; }
 }
 </style>
 
