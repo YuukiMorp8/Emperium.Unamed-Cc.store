@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Pagamento PIX - Emperium</title>
+
 <style>
-/* ===== BASE ===== */
 html, body {
     margin: 0;
     padding: 0;
@@ -13,244 +13,157 @@ html, body {
     font-family: "Poppins", Arial, sans-serif;
     background: linear-gradient(to bottom, #1a5f96, #0b2b45, #051524);
     color: #fff;
-    box-sizing: border-box;
-    position: relative;
     overflow: hidden;
 }
 
-/* ===== EFEITO ÁGUA ===== */
-.ocean-container {
+/* Fundo e ondas */
+.ocean-container, .sand-bottom, .wave {
     position: fixed;
-    top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
     z-index: -2;
-    overflow: hidden;
 }
-
-/* ===== AREIA NO FUNDO ===== */
 .sand-bottom {
-    position: fixed;
     bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background: linear-gradient(to bottom, transparent, #d4af37 20%, #b8941f 60%, #8a6f2e);
+    height: 70px;
+    background: linear-gradient(to bottom, transparent, #d4af37 25%, #8a6f2e);
+    border-top-left-radius: 50% 15px;
+    border-top-right-radius: 50% 15px;
+    box-shadow: 0 -4px 12px rgba(212,175,55,0.25);
     z-index: -1;
-    border-top-left-radius: 50% 20px;
-    border-top-right-radius: 50% 20px;
-    box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.3);
 }
-
-/* ===== ONDULAÇÕES ===== */
 .wave {
-    position: absolute;
-    bottom: 80px;
-    left: 0;
-    width: 100%;
-    height: 15px;
+    bottom: 70px;
+    height: 14px;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230b2b45" fill-opacity="0.3" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
     background-size: cover;
     animation: wave 15s linear infinite;
-    z-index: -1;
 }
+.wave:nth-child(2) { bottom: 60px; opacity: 0.4; animation: wave 12s linear infinite reverse; }
+@keyframes wave { 0% {background-position-x: 0;} 100% {background-position-x: 1440px;} }
 
-.wave:nth-child(2) {
-    bottom: 70px;
-    opacity: 0.5;
-    animation: wave 12s linear infinite reverse;
-}
-
-@keyframes wave {
-    0% {
-        background-position-x: 0;
-    }
-    100% {
-        background-position-x: 1440px;
-    }
-}
-
-/* ===== CONTAINER ===== */
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+/* Container principal */
+body { display: flex; justify-content: center; align-items: center; }
 .container {
     width: 95%;
-    max-width: 900px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    padding: 50px 40px;
-    border-radius: 20px;
+    max-width: 850px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(8px);
+    padding: 35px 30px;
+    border-radius: 18px;
     border: 2px solid rgba(245,214,123,0.15);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
-    box-sizing: border-box;
-    overflow-y: auto;
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
     text-align: center;
+    overflow-y: auto;
     position: relative;
     z-index: 1;
 }
-
-.container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(245,214,123,0.3), transparent);
-}
-
-/* ===== TÍTULO ===== */
 h2 {
-    font-size: 44px;
+    font-size: 36px;
     color: #f5d67b;
-    text-shadow: 0 0 18px rgba(245,214,123,0.4);
-    margin-bottom: 45px;
+    text-shadow: 0 0 12px rgba(245,214,123,0.4);
+    margin-bottom: 25px;
 }
 
-/* ===== EMBEDS TRANSPARENTES ===== */
+/* Embeds menores */
 .embed {
-    background: rgba(25, 25, 25, 0.4);
-    backdrop-filter: blur(5px);
-    border-left: 6px solid rgba(212, 175, 55, 0.7);
-    border-radius: 18px;
-    padding: 32px 28px;
+    background: rgba(25,25,25,0.4);
+    backdrop-filter: blur(4px);
+    border-left: 5px solid rgba(212,175,55,0.7);
+    border-radius: 14px;
+    padding: 22px 20px;
     text-align: left;
-    margin: 25px 0;
+    margin: 15px 0;
     transition: 0.3s;
 }
 .embed:hover {
     transform: scale(1.01);
-    background: rgba(35, 35, 35, 0.5);
-    border-left-color: rgba(245, 214, 123, 0.9);
+    background: rgba(35,35,35,0.5);
 }
-
 .embed h3 {
     color: #f5d67b;
-    font-size: 26px;
-    margin-top: 0;
-    margin-bottom: 18px;
-    text-shadow: 0 0 12px rgba(245,214,123,0.3);
+    font-size: 22px;
+    margin-bottom: 10px;
 }
 .embed p {
     color: #ddd;
-    font-size: 19px;
-    line-height: 1.6;
-    margin: 10px 0;
+    font-size: 17px;
+    line-height: 1.5;
+    margin: 8px 0;
 }
 
-/* ===== QR CODE ===== */
+/* QR Code menor */
 img {
-    margin: 25px auto;
+    margin: 18px auto;
     display: block;
-    width: 340px;
-    height: 340px;
-    border: 3px solid rgba(245,214,123,0.2);
-    border-radius: 16px;
-    box-shadow: 0 0 25px rgba(245,214,123,0.1);
-    transition: 0.3s;
-    background: white;
-    padding: 10px;
-}
-img:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0 40px rgba(245,214,123,0.25);
-}
-
-/* ===== CÓDIGO COPIA/COLA ===== */
-.copia-cola {
-    word-break: break-all;
-    background: rgba(20, 20, 20, 0.6);
-    padding: 18px;
+    width: 280px;
+    height: 280px;
+    border: 2px solid rgba(245,214,123,0.2);
     border-radius: 12px;
-    margin-top: 16px;
-    font-size: 18px;
+    box-shadow: 0 0 20px rgba(245,214,123,0.1);
+    background: white;
+    padding: 8px;
+    transition: 0.3s;
+}
+img:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(245,214,123,0.25); }
+
+/* Código PIX */
+.copia-cola {
+    background: rgba(20,20,20,0.6);
+    padding: 14px;
+    border-radius: 10px;
+    margin-top: 12px;
+    font-size: 16px;
     color: #f8f8f8;
     border: 1px solid rgba(245,214,123,0.25);
-    backdrop-filter: blur(5px);
 }
 
-/* ===== BOTÕES ===== */
+/* Botões */
 button {
     width: 100%;
-    max-width: 500px;
-    margin: 25px auto;
+    max-width: 450px;
+    margin: 18px auto;
     display: block;
-    padding: 22px;
-    border-radius: 14px;
+    padding: 18px;
+    border-radius: 12px;
     border: none;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
     color: #111;
     background: linear-gradient(135deg, #d4af37, #8a6f2e);
-    box-shadow: 0 0 30px rgba(245,214,123,0.35);
+    box-shadow: 0 0 25px rgba(245,214,123,0.35);
 }
 button:hover {
     background: linear-gradient(135deg, #f5d67b, #b99232);
-    transform: scale(1.05);
-    box-shadow: 0 0 45px rgba(245,214,123,0.6);
+    transform: scale(1.04);
 }
-
-/* Botão de confirmação (verde suave e dourado) */
 .confirm-btn {
     background: linear-gradient(135deg, #a9f58a, #6ccf5a);
-    color: #111;
-    font-weight: bold;
-    box-shadow: 0 0 35px rgba(160,255,120,0.25);
+    box-shadow: 0 0 25px rgba(160,255,120,0.25);
 }
 .confirm-btn:hover {
     background: linear-gradient(135deg, #c7ff9e, #84e870);
-    box-shadow: 0 0 50px rgba(160,255,120,0.5);
+    box-shadow: 0 0 40px rgba(160,255,120,0.4);
 }
 
-/* ===== BOLHAS MAIORES ===== */
-.bubble {
-    position: fixed;
-    border-radius: 50%;
-    animation: float linear infinite;
-    z-index: 0;
-    bottom: -100px;
-}
+/* Bolhas */
+.bubble { position: fixed; border-radius: 50%; animation: float linear infinite; bottom: -100px; z-index: 0; }
+@keyframes float { to { transform: translateY(calc(-100vh - 200px)); } }
 
-@keyframes float {
-    to {
-        transform: translateY(calc(-100vh - 200px));
-    }
-}
-
-/* ===== RESPONSIVO ===== */
+/* Responsivo */
 @media (max-width: 768px) {
-    .container {
-        padding: 35px 25px;
-    }
-    h2 {
-        font-size: 36px;
-        margin-bottom: 30px;
-    }
-    .embed {
-        padding: 25px;
-    }
-    .embed h3 {
-        font-size: 22px;
-    }
-    .embed p, .copia-cola {
-        font-size: 17px;
-    }
-    img {
-        width: 90%;
-        height: auto;
-    }
-    button {
-        font-size: 20px;
-        padding: 20px;
-    }
+    .container { padding: 25px 20px; }
+    h2 { font-size: 30px; }
+    .embed { padding: 18px; }
+    .embed h3 { font-size: 20px; }
+    .embed p, .copia-cola { font-size: 15px; }
+    img { width: 85%; height: auto; }
+    button { font-size: 18px; padding: 16px; }
 }
 </style>
+
 </head>
 <body>
 
